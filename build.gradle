@@ -13,11 +13,13 @@ plugins {
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.freemarker:freemarker:2.3.14'
-    api 'org.jboss.resteasy:resteasy-jaxrs:3.0.7.Final'
-    api 'javax.servlet:javax.servlet-api:3.0.1'
-    api 'log4j:log4j:1.2.17'
-    api 'org.codehaus.jackson:jackson-mapper-asl:1.9.11'
+    api 'org.freemarker:freemarker:2.3.28'
+    api 'org.jboss.resteasy:resteasy-jaxrs:3.6.1.Final'
+    api 'javax.servlet:javax.servlet-api:4.0.1'
+    api 'org.apache.logging.log4j:log4j-core:2.11.1'
+    api 'org.jboss.resteasy:resteasy-jackson2-provider:3.6.1.Final'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    
 
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.

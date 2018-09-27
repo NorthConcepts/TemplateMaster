@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -54,7 +55,7 @@ public class TemplateBootstrap extends ResteasyBootstrap implements ServletConte
 
     public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
-    public final Logger LOG = Logger.getLogger(getClass());
+    public final Logger LOG = LogManager.getLogger(getClass());
 
     private FilterConfig filterConfig;
     private ServletContext servletContext;
@@ -118,7 +119,7 @@ public class TemplateBootstrap extends ResteasyBootstrap implements ServletConte
     }
 
     public ResteasyProviderFactory getResteasyProviderFactory() {
-        return (ResteasyProviderFactory) servletContext.getAttribute("org.jboss.resteasy.spi.ResteasyProviderFactory");
+        return ResteasyProviderFactory.getInstance();
     }
 
     public ContentException exception(ContentException e, HttpServletRequest request) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
  */
 package com.stackhunter.web.template;
 
-import org.codehaus.jackson.JsonNode;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import com.stackhunter.web.content.Content;
 
+import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -27,6 +27,10 @@ import freemarker.template.TemplateModelException;
 public class ContentObjectWrapper extends DefaultObjectWrapper {
     
     public static final ContentObjectWrapper INSTANCE = new ContentObjectWrapper();
+    
+    public ContentObjectWrapper() {
+        super(Configuration.VERSION_2_3_28);
+    }
     
     @Override
     public TemplateModel wrap(Object object) throws TemplateModelException {
