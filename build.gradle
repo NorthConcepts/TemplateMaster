@@ -13,13 +13,14 @@ plugins {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
 
-    compile 'org.freemarker:freemarker:2.3.14'
-    compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.7.Final'
-    compile 'javax.servlet:javax.servlet-api:3.0.1'
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.11'
+    compile 'org.freemarker:freemarker:2.3.28'
+    compile 'org.jboss.resteasy:resteasy-jaxrs:3.6.1.Final'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.1'
+    
+    compile 'org.jboss.resteasy:resteasy-jackson2-provider:3.6.1.Final'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 
     compile fileTree(dir: 'lib', include: ['*.jar'])
 
@@ -38,7 +39,7 @@ repositories {
 archivesBaseName='blog-article'
 
 gretty {
-//    servletContainer = 'jetty9'
+    servletContainer = 'jetty9.4'
 
 //    httpEnabled = true
 //    httpPort = 8081
