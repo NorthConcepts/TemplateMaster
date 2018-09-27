@@ -33,8 +33,8 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.annotations.Form;
 
+import com.northconcepts.templatemaster.content.Content;
 import com.stackhunter.blog.example.articlesubmission.model.Article;
-import com.stackhunter.web.content.Content;
 
 
 @Path("/")
