@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,23 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.template;
+package com.northconcepts.templatemaster.content;
 
-import freemarker.template.Template;
+public enum ContentErrorCode implements IErrorCode {
+	
+    VALUE_NOT_FOUND(2001),
+    TEMPLATE_NOT_FOUND(2002),
+	;
+	
+	private final int number;
 
-public interface ITemplateSource {
+	private ContentErrorCode(int number) {
+		this.number = number;
+	}
+	
+	@Override
+	public int getNumber() {
+		return number;
+	}
 
-    Template getTemplate();
 }

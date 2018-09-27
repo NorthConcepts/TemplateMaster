@@ -14,10 +14,10 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.template;
+package com.northconcepts.templatemaster.template;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.stackhunter.web.content.Content;
+import com.northconcepts.templatemaster.content.Content;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;

@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.rest;
+package com.northconcepts.templatemaster.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,8 +43,8 @@ import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-import com.stackhunter.web.content.ContentException;
-import com.stackhunter.web.template.Templates;
+import com.northconcepts.templatemaster.content.ContentException;
+import com.northconcepts.templatemaster.template.Templates;
 
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;

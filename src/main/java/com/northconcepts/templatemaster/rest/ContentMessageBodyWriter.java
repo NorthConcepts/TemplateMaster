@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.rest;
+package com.northconcepts.templatemaster.rest;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,7 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import com.stackhunter.web.content.IContent;
+import com.northconcepts.templatemaster.content.IContent;
 
 @Provider
 public class ContentMessageBodyWriter implements MessageBodyWriter<Object> {

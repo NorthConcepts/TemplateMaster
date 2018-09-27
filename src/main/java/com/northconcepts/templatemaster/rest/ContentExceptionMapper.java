@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.rest;
+package com.northconcepts.templatemaster.rest;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import com.stackhunter.web.content.ContentException;
+import com.northconcepts.templatemaster.content.ContentException;
 
 @Provider
 public class ContentExceptionMapper implements ExceptionMapper<Throwable> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.content;
+package com.northconcepts.templatemaster.content;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

@@ -14,14 +14,14 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.template;
+package com.northconcepts.templatemaster.template;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.stackhunter.web.content.ContentErrorCode;
-import com.stackhunter.web.content.ContentException;
+import com.northconcepts.templatemaster.content.ContentErrorCode;
+import com.northconcepts.templatemaster.content.ContentException;
 
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;

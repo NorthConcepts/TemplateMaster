@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.template;
+package com.northconcepts.templatemaster.template;
 
-import com.stackhunter.web.content.Content;
-import com.stackhunter.web.content.ContentList;
+import com.northconcepts.templatemaster.content.Content;
+import com.northconcepts.templatemaster.content.ContentList;
 
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;

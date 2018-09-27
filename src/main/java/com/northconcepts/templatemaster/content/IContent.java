@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,10 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.content;
+package com.northconcepts.templatemaster.content;
 
-
-public class IdentityContent implements IContent {
+public interface IContent {
     
-    private final Object value;
-    
-    public IdentityContent(Object value) {
-        this.value = value;
-    }
-    
-    public Object getValue() {
-        return value;
-    }
-    
-    @Override
-    public Object render() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        Object object = render();
-        return object==null?"":object.toString();
-    }
+    Object render();
 
 }

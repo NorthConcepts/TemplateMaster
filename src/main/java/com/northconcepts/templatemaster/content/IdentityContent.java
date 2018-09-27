@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 North Concepts Inc.
+ * Copyright (c) 2014-2018 North Concepts Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,30 @@
  * limitations under the License.
  * 
  */
-package com.stackhunter.web.template;
+package com.northconcepts.templatemaster.content;
 
-import freemarker.template.Configuration;
 
-public class Templates {
-
-    private static final Templates INSTANCE = new Templates();
-
-    public static Templates get() {
-        return INSTANCE;
+public class IdentityContent implements IContent {
+    
+    private final Object value;
+    
+    public IdentityContent(Object value) {
+        this.value = value;
+    }
+    
+    public Object getValue() {
+        return value;
+    }
+    
+    @Override
+    public Object render() {
+        return value;
     }
 
-    private final Configuration configuration = new Configuration();
-
-    private Templates() {
-        configuration.setObjectWrapper(ContentObjectWrapper.INSTANCE);
-        // configuration.setNumberFormat("0.######");
-    }
-
-    public Configuration getConfiguration() {
-        return configuration;
+    @Override
+    public String toString() {
+        Object object = render();
+        return object==null?"":object.toString();
     }
 
 }
