@@ -18,7 +18,7 @@ package com.northconcepts.templatemaster.template;
 
 import java.io.StringReader;
 
-import com.northconcepts.templatemaster.content.ContentException;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 import freemarker.template.Template;
 
@@ -35,7 +35,7 @@ public class CodeTemplateSource implements ITemplateSource {
         try {
             return new Template(getClass().getName() + "-" + hashCode(), new StringReader(code), Templates.get().getConfiguration());
         } catch (Throwable e) {
-            throw ContentException.wrap(e).set("code", code);
+            throw TemplateMasterException.wrap(e).set("code", code);
         }
     }
     

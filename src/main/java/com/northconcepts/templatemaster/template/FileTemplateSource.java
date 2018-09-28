@@ -18,8 +18,7 @@ package com.northconcepts.templatemaster.template;
 
 import java.io.FileNotFoundException;
 
-import com.northconcepts.templatemaster.content.ContentErrorCode;
-import com.northconcepts.templatemaster.content.ContentException;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 import freemarker.template.Template;
 
@@ -36,9 +35,9 @@ public class FileTemplateSource implements ITemplateSource {
         try {
             return Templates.get().getConfiguration().getTemplate(file);
         } catch (FileNotFoundException e) {
-            throw ContentException.wrap(e, ContentErrorCode.TEMPLATE_NOT_FOUND).set("file", file);
+            throw new TemplateMasterException("Template not found", e).set("file", file);
         } catch (Throwable e) {
-            throw ContentException.wrap(e).set("file", file);
+            throw TemplateMasterException.wrap(e).set("file", file);
         }
     }
     

@@ -43,24 +43,24 @@ import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-import com.northconcepts.templatemaster.content.ContentException;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.template.Templates;
 
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
 
-public class TemplateBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
+public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
 
     public static final int MAX_ENV_VALUE_LENGTH = 256;
 
-    public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
     public final Logger LOG = LogManager.getLogger(getClass());
 
     private FilterConfig filterConfig;
     private ServletContext servletContext;
 
-    public TemplateBootstrap() {
+    public TemplateMasterBootstrap() {
     }
 
     public FilterConfig getFilterConfig() {
@@ -104,25 +104,28 @@ public class TemplateBootstrap extends ResteasyBootstrap implements ServletConte
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        RequestHolder.setHttpServletRequest((HttpServletRequest) request);
         try {
             chain.doFilter(request, response);
         } catch (Throwable e) {
-            ContentException e2 = ContentException.wrap(e);
+            TemplateMasterException e2 = TemplateMasterException.wrap(e);
             e2 = exception(e2, (HttpServletRequest) request);
             LOG.error(e2, e2);
             throw e2;
+        } finally {
+            RequestHolder.clearHttpServletRequest();
         }
     }
 
     public Registry getRegistry() {
-        return (Registry) servletContext.getAttribute("org.jboss.resteasy.spi.Registry");
+        return (Registry) servletContext.getAttribute(Registry.class.getName());
     }
 
     public ResteasyProviderFactory getResteasyProviderFactory() {
         return ResteasyProviderFactory.getInstance();
     }
 
-    public ContentException exception(ContentException e, HttpServletRequest request) {
+    public TemplateMasterException exception(TemplateMasterException e, HttpServletRequest request) {
         e.set("Request.AuthType", request.getAuthType());
         e.set("Request.CharacterEncoding", request.getCharacterEncoding());
         e.set("Request.ContentLength", request.getContentLength());

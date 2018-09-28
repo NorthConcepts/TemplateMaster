@@ -20,8 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.northconcepts.templatemaster.content.ContentErrorCode;
-import com.northconcepts.templatemaster.content.ContentException;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
@@ -40,7 +39,7 @@ public class JsonTemplateModel implements TemplateHashModel {
         // TODO: handle arrays
         JsonNode value = node.get(key);
         if (value == null) {
-            throw new ContentException(ContentErrorCode.VALUE_NOT_FOUND).set("key", key).set("parentJsonObject", node);
+            throw new TemplateMasterException("Value not found").set("key", key).set("parentJsonObject", node);
         }
         return Templates.get().getConfiguration().getObjectWrapper().wrap(value);
     }
@@ -76,7 +75,7 @@ public class JsonTemplateModel implements TemplateHashModel {
             }
             return Templates.get().getConfiguration().getObjectWrapper().wrap(value);
         } catch (Throwable e) {
-            throw ContentException.wrap(e).set("jsonNode", node);
+            throw TemplateMasterException.wrap(e).set("jsonNode", node);
         }
     }
 

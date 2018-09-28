@@ -16,22 +16,31 @@
  */
 package com.northconcepts.templatemaster.rest;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
-import com.northconcepts.templatemaster.content.TemplateMasterException;
-
-@Provider
-public class ContentExceptionMapper implements ExceptionMapper<Throwable> {
+public class FlashMessage {
     
-    @Override
-    public Response toResponse(Throwable exception) {
-        if (exception instanceof NotFoundException) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        throw TemplateMasterException.wrap(exception);
+    public static enum FlashMessageType {
+        SUCCESS, INFO, WARNING, ERROR;
+    }
+    
+    private final FlashMessageType type;
+    private final String displayText;
+    
+    public FlashMessage(FlashMessageType type, String displayText) {
+        this.type = type;
+        this.displayText = displayText;
+    }
+    
+    public FlashMessageType getType() {
+        return type;
     }
 
+    public String getDisplayText() {
+        return displayText;
+    }
+    
+    @Override
+    public String toString() {
+        return getDisplayText();
+    }
+    
 }

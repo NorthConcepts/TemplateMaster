@@ -108,7 +108,7 @@ public class Content implements IContent {
 //            template.process(templateModel, out);
             return out.toString();
         } catch (Throwable e) {
-            throw ContentException.wrap(e).set("templateSource", templateSource);
+            throw TemplateMasterException.wrap(e).set("templateSource", templateSource);
         }
     }
     
