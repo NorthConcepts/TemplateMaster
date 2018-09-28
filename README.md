@@ -5,7 +5,13 @@ It uses [FreeMarker](https://freemarker.apache.org/) underneath for the heavy li
 
 The code was originally developed as part of our blog titled ["How To Build Template Driven Java Websites with FreeMarker and RESTEasy"](https://blog.stackhunter.com/2014/01/21/build-template-driven-java-websites-freemarker-resteasy/).
 
+## How to Build
+Build the library jar file in `build/libs` by executing `gradle build` on the command line.
 
-Build the library jar file in `build/libs` by executing `gradle build`.
+
+## Examples Web Apps
+- [Article submission example](https://github.com/NorthConcepts/TemplateMaster-Article-Submission-Example)
+- [Article submission example using Spring Boot](https://github.com/NorthConcepts/TemplateMaster-Spring-Boot-Example)
+
 
 Enjoy.
