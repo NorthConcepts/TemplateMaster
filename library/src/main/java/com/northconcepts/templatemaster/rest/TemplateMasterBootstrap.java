@@ -34,6 +34,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,6 +50,7 @@ import com.northconcepts.templatemaster.template.Templates;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
 
+@WebFilter(urlPatterns = "/*")
 public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
 
     public static final int MAX_ENV_VALUE_LENGTH = 256;

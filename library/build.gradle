@@ -37,3 +37,23 @@ repositories {
 }
 
 archivesBaseName='NorthConcepts-TemplateMaster'
+
+task srcZip(type: Zip) {
+    classifier = 'src'
+    from sourceSets*.allSource
+}
+
+task sourcesZip(type: Zip, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocZip(type: Zip, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesZip
+    archives javadocZip
+}
