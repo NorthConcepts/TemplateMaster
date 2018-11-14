@@ -33,8 +33,8 @@ public class FieldDef {
     private boolean allowSort = true;
     private boolean allowFilter = true;
     
-    
-    
+    public FieldDef() {
+    }    
     
     public FieldDef(String name, String displayName, boolean nullable, FieldLookupDef lookupValues) {
         this.name = name;

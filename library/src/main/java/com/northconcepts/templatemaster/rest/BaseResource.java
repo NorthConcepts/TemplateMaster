@@ -32,6 +32,8 @@ import com.northconcepts.templatemaster.content.Util;
 
 public class BaseResource {
     
+    public static final String TEXT_HTML = "text/html; charset=utf-8";
+
     protected final Logger log = LogManager.getLogger(getClass());
     
     protected Response ok() {
