@@ -10,15 +10,22 @@ public class FieldDef {
     private ControlType controlType;
     private String placeholder;
     private boolean visible = true;
-    
+    private String styleClassName;
     
     // FieldDataDef
     private DataType dataType;
     private boolean nullable = true;
+    private boolean array;
     private String defaultValue;
     private String temporalPattern;
     private String numbericPattern;
     private String patternValidationMessage;
+    private FieldLookupDef lookupValues;
+    private boolean limitToLookupValues;
+    private Integer minLength;
+    private Integer maxLength;
+    private Number minNumber;
+    private Number maxNumber;
 
     // FieldPermissionDef
     private boolean allowCreate = true;
@@ -27,8 +34,6 @@ public class FieldDef {
     private boolean allowFilter = true;
     
     
-    private FieldLookupDef lookupValues;
-    private boolean limitToLookupValues;
     
     
     public FieldDef(String name, String displayName, boolean nullable, FieldLookupDef lookupValues) {
@@ -46,15 +51,20 @@ public class FieldDef {
         return value==null?null:value.toString();
     }
 
+
+    public boolean isReadonly() {
+        return isVisible() && !isAllowCreate() && !isAllowUpdate();
+    }
+    
     public String getId() {
         return id;
     }
-    
+
     public FieldDef setId(String id) {
         this.id = id;
         return this;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -72,43 +82,83 @@ public class FieldDef {
         this.displayName = displayName;
         return this;
     }
-    
+
     public ControlType getControlType() {
         return controlType;
     }
-    
+
     public FieldDef setControlType(ControlType controlType) {
         this.controlType = controlType;
         return this;
     }
-    
+
+    public boolean isTextArea() {
+        return controlType == ControlType.TEXT_AREA;
+    }
+
     public String getPlaceholder() {
         return placeholder;
     }
-    
+
     public FieldDef setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
         return this;
     }
-    
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public FieldDef setVisible(boolean visible) {
+        this.visible = visible;
+        return this;
+    }
+
+    public String getStyleClassName() {
+        return styleClassName;
+    }
+
+    public FieldDef setStyleClassName(String styleClassName) {
+        this.styleClassName = styleClassName;
+        return this;
+    }
+
     public DataType getDataType() {
         return dataType;
     }
-    
+
     public FieldDef setDataType(DataType dataType) {
         this.dataType = dataType;
         return this;
     }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public FieldDef setNullable(boolean nullable) {
+        this.nullable = nullable;
+        return this;
+    }
     
+    public boolean isArray() {
+        return array;
+    }
+    
+    public FieldDef setArray(boolean array) {
+        this.array = array;
+        return this;
+    }
+
     public String getDefaultValue() {
         return defaultValue;
     }
-    
+
     public FieldDef setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
-    
+
     public String getTemporalPattern() {
         return temporalPattern;
     }
@@ -136,19 +186,68 @@ public class FieldDef {
         return this;
     }
 
-    public boolean isRequired() {
-        return !isNullable();
+    public boolean isLookup() {
+        // TODO: find better way/place to do this (LookupFactory.createLookup()?)
+        if (lookupValues != null) {
+            lookupValues.refresh();
+        }
+        return lookupValues != null;
     }
     
-    public boolean isNullable() {
-        return nullable;
+    public FieldLookupDef getLookupValues() {
+        return lookupValues;
     }
     
-    public FieldDef setNullable(boolean nullable) {
-        this.nullable = nullable;
+    public FieldDef setLookupValues(FieldLookupDef lookupValues) {
+        this.lookupValues = lookupValues;
         return this;
     }
     
+    public boolean isLimitToLookupValues() {
+        return limitToLookupValues;
+    }
+
+    public FieldDef setLimitToLookupValues(boolean limitToLookupValues) {
+        this.limitToLookupValues = limitToLookupValues;
+        return this;
+    }
+    
+    public Integer getMinLength() {
+        return minLength;
+    }
+
+    public FieldDef setMinLength(Integer minLength) {
+        this.minLength = minLength;
+        return this;
+    }
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public FieldDef setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+        return this;
+    }
+
+    public Number getMinNumber() {
+        return minNumber;
+    }
+
+    public FieldDef setMinNumber(Number minNumber) {
+        this.minNumber = minNumber;
+        return this;
+    }
+
+    public Number getMaxNumber() {
+        return maxNumber;
+    }
+
+    public FieldDef setMaxNumber(Number maxNumber) {
+        this.maxNumber = maxNumber;
+        return this;
+    }
+
     public boolean isAllowCreate() {
         return allowCreate;
     }
@@ -164,15 +263,6 @@ public class FieldDef {
 
     public FieldDef setAllowUpdate(boolean allowUpdate) {
         this.allowUpdate = allowUpdate;
-        return this;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public FieldDef setVisible(boolean visible) {
-        this.visible = visible;
         return this;
     }
 
@@ -194,40 +284,6 @@ public class FieldDef {
         return this;
     }
 
-    public boolean isLookup() {
-        // TODO: find better way/place to do this (LookupFactory.createLookup()?)
-        if (lookupValues != null) {
-            lookupValues.refresh();
-        }
-        return lookupValues != null;
-    }
-    
-    public FieldLookupDef getLookupValues() {
-        return lookupValues;
-    }
-    
-    public FieldDef setLookupValues(FieldLookupDef lookupValues) {
-        this.lookupValues = lookupValues;
-        return this;
-    }
-    
-    public boolean isLimitToLookupValues() {
-        return limitToLookupValues;
-    }
-    
-    public FieldDef setLimitToLookupValues(boolean limitToLookupValues) {
-        this.limitToLookupValues = limitToLookupValues;
-        return this;
-    }
-    
-    public boolean isReadonly() {
-        return isVisible() && !isAllowCreate() && !isAllowUpdate();
-    }
-    
-    public boolean isTextArea() {
-        return controlType == ControlType.TEXT_AREA;
-    }
-    
 
 /*    
     

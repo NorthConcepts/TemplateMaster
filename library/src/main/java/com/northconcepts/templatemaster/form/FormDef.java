@@ -6,7 +6,11 @@ import java.util.List;
 public class FormDef {
     
     private String id;
-    private List<FieldDef> fields = new ArrayList<FieldDef>();
+    private String styleClassName;
+    private final List<FieldDef> fields = new ArrayList<FieldDef>();
+    private boolean allowCreate = true;
+    private boolean allowUpdate = true;
+    private boolean allowDelete = true;
     private boolean allowExport;
     private boolean allowImport;
     
@@ -19,6 +23,15 @@ public class FormDef {
     
     public FormDef setId(String id) {
         this.id = id;
+        return this;
+    }
+    
+    public String getStyleClassName() {
+        return styleClassName;
+    }
+    
+    public FormDef setStyleClassName(String styleClassName) {
+        this.styleClassName = styleClassName;
         return this;
     }
     
@@ -37,6 +50,35 @@ public class FormDef {
 
     public FieldDef add(String name, String displayName) {
         return add(new FieldDef(name, displayName));
+    }
+    
+    
+
+    public boolean isAllowCreate() {
+        return allowCreate;
+    }
+
+    public FormDef setAllowCreate(boolean allowCreate) {
+        this.allowCreate = allowCreate;
+        return this;
+    }
+
+    public boolean isAllowUpdate() {
+        return allowUpdate;
+    }
+
+    public FormDef setAllowUpdate(boolean allowUpdate) {
+        this.allowUpdate = allowUpdate;
+        return this;
+    }
+
+    public boolean isAllowDelete() {
+        return allowDelete;
+    }
+
+    public FormDef setAllowDelete(boolean allowDelete) {
+        this.allowDelete = allowDelete;
+        return this;
     }
 
     public boolean isAllowExport() {
