@@ -1,0 +1,17 @@
+[#ftl]
+[#setting url_escaping_charset="UTF-8"]
+<div class="text-right">
+    <span style="margin-right: 1em">Page ${page.number + 1} of ${page.totalPages} &mdash; ${page.totalElements} Records</span>
+
+    [#if page.number > 0]
+    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number - 1))}[#if searchQuery??]?q=${searchQuery!?html}[/#if]" class="btn btn-default">&lt;</a>
+    [#else]
+    <a class="btn btn-default" disabled="disabled">&lt;</a>
+    [/#if]
+    
+    [#if page.number < page.totalPages - 1]
+    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number + 1))}[#if searchQuery??]?q=${searchQuery!?html}[/#if]" class="btn btn-default">&gt;</a>
+    [#else]
+    <a class="btn btn-default" disabled="disabled">&gt;</a>
+    [/#if]
+</div>

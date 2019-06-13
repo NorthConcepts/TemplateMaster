@@ -1,0 +1,51 @@
+[#ftl]
+[#setting url_escaping_charset="UTF-8"]
+
+<div class="crud crud-view">
+<div class="container">
+<div class="row">
+<div class="col-sm-9 col-sm-offset-1">
+
+<div class="box box-primary">
+  <div class="box-header">
+    <div class="box-title">${title!?html}</div>
+  </div>
+  <div class="box-body">
+    <!-- <div class="table-responsive"> -->
+      <table class="display table table-bordered table-hover">
+          <tbody>
+            [#list formDef.listFields as field]
+              [#if field.showInView]
+                <tr>
+                  <th class="col-sm-2">${field.displayName}</th>
+                  <td class="col-sm-10" >${field.getDisplayValueHtmlEscaped(record[field.name])!}</td>
+                </tr>
+              [/#if]
+            [/#list]
+          </tbody>
+      </table>
+    <!-- </div> -->
+  </div>
+  <!-- /.box-body -->
+  <div class="box-footer">
+    <div class="row">
+      <div class="col-sm-4 text-left">
+         <a class="btn btn-default" href="${RequestHolder.referer!(subUrl!)}">Back</a></td>
+      </div>
+      <div class="col-sm-8 text-right">
+        [#list resource.singleRecordActions as action]
+          <a class="btn btn-default crud-action" href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a>
+        [/#list]
+        [#if formDef.allowEdit]
+         <a class="btn btn-default" href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a></td>
+        [/#if]
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /.box -->
+</div>
+</div>
+</div>
+</div>
