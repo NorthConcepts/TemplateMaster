@@ -115,6 +115,11 @@ public class Util {
     
     /**
      * Returns the number of <code>searchChar</code>s contained in <code>string</code> or zero (0).
+     * 
+     * @param string the string to search
+     * @param searchChar the character to count
+     * 
+     * @return the number of matching characters found
      */
     public static int getCharacterCount(String string, char searchChar) {
         int index = 0;
