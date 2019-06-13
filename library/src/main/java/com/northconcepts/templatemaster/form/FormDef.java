@@ -3,13 +3,15 @@ package com.northconcepts.templatemaster.form;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FormDef {
+import com.northconcepts.templatemaster.service.Bean;
+
+public class FormDef extends Bean {
     
     private String id;
-    private String styleClassName;
+    private final CssStyleClass cssStyleClass = new CssStyleClass();
     private final List<FieldDef> fields = new ArrayList<FieldDef>();
     private boolean allowCreate = true;
-    private boolean allowUpdate = true;
+    private boolean allowEdit = true;
     private boolean allowDelete = true;
     private boolean allowExport;
     private boolean allowImport;
@@ -26,21 +28,24 @@ public class FormDef {
         return this;
     }
     
-    public String getStyleClassName() {
-        return styleClassName;
-    }
-    
-    public FormDef setStyleClassName(String styleClassName) {
-        this.styleClassName = styleClassName;
-        return this;
+    public CssStyleClass getCssStyleClass() {
+        return cssStyleClass;
     }
     
     public List<FieldDef> getFields() {
         return fields;
     }
     
+    public List<FieldDef> getListFields() {
+        // TODO filter and apply list arrangement
+        return fields;
+    }
+    
     public FieldDef add(FieldDef field) {
         fields.add(field);
+        if (fields.size() == 1 && !field.isAutofocusSet()) {
+            field.setAutofocus(true);
+        }
         return field;
     }
 
@@ -51,8 +56,6 @@ public class FormDef {
     public FieldDef add(String name, String displayName) {
         return add(new FieldDef(name, displayName));
     }
-    
-    
 
     public boolean isAllowCreate() {
         return allowCreate;
@@ -63,12 +66,12 @@ public class FormDef {
         return this;
     }
 
-    public boolean isAllowUpdate() {
-        return allowUpdate;
+    public boolean isAllowEdit() {
+        return allowEdit;
     }
 
-    public FormDef setAllowUpdate(boolean allowUpdate) {
-        this.allowUpdate = allowUpdate;
+    public FormDef setAllowEdit(boolean allowEdit) {
+        this.allowEdit = allowEdit;
         return this;
     }
 

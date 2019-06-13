@@ -1,16 +1,24 @@
 package com.northconcepts.templatemaster.form;
 
-public class FieldDef {
+import org.apache.commons.text.StringEscapeUtils;
+
+import com.northconcepts.templatemaster.service.Bean;
+
+public class FieldDef extends Bean {
     
     private String id;
     
     // FieldControlDef
     private String name;
     private String displayName;
+    private String helpText;
     private ControlType controlType;
     private String placeholder;
+    private String nullDisplayValue;
+    private FieldValuePresenter fieldValuePresenter = FieldValuePresenter.NULL;
     private boolean visible = true;
-    private String styleClassName;
+    private final CssStyleClass cssStyleClass = new CssStyleClass();
+    private Boolean autofocus;
     
     // FieldDataDef
     private DataType dataType;
@@ -29,16 +37,23 @@ public class FieldDef {
 
     // FieldPermissionDef
     private boolean allowCreate = true;
-    private boolean allowUpdate = true;
+    private boolean allowEdit = true;
     private boolean allowSort = true;
     private boolean allowFilter = true;
+
+    // Template-Related
+    private boolean showInList = true;
+    private boolean showInSelectList;
+    private boolean showInView = true;
     
     public FieldDef() {
     }    
     
     public FieldDef(String name, String displayName, boolean nullable, FieldLookupDef lookupValues) {
+        this.id = name;
         this.name = name;
         this.displayName = displayName;
+        this.placeholder = displayName;
         this.nullable = nullable;
         this.lookupValues = lookupValues;
     }
@@ -48,12 +63,42 @@ public class FieldDef {
     }
 
     public String getDisplayValue(Object value) {
-        return value==null?null:value.toString();
+        // TODO: handle pattern-based formatting
+        return fieldValuePresenter.getDisplayValue(this, value);
     }
 
+    public String getDisplayValueHtmlEscaped(Object value) {
+        // TODO: handle pattern-based formatting
+        String displayValue = fieldValuePresenter.getDisplayValue(this, value);
+        
+        displayValue = StringEscapeUtils.escapeHtml4(displayValue);
+        
+        if (isTextFormatted(displayValue)) {
+            displayValue = "<pre>" + displayValue + "</pre>";
+        }
+        
+        return displayValue;
+    }
+
+    public boolean isTextFormatted(String text) {
+        if (text == null) {
+            return false;
+        }
+        
+        return text.contains("  ") ||
+                text.contains("\n") ||
+                text.contains("\r") ||
+                text.contains("\t");
+    }
 
     public boolean isReadonly() {
-        return isVisible() && !isAllowCreate() && !isAllowUpdate();
+        return !isAllowCreate() && !isAllowEdit();
+    }
+    
+    public FieldDef setReadonly(boolean readonly) {
+        setAllowCreate(!readonly);
+        setAllowEdit(!readonly);
+        return this;
     }
     
     public String getId() {
@@ -82,6 +127,15 @@ public class FieldDef {
         this.displayName = displayName;
         return this;
     }
+    
+    public String getHelpText() {
+        return helpText;
+    }
+    
+    public FieldDef setHelpText(String helpText) {
+        this.helpText = helpText;
+        return this;
+    }
 
     public ControlType getControlType() {
         return controlType;
@@ -89,6 +143,11 @@ public class FieldDef {
 
     public FieldDef setControlType(ControlType controlType) {
         this.controlType = controlType;
+
+        if(controlType == ControlType.PASSWORD) {
+            setShowInView(false);
+            setShowInList(false);
+        }
         return this;
     }
 
@@ -104,7 +163,28 @@ public class FieldDef {
         this.placeholder = placeholder;
         return this;
     }
+    
+    public String getNullDisplayValue() {
+        return nullDisplayValue;
+    }
+    
+    public FieldDef setNullDisplayValue(String nullDisplayValue) {
+        this.nullDisplayValue = nullDisplayValue;
+        return this;
+    }
 
+    public FieldValuePresenter getFieldValuePresenter() {
+        return fieldValuePresenter;
+    }
+    
+    public FieldDef setFieldValuePresenter(FieldValuePresenter fieldValuePresenter) {
+        if (fieldValuePresenter == null) {
+            fieldValuePresenter = FieldValuePresenter.NULL;
+        }
+        this.fieldValuePresenter = fieldValuePresenter;
+        return this;
+    }
+    
     public boolean isVisible() {
         return visible;
     }
@@ -113,13 +193,21 @@ public class FieldDef {
         this.visible = visible;
         return this;
     }
-
-    public String getStyleClassName() {
-        return styleClassName;
+    
+    public CssStyleClass getCssStyleClass() {
+        return cssStyleClass;
     }
-
-    public FieldDef setStyleClassName(String styleClassName) {
-        this.styleClassName = styleClassName;
+    
+    protected boolean isAutofocusSet() {
+        return autofocus != null;
+    }
+    
+    public boolean isAutofocus() {
+        return autofocus != null && autofocus.booleanValue();
+    }
+    
+    public FieldDef setAutofocus(boolean autofocus) {
+        this.autofocus = autofocus;
         return this;
     }
 
@@ -131,11 +219,15 @@ public class FieldDef {
         this.dataType = dataType;
         return this;
     }
-
+    
+    public boolean isRequired() {
+        return !isNullable();
+    }
+    
     public boolean isNullable() {
         return nullable;
     }
-
+    
     public FieldDef setNullable(boolean nullable) {
         this.nullable = nullable;
         return this;
@@ -187,10 +279,6 @@ public class FieldDef {
     }
 
     public boolean isLookup() {
-        // TODO: find better way/place to do this (LookupFactory.createLookup()?)
-        if (lookupValues != null) {
-            lookupValues.refresh();
-        }
         return lookupValues != null;
     }
     
@@ -257,12 +345,12 @@ public class FieldDef {
         return this;
     }
 
-    public boolean isAllowUpdate() {
-        return allowUpdate;
+    public boolean isAllowEdit() {
+        return allowEdit;
     }
 
-    public FieldDef setAllowUpdate(boolean allowUpdate) {
-        this.allowUpdate = allowUpdate;
+    public FieldDef setAllowEdit(boolean allowEdit) {
+        this.allowEdit = allowEdit;
         return this;
     }
 
@@ -284,6 +372,32 @@ public class FieldDef {
         return this;
     }
 
+    public boolean isShowInList() {
+        return showInList;
+    }
+
+    public FieldDef setShowInList(boolean showInList) {
+        this.showInList = showInList;
+        return this;
+    }
+    
+    public boolean isShowInSelectList() {
+        return showInSelectList;
+    }
+    
+    public FieldDef setShowInSelectList(boolean showInSelectList) {
+        this.showInSelectList = showInSelectList;
+        return this;
+    }
+
+    public boolean isShowInView() {
+        return showInView;
+    }
+
+    public FieldDef setShowInView(boolean showInView) {
+        this.showInView = showInView;
+        return this;
+    }
 
 /*    
     

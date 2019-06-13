@@ -56,7 +56,7 @@ public final class RequestHolder {
     }
 
     // ============================================================================================================
-    //  Base URL
+    //  Base URL, URL, Referrer
     // ============================================================================================================
 
     private static String cachedBaseUrl;
@@ -74,6 +74,24 @@ public final class RequestHolder {
         cachedBaseUrl = baseUrl;
         return baseUrl;
     }
+    
+    public static Url getUrl() {
+        Url url = RequestHolder.getRequestAttribute(Url.class);
+        if (url == null) {
+            url = new Url(RequestHolder.getHttpServletRequest());
+            RequestHolder.setRequestAttribute(Url.class, url);
+        }
+        return url;
+    }
+
+    public static String getReferrer() {
+        return getHttpServletRequest().getHeader("referer");
+    } 
+
+    public static String getReferer() {
+        return getReferrer();
+    } 
+
     
     // ============================================================================================================
     //  Session Attribute

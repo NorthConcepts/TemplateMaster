@@ -1,14 +1,19 @@
 package com.northconcepts.templatemaster.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
@@ -16,6 +21,12 @@ import org.springframework.data.domain.Page;
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.rest.BaseResource;
+import com.northconcepts.templatemaster.rest.RequestHolder;
+import com.northconcepts.templatemaster.rest.Url;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @Path("/")
 @Produces(BaseResource.TEXT_HTML)
@@ -23,65 +34,228 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
 
     protected static final int PAGE_SIZE = 20;
     
-    protected final String title;
+    protected final String singularTitle;
+    protected final String pluralTitle;
     protected final String subUrl;
-    protected final String listBodyTemplate;
-    protected final String viewBodyTemplate;
-    protected final String newBodyTemplate;
-    protected final String editBodyTemplate;
     protected final FormDef formDef;
+    private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
+    private String listBodyTemplate = "/formdef/list.html";
+    private String selectListBodyTemplate = "/formdef/select-list.html";
+    private String listPagerTemplate = "/formdef/list-pager.html";    
+    private String listJavascriptTemplate = "/formdef/list.js";    
+    private String viewBodyTemplate = "/formdef/view.html";
+    private String newBodyTemplate = "/formdef/new.html";
+    private String editBodyTemplate = "/formdef/edit.html";
 
-    
-    public CrudResource(String title, String subUrl, String templateFolder, FormDef formDef) {
-        this.title = title;
+    public CrudResource(String singularTitle, String pluralTitle, String subUrl, FormDef formDef) {
+        this.singularTitle = singularTitle;
+        this.pluralTitle = pluralTitle;
         this.subUrl = subUrl;
-        
-        if (templateFolder == null) {
-            templateFolder = "";
-        }
-        templateFolder = templateFolder.replace('\\', '/');
-        templateFolder = Util.trimRight(templateFolder, '/');
-        
-        this.listBodyTemplate = templateFolder + "/list.html";
-        this.viewBodyTemplate = templateFolder + "/view.html";
-        this.newBodyTemplate = templateFolder + "/new.html";
-        this.editBodyTemplate = templateFolder + "/edit.html";
-        
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, int pageNumber, int pageSize);
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
     
     protected abstract ENTITY getRecord(String id);
     
-    protected FormDef getFormDef() {
-        return formDef;
+    protected abstract ENTITY createRecord(ENTITY newRecord);
+    
+    protected abstract ENTITY editRecord(String id, ENTITY editedRecord);
+    
+    protected abstract long deleteRecords(String[] ids);
+    
+    public String getSingularTitle() {
+        return singularTitle;
+    }
+    
+    public String getPluralTitle() {
+        return pluralTitle;
     }
     
     protected String getBaseUrl() {
         return subUrl;
     }
+    
+    protected FormDef getFormDef() {
+        return formDef;
+    }
+    
+    public List<CrudAction> getSingleRecordActions() {
+        return singleRecordActions;
+    }
+    
+    public CrudResource<ENTITY> addSingleRecordAction(CrudAction action) {
+        singleRecordActions.add(action);
+        return this;
+    }
+    
+    public String getListBodyTemplate() {
+        return listBodyTemplate;
+    }
 
+    public CrudResource<ENTITY> setListBodyTemplate(String listBodyTemplate) {
+        this.listBodyTemplate = listBodyTemplate;
+        return this;
+    }
+    
+    public String getSelectListBodyTemplate() {
+        return selectListBodyTemplate;
+    }
+    
+    public CrudResource<ENTITY> setSelectListBodyTemplate(String selectListBodyTemplate) {
+        this.selectListBodyTemplate = selectListBodyTemplate;
+        return this;
+    }
+
+    public String getListPagerTemplate() {
+        return listPagerTemplate;
+    }
+
+    public CrudResource<ENTITY> setListPagerTemplate(String listPagerTemplate) {
+        this.listPagerTemplate = listPagerTemplate;
+        return this;
+    }
+
+    public String getListJavascriptTemplate() {
+        return listJavascriptTemplate;
+    }
+
+    public CrudResource<ENTITY> setListJavascriptTemplate(String listJavascriptTemplate) {
+        this.listJavascriptTemplate = listJavascriptTemplate;
+        return this;
+    }
+
+    public String getViewBodyTemplate() {
+        return viewBodyTemplate;
+    }
+
+    public CrudResource<ENTITY> setViewBodyTemplate(String viewBodyTemplate) {
+        this.viewBodyTemplate = viewBodyTemplate;
+        return this;
+    }
+
+    public String getNewBodyTemplate() {
+        return newBodyTemplate;
+    }
+
+    public CrudResource<ENTITY> setNewBodyTemplate(String newBodyTemplate) {
+        this.newBodyTemplate = newBodyTemplate;
+        return this;
+    }
+
+    public String getEditBodyTemplate() {
+        return editBodyTemplate;
+    }
+
+    public CrudResource<ENTITY> setEditBodyTemplate(String editBodyTemplate) {
+        this.editBodyTemplate = editBodyTemplate;
+        return this;
+    }
+
+    //==========================================================================================
+    // List
+    //==========================================================================================
+    
     @GET
     @Path("/")
-    public Content getListHome(@QueryParam("q") String searchQuery) throws Throwable {
-        return getList(searchQuery, 0);
+    public Content getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
+        return getListRecords(searchQuery, sortField, 0);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Content getList(@QueryParam("q") String searchQuery, @PathParam("pageNumber") int pageNumber) {
-        String keyword =  Util.isNotEmpty(searchQuery)?searchQuery:null;
+    public Content getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+        searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
+        sortField = Util.isNotEmpty(sortField)?sortField:null;
 
-        Content page = newPage(title, listBodyTemplate);
+        Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(keyword, pageNumber, PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
+        page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
-        
+        page.add("formDef", formDef);
+        page.add("listPager", new Content(listPagerTemplate));
+        page.add("script", new Content(listJavascriptTemplate));
+        page.add("sortField", sortField);
+
         return page;
     }
 
+    protected Sort getSortBy(String column) {
+        if(Util.isEmpty(column)) {
+            return null;
+        }
+        return column.startsWith("-") ? Sort.by(Sort.Direction.DESC, column.replaceFirst("-", "")) :
+                Sort.by(Sort.Direction.ASC, column);
+    }
+
+    protected Pageable getPageable(String sortField, int pageNumber, int pageSize) {
+        Sort sort = getSortBy(sortField);
+        return sort == null ? PageRequest.of(pageNumber, pageSize) : PageRequest.of(pageNumber, pageSize, sort);
+    }
+    //==========================================================================================
+    // Select List
+    //==========================================================================================
+    
+    @GET
+    @Path("/select/")
+    public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
+        return getSelectListRecords(callbackUrl, searchQuery, sortField, 0);
+    }
+    
+    @GET
+    @Path("/select/{pageNumber}")
+    public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+        searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
+        sortField = Util.isNotEmpty(sortField)?sortField:null;
+
+        Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
+        page.add("searchQuery", searchQuery);
+        page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
+        page.add("resource", this);
+        page.add("subUrl", subUrl + "/select");
+        page.add("baseUrl", getBaseUrl());
+        page.add("formDef", formDef);
+        page.add("listPager", new Content(listPagerTemplate));
+        page.add("sortField", sortField);
+
+        if (Util.isEmpty(callbackUrl)) {
+            setErrorFlashMessage("No callback URL specified");
+        } else {
+            page.add("callbackUrl", new Url(callbackUrl));
+        }
+//        page.add("script", new Content(listJavascriptTemplate));
+        
+        
+        return page;
+    }
+    
+    //==========================================================================================
+    // Delete
+    //==========================================================================================
+    
+    @POST
+    @Path("/delete")
+    public Response postDeleteRecords(@FormParam("id") String[] ids) throws Throwable {
+        if (!formDef.isAllowDelete()) {
+            setErrorFlashMessage("Delete is not allowed");
+            return badRequest();
+        }
+        
+        return postDeleteRecordsImpl(ids);
+    }
+    
+    protected Response postDeleteRecordsImpl(String[] ids) throws Throwable {
+        long deleteRecords = deleteRecords(ids);
+        setSuccessFlashMessage(deleteRecords + " " + (deleteRecords==1?singularTitle:pluralTitle).toLowerCase() + " deleted");
+        return gotoUri(RequestHolder.getReferrer());
+    }
+
+    //==========================================================================================
+    // View
+    //==========================================================================================
+    
     @GET
     @Path("/view/{id}")
     public Response getViewRecord(@PathParam("id") String id) {
@@ -94,62 +268,114 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
     }
 
     protected Content getViewRecordImpl(String id, ENTITY record) {
-        Content page = newPage(title, viewBodyTemplate);
+        Content page = newPage(singularTitle, viewBodyTemplate);
         page.add("id", id);
         page.add("record", record);
+        page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
+        page.add("formDef", formDef);
         return page;
     }
 
-    @GET
-    @Path("/new")
-    public Response getNewRecord() {
-        // TODO
-        return notFound();
-    }
-    
-//    @POST
-//    @Path("/new")
-//    public Response postNewRecord() {
-//        // TODO
-//        return gotoPath(getBaseUrl());
-//    }
+    //==========================================================================================
+    // Edit
+    //==========================================================================================
     
     @GET
     @Path("/edit/{id}")
     public Response getEditRecord(@PathParam("id") String id) {
-        if (Util.isEmpty(editBodyTemplate)) {
+        if (!formDef.isAllowEdit()) {
+            setErrorFlashMessage("Update not allowed");
+            return badRequest();
+        }
+        
+        ENTITY record = getRecord(id);
+        if (record == null) {
             return notFound();
         }
         
-        Content page = getEditRecordImpl(id);
+        Content page = getEditRecordImpl(id, record);
         return ok(page);
     }
 
-    protected Content getEditRecordImpl(String id) {
-        Content page = newPage(title, editBodyTemplate);
+    protected Content getEditRecordImpl(String id, ENTITY record) {
+        Content page = newPage("Edit " + singularTitle, editBodyTemplate);
         page.add("id", id);
-        page.add("record", getRecord(id));
+        page.add("record", record);
+        page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", getFormDef());
+        page.add("formMode", FormMode.EDIT);        
         return page;
     } 
 
     @POST
     @Path("/edit/{id}")
-    public Response postEditRecord(@PathParam("id") String id, @Form ENTITY form) throws Throwable {
-        System.out.println("postEditRecord - form: " + form);
-        return notFound();
+    public Response postEditRecord(@PathParam("id") String id, @Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
+        if (!formDef.isAllowEdit()) {
+            setErrorFlashMessage("Update not allowed");
+            return badRequest();
+        }
+        
+        return postEditRecordImpl(id, uriInfo, form);
+    }
+    
+    protected Response postEditRecordImpl(String id, UriInfo uriInfo, ENTITY form) throws Throwable {
+        editRecord(id, form);
+        setSuccessFlashMessage(singularTitle + " updated");
+        return gotoUri(RequestHolder.getReferrer());
     }
     
 
-//    @POST
-//    @Path("/edit/{id}")
-//    public Response postEditRecord(@PathParam("id") String id) {
-//        // TODO
-//        return gotoPath(getBaseUrl());
-//    }
+    //==========================================================================================
+    // New
+    //==========================================================================================
+    
+    @GET
+    @Path("/new")
+    public Response getNewRecord() {
+        if (!formDef.isAllowCreate()) {
+            setErrorFlashMessage("Create not allowed");
+            return badRequest();
+        }
+        
+        Content page = getNewRecordImpl();
+        return ok(page);
+    }
+
+    protected Content getNewRecordImpl() {
+        Content page = newPage("New " + singularTitle, newBodyTemplate);
+//        page.add("record", getRecord(id));
+        page.add("subUrl", subUrl);
+        page.add("resource", this);
+        page.add("baseUrl", getBaseUrl());
+        page.add("formDef", getFormDef());
+        page.add("formMode", FormMode.NEW);        
+        return page;
+    } 
+
+    @POST
+    @Path("/new")
+    public Response postNewRecord(@Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
+        if (!formDef.isAllowCreate()) {
+            setErrorFlashMessage("Create not allowed");
+            return badRequest();
+        }
+        
+        try {
+            return postNewRecordImpl(uriInfo, form);
+        } catch (Throwable e) {
+            setErrorFlashMessage("Error creating " + singularTitle + ": " + e.getMessage());
+            return gotoPath(subUrl + "/new");
+        }
+    }
+    
+    protected Response postNewRecordImpl(UriInfo uriInfo, ENTITY form) throws Throwable {
+        createRecord(form);
+        setSuccessFlashMessage(singularTitle + " created");
+        return gotoPath(subUrl);
+    }
     
 }

@@ -1,9 +1,9 @@
 package com.northconcepts.templatemaster.form;
 
-public abstract class FieldLookupDef {
+import com.northconcepts.templatemaster.service.Bean;
+
+public abstract class FieldLookupDef extends Bean {
     
-    public void refresh() {
-    }
     
     public abstract int getValueCount();
 

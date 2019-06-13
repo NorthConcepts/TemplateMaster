@@ -16,6 +16,9 @@
  */
 package com.northconcepts.templatemaster.content;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 public class Util {
 
     public static boolean isEmpty(String s) {
@@ -76,4 +79,53 @@ public class Util {
         }
     }
 
+    public static String collectionToString(Collection<?> collection, String separator) {
+        if (collection == null || collection.size() == 0) {
+            return "";
+        }
+
+        StringBuilder s = new StringBuilder(32 * collection.size());
+        
+        Iterator<?> i = collection.iterator();
+        s.append(i.next());
+        
+        while (i.hasNext()) {
+            s.append(separator).append(i.next());
+        }
+
+        return s.toString();
+    }
+    
+    public static String collectionToString(Collection<?> collection, String elementFormat, String separator) {
+        if (collection == null || collection.size() == 0) {
+            return "";
+        }
+
+        StringBuilder s = new StringBuilder((32+elementFormat.length()+separator.length()) * collection.size());
+        
+        Iterator<?> i = collection.iterator();
+        s.append(String.format(elementFormat, i.next()));
+        
+        while (i.hasNext()) {
+            s.append(separator).append(String.format(elementFormat, i.next()));
+        }
+
+        return s.toString();
+    }
+    
+    /**
+     * Returns the number of <code>searchChar</code>s contained in <code>string</code> or zero (0).
+     */
+    public static int getCharacterCount(String string, char searchChar) {
+        int index = 0;
+        int count = 0;
+
+        while((index = string.indexOf(searchChar, index)) >= 0) {
+            count++;
+            index++;
+        }
+        
+        return count;
+    }
+    
 }
