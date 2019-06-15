@@ -17,16 +17,15 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.rest.BaseResource;
 import com.northconcepts.templatemaster.rest.RequestHolder;
 import com.northconcepts.templatemaster.rest.Url;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 @Path("/")
 @Produces(BaseResource.TEXT_HTML)
