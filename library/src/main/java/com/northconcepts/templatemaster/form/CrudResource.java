@@ -29,7 +29,7 @@ import com.northconcepts.templatemaster.rest.Url;
 
 @Path("/")
 @Produces(BaseResource.TEXT_HTML)
-public abstract class CrudResource<ENTITY extends Serializable> extends BaseResource {
+public abstract class CrudResource<ID extends Serializable, ENTITY extends Serializable> extends BaseResource {
 
     protected static final int PAGE_SIZE = 20;
     
@@ -55,13 +55,13 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
 
     protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
     
-    protected abstract ENTITY getRecord(String id);
+    protected abstract ENTITY getRecord(ID id);
     
     protected abstract ENTITY createRecord(ENTITY newRecord);
     
-    protected abstract ENTITY editRecord(String id, ENTITY editedRecord);
+    protected abstract ENTITY editRecord(ID id, ENTITY editedRecord);
     
-    protected abstract long deleteRecords(String[] ids);
+    protected abstract long deleteRecords(ID[] ids);
     
     public String getSingularTitle() {
         return singularTitle;
@@ -83,7 +83,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return singleRecordActions;
     }
     
-    public CrudResource<ENTITY> addSingleRecordAction(CrudAction action) {
+    public CrudResource<ID, ENTITY> addSingleRecordAction(CrudAction action) {
         singleRecordActions.add(action);
         return this;
     }
@@ -92,7 +92,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return listBodyTemplate;
     }
 
-    public CrudResource<ENTITY> setListBodyTemplate(String listBodyTemplate) {
+    public CrudResource<ID, ENTITY> setListBodyTemplate(String listBodyTemplate) {
         this.listBodyTemplate = listBodyTemplate;
         return this;
     }
@@ -101,7 +101,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return selectListBodyTemplate;
     }
     
-    public CrudResource<ENTITY> setSelectListBodyTemplate(String selectListBodyTemplate) {
+    public CrudResource<ID, ENTITY> setSelectListBodyTemplate(String selectListBodyTemplate) {
         this.selectListBodyTemplate = selectListBodyTemplate;
         return this;
     }
@@ -110,7 +110,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return listPagerTemplate;
     }
 
-    public CrudResource<ENTITY> setListPagerTemplate(String listPagerTemplate) {
+    public CrudResource<ID, ENTITY> setListPagerTemplate(String listPagerTemplate) {
         this.listPagerTemplate = listPagerTemplate;
         return this;
     }
@@ -119,7 +119,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return listJavascriptTemplate;
     }
 
-    public CrudResource<ENTITY> setListJavascriptTemplate(String listJavascriptTemplate) {
+    public CrudResource<ID, ENTITY> setListJavascriptTemplate(String listJavascriptTemplate) {
         this.listJavascriptTemplate = listJavascriptTemplate;
         return this;
     }
@@ -128,7 +128,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return viewBodyTemplate;
     }
 
-    public CrudResource<ENTITY> setViewBodyTemplate(String viewBodyTemplate) {
+    public CrudResource<ID, ENTITY> setViewBodyTemplate(String viewBodyTemplate) {
         this.viewBodyTemplate = viewBodyTemplate;
         return this;
     }
@@ -137,7 +137,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return newBodyTemplate;
     }
 
-    public CrudResource<ENTITY> setNewBodyTemplate(String newBodyTemplate) {
+    public CrudResource<ID, ENTITY> setNewBodyTemplate(String newBodyTemplate) {
         this.newBodyTemplate = newBodyTemplate;
         return this;
     }
@@ -146,7 +146,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return editBodyTemplate;
     }
 
-    public CrudResource<ENTITY> setEditBodyTemplate(String editBodyTemplate) {
+    public CrudResource<ID, ENTITY> setEditBodyTemplate(String editBodyTemplate) {
         this.editBodyTemplate = editBodyTemplate;
         return this;
     }
@@ -236,7 +236,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
     
     @POST
     @Path("/delete")
-    public Response postDeleteRecords(@FormParam("id") String[] ids) throws Throwable {
+    public Response postDeleteRecords(@FormParam("id") ID[] ids) throws Throwable {
         if (!formDef.isAllowDelete()) {
             setErrorFlashMessage("Delete is not allowed");
             return badRequest();
@@ -245,7 +245,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return postDeleteRecordsImpl(ids);
     }
     
-    protected Response postDeleteRecordsImpl(String[] ids) throws Throwable {
+    protected Response postDeleteRecordsImpl(ID[] ids) throws Throwable {
         long deleteRecords = deleteRecords(ids);
         setSuccessFlashMessage(deleteRecords + " " + (deleteRecords==1?singularTitle:pluralTitle).toLowerCase() + " deleted");
         return gotoUri(RequestHolder.getReferrer());
@@ -257,7 +257,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
     
     @GET
     @Path("/view/{id}")
-    public Response getViewRecord(@PathParam("id") String id) {
+    public Response getViewRecord(@PathParam("id") ID id) {
         ENTITY record = getRecord(id);
         if (record == null) {
             return notFound();
@@ -266,7 +266,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return ok(getViewRecordImpl(id, record));
     }
 
-    protected Content getViewRecordImpl(String id, ENTITY record) {
+    protected Content getViewRecordImpl(ID id, ENTITY record) {
         Content page = newPage(singularTitle, viewBodyTemplate);
         page.add("id", id);
         page.add("record", record);
@@ -283,7 +283,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
     
     @GET
     @Path("/edit/{id}")
-    public Response getEditRecord(@PathParam("id") String id) {
+    public Response getEditRecord(@PathParam("id") ID id) {
         if (!formDef.isAllowEdit()) {
             setErrorFlashMessage("Update not allowed");
             return badRequest();
@@ -298,7 +298,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return ok(page);
     }
 
-    protected Content getEditRecordImpl(String id, ENTITY record) {
+    protected Content getEditRecordImpl(ID id, ENTITY record) {
         Content page = newPage("Edit " + singularTitle, editBodyTemplate);
         page.add("id", id);
         page.add("record", record);
@@ -312,7 +312,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
 
     @POST
     @Path("/edit/{id}")
-    public Response postEditRecord(@PathParam("id") String id, @Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
+    public Response postEditRecord(@PathParam("id") ID id, @Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
         if (!formDef.isAllowEdit()) {
             setErrorFlashMessage("Update not allowed");
             return badRequest();
@@ -321,7 +321,7 @@ public abstract class CrudResource<ENTITY extends Serializable> extends BaseReso
         return postEditRecordImpl(id, uriInfo, form);
     }
     
-    protected Response postEditRecordImpl(String id, UriInfo uriInfo, ENTITY form) throws Throwable {
+    protected Response postEditRecordImpl(ID id, UriInfo uriInfo, ENTITY form) throws Throwable {
         editRecord(id, form);
         setSuccessFlashMessage(singularTitle + " updated");
         return gotoUri(RequestHolder.getReferrer());

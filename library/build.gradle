@@ -3,6 +3,9 @@ plugins {
     id 'java-library'
 }
 
+archivesBaseName='NorthConcepts-TemplateMaster'
+
+
 dependencies {
     // This dependency is exported to consumers, that is to say, found on their compile classpath.
     api 'org.freemarker:freemarker:2.3.28'
@@ -30,8 +33,6 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
-
-archivesBaseName='NorthConcepts-TemplateMaster'
 
 task srcZip(type: Zip) {
     classifier = 'src'
