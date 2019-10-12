@@ -80,6 +80,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     public void contextInitialized(ServletContextEvent event) {
         try {
             LOG.debug("contextInitialized: " + event.getServletContext());
+            ServletContextHolder.setServletContext(event.getServletContext());
             super.contextInitialized(event);
             servletContext = event.getServletContext();
             Configuration configuration = Templates.get().getConfiguration();
@@ -105,6 +106,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         LOG.debug("contextDestroyed: " + event.getServletContext());
         super.contextDestroyed(event);
         servletContext = null;
+        ServletContextHolder.setServletContext(null);
     }
 
     @Override
