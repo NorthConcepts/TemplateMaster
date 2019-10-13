@@ -43,6 +43,7 @@ public class FormDef extends Bean {
     
     public FieldDef add(FieldDef field) {
         fields.add(field);
+        field.setFormDef(this);
         if (fields.size() == 1 && !field.isAutofocusSet()) {
             field.setAutofocus(true);
         }

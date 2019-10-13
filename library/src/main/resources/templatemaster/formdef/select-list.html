@@ -39,7 +39,7 @@
                   <td>${record?index + 1}</td>
                   [#list formDef.listFields as field]
                     [#if field.showInSelectList]
-                        <td><a href="${selectUrl!}">${field.getDisplayValue(record[field.name])!?html}</a></td>
+                        <td><a href="${selectUrl!}">${field.getDisplayValue(resource, record, record[field.name])!?html}</a></td>
                     [/#if]
                   [/#list]
                   <td class="actions">

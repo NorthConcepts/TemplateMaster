@@ -2,9 +2,12 @@ package com.northconcepts.templatemaster.form;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FieldDef extends Bean {
+    
+    private FormDef formDef;
     
     private String id;
     
@@ -62,14 +65,14 @@ public class FieldDef extends Bean {
         this(name, displayName, true, null);
     }
 
-    public String getDisplayValue(Object value) {
+    public String getDisplayValue(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
         // TODO: handle pattern-based formatting
-        return fieldValuePresenter.getDisplayValue(this, value);
+        return fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
     }
 
-    public String getDisplayValueHtmlEscaped(Object value) {
+    public String getDisplayValueHtmlEscaped(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
         // TODO: handle pattern-based formatting
-        String displayValue = fieldValuePresenter.getDisplayValue(this, value);
+        String displayValue = fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
         
         displayValue = StringEscapeUtils.escapeHtml4(displayValue);
         
@@ -98,6 +101,16 @@ public class FieldDef extends Bean {
     public FieldDef setReadonly(boolean readonly) {
         setAllowCreate(!readonly);
         setAllowEdit(!readonly);
+        return this;
+    }
+    
+    @JsonIgnore
+    public FormDef getFormDef() {
+        return formDef;
+    }
+    
+    public FieldDef setFormDef(FormDef formDef) {
+        this.formDef = formDef;
         return this;
     }
     

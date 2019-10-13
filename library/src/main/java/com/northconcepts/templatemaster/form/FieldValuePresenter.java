@@ -5,11 +5,11 @@ public interface FieldValuePresenter {
     public static final FieldValuePresenter NULL = new FieldValuePresenter() {
         
         @Override
-        public String getDisplayValue(FieldDef fieldDef, Object value) {
-            return value==null?fieldDef.getNullDisplayValue():value.toString();
+        public String getDisplayValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Object fieldValue) {
+            return fieldValue==null?fieldDef.getNullDisplayValue():fieldValue.toString();
         }
     };
     
-    String getDisplayValue(FieldDef fieldDef, Object value);
+    String getDisplayValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Object fieldValue);
 
 }

@@ -23,7 +23,7 @@
               <label for="${field.name!?html}" class="control-label">${field.displayName!?html}</label>
             [/#if] 
             [#if field.readonly]
-              <p class="form-control-static">${(field.getDisplayValue(record[field.name]))!?html}</p> 
+              <p class="form-control-static">${(field.getDisplayValue(resource, record, record[field.name]))!?html}</p> 
             [#elseif field.lookup]
               <select class="form-control" id="${field.name!?html}" name="${field.name!?html}" [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
                 [#if field.required]
@@ -34,15 +34,15 @@
                 [/#list]
               </select>
             [#elseif ((field.controlType)!) == "TEXT_AREA"]
-              <textarea class="form-control" rows="3" id="${field.id!?html}" name="${field.name!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>${(field.getDisplayValue(record[field.name]))!?html}</textarea>
+              <textarea class="form-control" rows="3" id="${field.id!?html}" name="${field.name!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>${(field.getDisplayValue(resource, record, record[field.name]))!?html}</textarea>
             [#elseif ((field.controlType)!) == "CHECKBOX"]
               <div class="checkbox">
                 <label><input type="checkbox" id="${field.id!?html}" name="${field.name!?html}" value="true" [#if ((record[field.name])!)]checked="checked"[/#if]>${field.displayName!?html}</label>
               </div>
             [#elseif ((field.controlType)!) == "PASSWORD"]
-            <input type="password" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValue(record[field.name]))!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
+            <input type="password" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValue(resource, record, record[field.name]))!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
             [#else]
-              <input type="text" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValue(record[field.name]))!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
+              <input type="text" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValue(resource, record, record[field.name]))!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
             [/#if]
             [#if field.helpText??]
               <span class="help-block">${field.helpText!?html}</span>
