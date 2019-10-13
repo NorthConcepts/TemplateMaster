@@ -74,8 +74,11 @@ public class FieldDef extends Bean {
         // TODO: handle pattern-based formatting
         String displayValue = fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
         
-        displayValue = StringEscapeUtils.escapeHtml4(displayValue);
+        if (fieldValuePresenter.requiresHtmlEscaping()) {
+            displayValue = StringEscapeUtils.escapeHtml4(displayValue);
+        }
         
+        // TODO: may need to be flag on the field
         if (isTextFormatted(displayValue)) {
             displayValue = "<pre>" + displayValue + "</pre>";
         }

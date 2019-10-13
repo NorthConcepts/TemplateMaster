@@ -60,7 +60,7 @@
                   <td>${record?index + 1}</td>
                   [#list formDef.listFields as field]
                     [#if field.showInList]
-                        <td>${field.getDisplayValue(resource, record, record[field.name])!?html}</td>
+                        <td>${field.getDisplayValueHtmlEscaped(resource, record, record[field.name])!}</td>
                     [/#if]
                   [/#list]
                   <td class="actions">
