@@ -75,6 +75,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         return subUrl;
     }
     
+    public String getSubUrl() {
+        return subUrl;
+    }
+    
     protected FormDef getFormDef() {
         return formDef;
     }
