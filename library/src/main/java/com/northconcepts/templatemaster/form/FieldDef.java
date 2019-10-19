@@ -19,6 +19,7 @@ public class FieldDef extends Bean {
     private String placeholder;
     private String nullDisplayValue;
     private FieldValuePresenter fieldValuePresenter = FieldValuePresenter.NULL;
+    private boolean preformattedText;
     private boolean visible = true;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
     private Boolean autofocus;
@@ -78,24 +79,28 @@ public class FieldDef extends Bean {
             displayValue = StringEscapeUtils.escapeHtml4(displayValue);
         }
         
-        // TODO: may need to be flag on the field
-        if (isTextFormatted(displayValue)) {
+//        // TODO: may need to be flag on the field
+//        if (isTextFormatted(displayValue)) {
+//            displayValue = "<pre>" + displayValue + "</pre>";
+//        }
+
+        if (isPreformattedText()) {
             displayValue = "<pre>" + displayValue + "</pre>";
         }
         
         return displayValue;
     }
 
-    public boolean isTextFormatted(String text) {
-        if (text == null) {
-            return false;
-        }
-        
-        return text.contains("  ") ||
-                text.contains("\n") ||
-                text.contains("\r") ||
-                text.contains("\t");
-    }
+//    public boolean isTextFormatted(String text) {
+//        if (text == null) {
+//            return false;
+//        }
+//        
+//        return text.contains("  ") ||
+//                text.contains("\n") ||
+//                text.contains("\r") ||
+//                text.contains("\t");
+//    }
 
     public boolean isReadonly() {
         return !isAllowCreate() && !isAllowEdit();
@@ -198,6 +203,15 @@ public class FieldDef extends Bean {
             fieldValuePresenter = FieldValuePresenter.NULL;
         }
         this.fieldValuePresenter = fieldValuePresenter;
+        return this;
+    }
+    
+    public boolean isPreformattedText() {
+        return preformattedText;
+    }
+    
+    public FieldDef setPreformattedText(boolean preformattedText) {
+        this.preformattedText = preformattedText;
         return this;
     }
     
