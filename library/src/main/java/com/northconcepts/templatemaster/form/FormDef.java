@@ -15,7 +15,9 @@ public class FormDef extends Bean {
     private boolean allowDelete = true;
     private boolean allowExport;
     private boolean allowImport;
-    
+    private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
+    private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>(); 
+
     public FormDef() {
     }
     
@@ -103,6 +105,26 @@ public class FormDef extends Bean {
         return this;
     }
 
+    public List<CrudAction> getSingleRecordActions() {
+        return singleRecordActions;
+    }
+    
+    public FormDef addSingleRecordAction(CrudAction action) {
+        singleRecordActions.add(action);
+        return this;
+    }
+    
+    public List<CrudAction> getBulkRecordActions() {
+        return bulkRecordActions;
+    }
+    
+    public FormDef addBulkRecordAction(CrudAction action) {
+        bulkRecordActions.add(action);
+        return this;
+    }
+    
+    
+    
     
 /*    
     

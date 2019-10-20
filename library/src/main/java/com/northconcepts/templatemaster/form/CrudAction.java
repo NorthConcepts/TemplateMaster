@@ -7,6 +7,8 @@ public class CrudAction extends Bean {
     private final String displayName;
     private final String subPath;
     private final String target;
+    private FormMethod method = FormMethod.GET;
+    private final CssStyleClass cssStyleClass = new CssStyleClass();
     
     public CrudAction(String displayName, String subPath, String target) {
         this.displayName = displayName;
@@ -30,6 +32,19 @@ public class CrudAction extends Bean {
     
     public String getTarget() {
         return target;
+    }
+    
+    public FormMethod getMethod() {
+        return method;
+    }
+    
+    public CrudAction setMethod(FormMethod method) {
+        this.method = method;
+        return this;
+    }
+    
+    public CssStyleClass getCssStyleClass() {
+        return cssStyleClass;
     }
     
 }

@@ -37,7 +37,6 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     protected final String pluralTitle;
     protected final String subUrl;
     protected final FormDef formDef;
-    private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
     private String listBodyTemplate = "/formdef/list.html";
     private String selectListBodyTemplate = "/formdef/select-list.html";
     private String listPagerTemplate = "/formdef/list-pager.html";    
@@ -81,15 +80,6 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     protected FormDef getFormDef() {
         return formDef;
-    }
-    
-    public List<CrudAction> getSingleRecordActions() {
-        return singleRecordActions;
-    }
-    
-    public CrudResource<ID, ENTITY> addSingleRecordAction(CrudAction action) {
-        singleRecordActions.add(action);
-        return this;
     }
     
     public String getListBodyTemplate() {
