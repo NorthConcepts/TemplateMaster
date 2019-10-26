@@ -55,6 +55,8 @@ import freemarker.template.TemplateHashModel;
 @WebFilter(urlPatterns = "/*")
 public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
 
+    public static final String UUID = "com.northconcepts.templatemaster.uuid";
+
     public static final int MAX_ENV_VALUE_LENGTH = 256;
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
@@ -122,6 +124,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         RequestHolder.setHttpServletRequest((HttpServletRequest) request);
+        setRequestUuid(request);
         try {
             chain.doFilter(request, response);
         } catch (Throwable e) {
@@ -132,6 +135,10 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         } finally {
             RequestHolder.clearHttpServletRequest();
         }
+    }
+
+    protected void setRequestUuid(ServletRequest request) {
+        request.setAttribute(UUID, java.util.UUID.randomUUID());
     }
 
     public Registry getRegistry() {

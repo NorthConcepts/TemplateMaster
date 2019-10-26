@@ -16,6 +16,8 @@
  */
 package com.northconcepts.templatemaster.rest;
 
+import java.util.UUID;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -170,6 +172,10 @@ public final class RequestHolder {
         removeRequestAttribute(type, null);
     }
 
+    public static UUID getRequestUuid() {
+        return getRequestAttribute(null, TemplateMasterBootstrap.UUID);
+    }
+    
     // ============================================================================================================
     //  Flash Message
     // ============================================================================================================
