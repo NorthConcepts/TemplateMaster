@@ -42,7 +42,7 @@
             [#elseif ((field.controlType)!) == "PASSWORD"]
             <input type="password" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
             [#else]
-              <input type="text" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!?}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
+              <input type="text" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
             [/#if]
             [#if field.helpText??]
               <span class="help-block">${field.helpText!?html}</span>
