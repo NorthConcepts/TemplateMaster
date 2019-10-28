@@ -51,7 +51,6 @@ import com.northconcepts.templatemaster.template.Templates;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateHashModel;
 
 @WebFilter(urlPatterns = "/*")
 public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
@@ -90,6 +89,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
             // configuration.setTemplateLoader(new WebappTemplateLoader(servletContext, "WEB-INF/content"));
             configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templatemaster"));
             configuration.setNumberFormat("0.####");
+            configuration.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
 
             BeansWrapper wrapper = (BeansWrapper) configuration.getObjectWrapper();
             configuration.setSharedVariable("RequestHolder", new StaticBeanTemplateModel(wrapper, RequestHolder.class));
