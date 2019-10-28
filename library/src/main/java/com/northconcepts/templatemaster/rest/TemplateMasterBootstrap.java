@@ -45,6 +45,7 @@ import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
+import com.northconcepts.templatemaster.template.StaticBeanTemplateModel;
 import com.northconcepts.templatemaster.template.Templates;
 
 import freemarker.cache.ClassTemplateLoader;
@@ -91,8 +92,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
             configuration.setNumberFormat("0.####");
 
             BeansWrapper wrapper = (BeansWrapper) configuration.getObjectWrapper();
-            TemplateHashModel staticModels = wrapper.getStaticModels();
-            configuration.setSharedVariable("RequestHolder", (TemplateHashModel) staticModels.get(RequestHolder.class.getName()));
+            configuration.setSharedVariable("RequestHolder", new StaticBeanTemplateModel(wrapper, RequestHolder.class));
 
             ResteasyProviderFactory providerFactory = getResteasyProviderFactory();
             providerFactory.registerProvider(ContentMessageBodyWriter.class);
