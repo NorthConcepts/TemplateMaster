@@ -1,8 +1,6 @@
 package com.northconcepts.templatemaster.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -56,11 +54,17 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     protected abstract ENTITY getRecord(ID id);
     
-    protected abstract ENTITY createRecord(ENTITY newRecord);
+    protected ENTITY createRecord(ENTITY newRecord) {
+        return newRecord;
+    }
     
-    protected abstract ENTITY editRecord(ID id, ENTITY editedRecord);
+    protected ENTITY editRecord(ID id, ENTITY editedRecord) {
+        return editedRecord;
+    }
     
-    protected abstract long deleteRecords(ID[] ids);
+    protected long deleteRecords(ID[] ids) {
+        return 0L;
+    }
     
     public String getSingularTitle() {
         return singularTitle;

@@ -13,6 +13,7 @@ public class FormDef extends Bean {
     private boolean allowCreate = true;
     private boolean allowEdit = true;
     private boolean allowDelete = true;
+    private boolean allowSearch = true;
     private boolean allowExport;
     private boolean allowImport;
     private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
@@ -84,6 +85,15 @@ public class FormDef extends Bean {
 
     public FormDef setAllowDelete(boolean allowDelete) {
         this.allowDelete = allowDelete;
+        return this;
+    }
+    
+    public boolean isAllowSearch() {
+        return allowSearch;
+    }
+
+    public FormDef setAllowSearch(boolean allowSearch) {
+        this.allowSearch = allowSearch;
         return this;
     }
 
