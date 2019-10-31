@@ -3,38 +3,28 @@ package com.northconcepts.templatemaster.form.time;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.northconcepts.templatemaster.content.TemplateMasterException;
-import com.northconcepts.templatemaster.content.Util;
-import com.northconcepts.templatemaster.service.Bean;
+import com.northconcepts.templatemaster.form.Param;
 
-public class ZonedDateTimeParam extends Bean {
+public class ZonedDateTimeParam extends Param<ZonedDateTime> {
 
     private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
-    private final ZonedDateTime datetime;
-
-    public ZonedDateTimeParam(String dateString) {
-        if (Util.isEmpty(dateString)) {
-            this.datetime = null;
-        } else {
-            try {
-                this.datetime = ZonedDateTime.parse(dateString, format);
-            } catch (Throwable e) {
-                throw TemplateMasterException.wrap(e).set("dateString", dateString);
-            }
-        }
+    public ZonedDateTimeParam(String valueAsString) {
+        super(valueAsString);
     }
-    
-    public ZonedDateTime getDatetime() {
-        return datetime;
+
+    public ZonedDateTimeParam(ZonedDateTime value) {
+        super(value);
     }
 
     @Override
-    public String toString() {
-        if (datetime != null) {
-            return datetime.toString();
-        } else {
-            return "";
-        }
+    protected ZonedDateTime parse(String valueAsString) throws Throwable {
+        return ZonedDateTime.parse(valueAsString, format);
     }
+
+    @Override
+    protected String format(ZonedDateTime value) throws Throwable {
+        return format.format(value);
+    }
+
 }

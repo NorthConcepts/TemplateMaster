@@ -3,40 +3,32 @@ package com.northconcepts.templatemaster.form.time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.northconcepts.templatemaster.content.TemplateMasterException;
-import com.northconcepts.templatemaster.content.Util;
-import com.northconcepts.templatemaster.service.Bean;
+import com.northconcepts.templatemaster.form.Param;
 
-public class DateTimeParam extends Bean {
+public class DateTimeParam extends Param<Date> {
 
     private final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
-    private final Date datetime;
-
-    public DateTimeParam(String dateString) {
-        if (Util.isEmpty(dateString)) {
-            this.datetime = null;
-        } else {
-            try {
-                synchronized (format) {
-                    this.datetime = format.parse(dateString);
-                }
-            } catch (Throwable e) {
-                throw TemplateMasterException.wrap(e).set("dateString", dateString);
-            }
-        }
+    public DateTimeParam(String valueAsString) {
+        super(valueAsString);
     }
-    
-    public Date getDatetime() {
-        return datetime;
+
+    public DateTimeParam(Date value) {
+        super(value);
     }
 
     @Override
-    public String toString() {
-        if (datetime != null) {
-            return datetime.toString();
-        } else {
-            return "";
+    protected Date parse(String valueAsString) throws Throwable {
+        synchronized (format) {
+            return format.parse(valueAsString);
         }
     }
+
+    @Override
+    protected String format(Date value) throws Throwable {
+        synchronized (format) {
+            return format.format(value);
+        }
+    }
+
 }
