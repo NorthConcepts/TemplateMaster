@@ -1,4 +1,4 @@
-package com.northconcepts.templatemaster.form;
+package com.northconcepts.templatemaster.form.time;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;

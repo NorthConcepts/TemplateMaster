@@ -1,6 +1,5 @@
 package com.northconcepts.templatemaster.form;
 
-
 public enum DataType {
 
     UNDEFINED(DataTypeGroup.UNDEFINED),

@@ -1,33 +1,31 @@
-package com.northconcepts.templatemaster.form;
+package com.northconcepts.templatemaster.form.time;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.service.Bean;
 
-public class DatetimeParam extends Bean {
+public class LocalDateTimeParam extends Bean {
 
-    private final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
-    private final Date datetime;
+    private final LocalDateTime datetime;
 
-    public DatetimeParam(String dateString) {
+    public LocalDateTimeParam(String dateString) {
         if (Util.isEmpty(dateString)) {
             this.datetime = null;
         } else {
             try {
-                synchronized (format) {
-                    this.datetime = format.parse(dateString);
-                }
+                this.datetime = LocalDateTime.parse(dateString, format);
             } catch (Throwable e) {
                 throw TemplateMasterException.wrap(e).set("dateString", dateString);
             }
         }
     }
     
-    public Date getDatetime() {
+    public LocalDateTime getDatetime() {
         return datetime;
     }
 
