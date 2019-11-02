@@ -1,11 +1,11 @@
-package com.northconcepts.templatemaster.form.time;
+package com.northconcepts.templatemaster.form.param;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
-import com.northconcepts.templatemaster.form.Param;
 
 public class TimeParam extends Param<Time> {
 
@@ -40,4 +40,10 @@ public class TimeParam extends Param<Time> {
         }
     }
     
+    public TemplateMasterException addExceptionProperties(TemplateMasterException exception) {
+        synchronized (format) {
+            return super.addExceptionProperties(exception).set("format", Arrays.asList(format));
+        }
+    }
+
 }

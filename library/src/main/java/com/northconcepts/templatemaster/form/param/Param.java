@@ -1,4 +1,4 @@
-package com.northconcepts.templatemaster.form;
+package com.northconcepts.templatemaster.form.param;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
@@ -17,7 +17,7 @@ public abstract class Param<T> extends Bean {
             try {
                 this.valueAsString = format(value);
             } catch (Throwable e) {
-                throw TemplateMasterException.wrap(e).set("value", value);
+                throw addExceptionProperties(TemplateMasterException.wrap(e));
             }
         }
     }
@@ -30,7 +30,7 @@ public abstract class Param<T> extends Bean {
             try {
                 this.value = parse(valueAsString);
             } catch (Throwable e) {
-                throw TemplateMasterException.wrap(e).set("valueAsString", valueAsString);
+                throw addExceptionProperties(TemplateMasterException.wrap(e));
             }
         }
     }
@@ -38,6 +38,11 @@ public abstract class Param<T> extends Bean {
     protected abstract T parse(String valueAsString) throws Throwable;
 
     protected abstract String format(T value) throws Throwable;
+    
+    @Override
+    public TemplateMasterException addExceptionProperties(TemplateMasterException exception) {
+        return super.addExceptionProperties(exception).set("valueAsString", valueAsString).set("value", value);
+    }
 
     public T getValue() {
         return value;

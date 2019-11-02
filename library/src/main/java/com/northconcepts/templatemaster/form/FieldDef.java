@@ -3,6 +3,8 @@ package com.northconcepts.templatemaster.form;
 import org.apache.commons.text.StringEscapeUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.northconcepts.templatemaster.form.editor.FieldValueEditor;
+import com.northconcepts.templatemaster.form.presenter.FieldValuePresenter;
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FieldDef extends Bean {
@@ -19,6 +21,7 @@ public class FieldDef extends Bean {
     private String placeholder;
     private String nullDisplayValue;
     private FieldValuePresenter fieldValuePresenter = FieldValuePresenter.NULL;
+    private FieldValueEditor fieldValueEditor = FieldValueEditor.NULL;
     private boolean preformattedText;
     private boolean visible = true;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
@@ -67,23 +70,16 @@ public class FieldDef extends Bean {
     }
 
     public String getDisplayValue(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
-        // TODO: handle pattern-based formatting
         return fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
     }
 
     public String getDisplayValueHtmlEscaped(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
-        // TODO: handle pattern-based formatting
         String displayValue = fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
         
-        if (fieldValuePresenter.requiresHtmlEscaping()) {
+        if (fieldValuePresenter.isDisplayValueRequiresHtmlEscaping()) {
             displayValue = StringEscapeUtils.escapeHtml4(displayValue);
         }
         
-//        // TODO: may need to be flag on the field
-//        if (isTextFormatted(displayValue)) {
-//            displayValue = "<pre>" + displayValue + "</pre>";
-//        }
-
         if (isPreformattedText()) {
             displayValue = "<pre>" + displayValue + "</pre>";
         }
@@ -91,6 +87,29 @@ public class FieldDef extends Bean {
         return displayValue;
     }
 
+    public String getEditValue(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
+        return fieldValueEditor.getEditValue(resource, this, entity, fieldValue);
+    }
+
+    public String getEditValueHtmlEscaped(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
+        String editValue = fieldValueEditor.getEditValue(resource, this, entity, fieldValue);
+        
+        if (fieldValueEditor.isEditValueRequiresHtmlEscaping()) {
+            editValue = StringEscapeUtils.escapeHtml4(editValue);
+        }
+
+        if (!fieldValueEditor.isControlIncluded()) {
+            editValue = FieldValueEditor.NULL.getEditValue(resource, this, entity, editValue);
+        }
+
+        // Preformatted text doesn't apply to edit values
+//        if (isPreformattedText()) {
+//            editValue = "<pre>" + editValue + "</pre>";
+//        }
+        
+        return editValue;
+    }
+    
 //    public boolean isTextFormatted(String text) {
 //        if (text == null) {
 //            return false;
@@ -203,6 +222,18 @@ public class FieldDef extends Bean {
             fieldValuePresenter = FieldValuePresenter.NULL;
         }
         this.fieldValuePresenter = fieldValuePresenter;
+        return this;
+    }
+
+    public FieldValueEditor getFieldValueEditor() {
+        return fieldValueEditor;
+    }
+    
+    public FieldDef setFieldValueEditor(FieldValueEditor fieldValueEditor) {
+        if (fieldValueEditor == null) {
+            fieldValueEditor = FieldValueEditor.NULL;
+        }
+        this.fieldValueEditor = fieldValueEditor;
         return this;
     }
     

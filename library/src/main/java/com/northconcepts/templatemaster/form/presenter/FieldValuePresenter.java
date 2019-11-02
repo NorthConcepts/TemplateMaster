@@ -1,4 +1,7 @@
-package com.northconcepts.templatemaster.form;
+package com.northconcepts.templatemaster.form.presenter;
+
+import com.northconcepts.templatemaster.form.CrudResource;
+import com.northconcepts.templatemaster.form.FieldDef;
 
 public interface FieldValuePresenter {
     
@@ -10,7 +13,7 @@ public interface FieldValuePresenter {
         }
         
         @Override
-        public boolean requiresHtmlEscaping() {
+        public boolean isDisplayValueRequiresHtmlEscaping() {
             return true;
         }
         
@@ -18,6 +21,6 @@ public interface FieldValuePresenter {
     
     String getDisplayValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Object fieldValue);
     
-    boolean requiresHtmlEscaping();
+    boolean isDisplayValueRequiresHtmlEscaping();
 
 }

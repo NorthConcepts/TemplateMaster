@@ -90,6 +90,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
             configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templatemaster"));
             configuration.setNumberFormat("0.####");
             configuration.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
+            configuration.setURLEscapingCharset("UTF-8");
 
             BeansWrapper wrapper = (BeansWrapper) configuration.getObjectWrapper();
             configuration.setSharedVariable("RequestHolder", new StaticBeanTemplateModel(wrapper, RequestHolder.class));

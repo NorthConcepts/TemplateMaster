@@ -1,13 +1,14 @@
-package com.northconcepts.templatemaster.form.time;
+package com.northconcepts.templatemaster.form.param;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.northconcepts.templatemaster.form.Param;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 public class ZonedDateTimeParam extends Param<ZonedDateTime> {
 
-    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern(PATTERN);
     
     public ZonedDateTimeParam(String valueAsString) {
         super(valueAsString);
@@ -25,6 +26,10 @@ public class ZonedDateTimeParam extends Param<ZonedDateTime> {
     @Override
     protected String format(ZonedDateTime value) throws Throwable {
         return format.format(value);
+    }
+
+    public TemplateMasterException addExceptionProperties(TemplateMasterException exception) {
+        return super.addExceptionProperties(exception).set("format", format).set("pattern", PATTERN);
     }
 
 }

@@ -1,13 +1,14 @@
-package com.northconcepts.templatemaster.form.time;
+package com.northconcepts.templatemaster.form.param;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.northconcepts.templatemaster.form.Param;
+import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 public class DateParam extends Param<Date> {
 
-    private final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    private static final String PATTERN = "yyyy-MM-dd";
+    private final static SimpleDateFormat format = new SimpleDateFormat(PATTERN);
     
     public DateParam(String valueAsString) {
         super(valueAsString);
@@ -31,4 +32,10 @@ public class DateParam extends Param<Date> {
         }
     }
     
+    public TemplateMasterException addExceptionProperties(TemplateMasterException exception) {
+        synchronized (format) {
+            return super.addExceptionProperties(exception).set("format", format).set("pattern", PATTERN);
+        }
+    }
+
 }
