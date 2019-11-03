@@ -52,8 +52,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
 
     protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
     
-    protected abstract ENTITY newRecord();
-    
+    protected ENTITY newRecord() {
+        throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
+    }
+
     protected abstract ENTITY getRecord(ID id);
     
     protected ENTITY createRecord(ENTITY newRecord) {
