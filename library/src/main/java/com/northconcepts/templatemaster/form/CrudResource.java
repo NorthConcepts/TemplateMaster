@@ -165,6 +165,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
         sortField = Util.isNotEmpty(sortField)?sortField:null;
 
+        formDef.prepareViewer();
+        
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
         page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
@@ -207,6 +209,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
         sortField = Util.isNotEmpty(sortField)?sortField:null;
 
+        formDef.prepareViewer();
+        
         Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
         page.add("searchQuery", searchQuery);
         page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
@@ -265,6 +269,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
 
     protected Content getViewRecordImpl(ID id, ENTITY record) {
+        formDef.prepareViewer();
+        
         Content page = newPage(singularTitle, viewBodyTemplate);
         page.add("id", id);
         page.add("record", record);
@@ -297,6 +303,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
 
     protected Content getEditRecordImpl(ID id, ENTITY record) {
+        formDef.prepareEditor();
+        
         Content page = newPage("Edit " + singularTitle, editBodyTemplate);
         page.add("id", id);
         page.add("record", record);
@@ -343,6 +351,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
 
     protected Content getNewRecordImpl() {
+        formDef.prepareEditor();
+        
         Content page = newPage("New " + singularTitle, newBodyTemplate);
 //        page.add("record", getRecord(id));
         page.add("subUrl", subUrl);

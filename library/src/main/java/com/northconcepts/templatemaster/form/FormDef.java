@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.northconcepts.templatemaster.service.Bean;
 
-public class FormDef extends Bean {
+public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
     
     private String id;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
@@ -20,6 +20,18 @@ public class FormDef extends Bean {
     private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>(); 
 
     public FormDef() {
+    }
+    
+    @Override
+    public void prepareViewer() {
+        prepareViewer(fields);
+        prepareViewer(singleRecordActions);
+        prepareViewer(bulkRecordActions);
+    }
+    
+    @Override
+    public void prepareEditor() {
+        prepareEditor(fields);
     }
     
     public String getId() {

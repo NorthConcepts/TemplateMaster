@@ -2,8 +2,7 @@ package com.northconcepts.templatemaster.form;
 
 import com.northconcepts.templatemaster.service.Bean;
 
-public abstract class FieldLookupDef extends Bean {
-    
+public abstract class FieldLookupDef extends Bean implements PreparableEditor {
     
     public abstract int getValueCount();
 

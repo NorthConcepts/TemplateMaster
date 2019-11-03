@@ -2,7 +2,7 @@ package com.northconcepts.templatemaster.form;
 
 import com.northconcepts.templatemaster.service.Bean;
 
-public class CrudAction extends Bean {
+public class CrudAction extends Bean implements PreparableViewer {
     
     private final String displayName;
     private final String subPath;

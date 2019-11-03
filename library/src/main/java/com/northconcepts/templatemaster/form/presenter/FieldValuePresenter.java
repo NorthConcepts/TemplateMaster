@@ -2,8 +2,9 @@ package com.northconcepts.templatemaster.form.presenter;
 
 import com.northconcepts.templatemaster.form.CrudResource;
 import com.northconcepts.templatemaster.form.FieldDef;
+import com.northconcepts.templatemaster.form.PreparableViewer;
 
-public interface FieldValuePresenter {
+public interface FieldValuePresenter extends PreparableViewer {
     
     public static final FieldValuePresenter NULL = new FieldValuePresenter() {
         

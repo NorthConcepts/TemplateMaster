@@ -1,14 +1,11 @@
 package com.northconcepts.templatemaster.form.editor;
 
-import java.beans.PropertyDescriptor;
-import java.util.List;
-
 import com.northconcepts.templatemaster.content.Content;
-import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.form.CrudResource;
 import com.northconcepts.templatemaster.form.FieldDef;
+import com.northconcepts.templatemaster.form.PreparableEditor;
 
-public interface FieldValueEditor {
+public interface FieldValueEditor  extends PreparableEditor {
     
     public static final FieldValueEditor NULL = new FieldValueEditor() {
         

@@ -7,7 +7,7 @@ import com.northconcepts.templatemaster.form.editor.FieldValueEditor;
 import com.northconcepts.templatemaster.form.presenter.FieldValuePresenter;
 import com.northconcepts.templatemaster.service.Bean;
 
-public class FieldDef extends Bean {
+public class FieldDef extends Bean implements PreparableViewer, PreparableEditor {
     
     private FormDef formDef;
     
@@ -68,7 +68,20 @@ public class FieldDef extends Bean {
     public FieldDef(String name, String displayName) {
         this(name, displayName, true, null);
     }
-
+    
+    @Override
+    public void prepareViewer() {
+        fieldValuePresenter.prepareViewer();
+    }
+    
+    @Override
+    public void prepareEditor() {
+        fieldValueEditor.prepareEditor();
+        if (lookupValues != null) {
+            lookupValues.prepareEditor();
+        }
+    }
+    
     public String getDisplayValue(CrudResource<?, ?> resource, Object entity, Object fieldValue) {
         return fieldValuePresenter.getDisplayValue(resource, this, entity, fieldValue);
     }
