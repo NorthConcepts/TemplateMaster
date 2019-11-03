@@ -52,6 +52,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
 
     protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
     
+    protected abstract ENTITY newRecord();
+    
     protected abstract ENTITY getRecord(ID id);
     
     protected ENTITY createRecord(ENTITY newRecord) {
@@ -353,9 +355,12 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     protected Content getNewRecordImpl() {
         formDef.prepareEditor();
         
+        ENTITY record = newRecord();
+        
         Content page = newPage("New " + singularTitle, newBodyTemplate);
 //        page.add("record", getRecord(id));
         page.add("subUrl", subUrl);
+        page.add("record", record);
         page.add("resource", this);
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", getFormDef());
