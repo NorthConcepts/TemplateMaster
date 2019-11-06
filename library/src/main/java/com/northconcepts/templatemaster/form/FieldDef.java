@@ -52,6 +52,8 @@ public class FieldDef extends Bean implements PreparableViewer, PreparableEditor
     private boolean showInList = true;
     private boolean showInSelectList;
     private boolean showInView = true;
+    private boolean showInEdit = true;
+    private boolean showInNew = true;
     
     public FieldDef() {
     }    
@@ -470,6 +472,24 @@ public class FieldDef extends Bean implements PreparableViewer, PreparableEditor
 
     public FieldDef setShowInView(boolean showInView) {
         this.showInView = showInView;
+        return this;
+    }
+
+    public boolean isShowInEdit() {
+        return showInEdit;
+    }
+
+    public FieldDef setShowInEdit(boolean showInEdit) {
+        this.showInEdit = showInEdit;
+        return this;
+    }
+
+    public boolean isShowInNew() {
+        return showInNew;
+    }
+
+    public FieldDef setShowInNew(boolean showInNew) {
+        this.showInNew = showInNew;
         return this;
     }
 
