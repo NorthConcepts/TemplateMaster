@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
-import com.northconcepts.templatemaster.content.TemplateMasterException;
+import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.form.CrudResource;
 import com.northconcepts.templatemaster.form.FieldDef;
 
@@ -22,33 +22,36 @@ public class DateTimeEditor implements FieldValueEditor {
     
     @Override
     public String getEditValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Object fieldValue) {
-        if (fieldValue == null) {
-            return "";
-        }
-        
+        String dateString;
         if (fieldValue instanceof TemporalAccessor) {
             TemporalAccessor temporalAccessor = (TemporalAccessor) fieldValue;
-            return formatter.format(temporalAccessor);
+            dateString = formatter.format(temporalAccessor);
         } else if (fieldValue instanceof Date) {
             Date date = (Date) fieldValue;
-            return formatter.format(date.toInstant());
+            dateString = formatter.format(date.toInstant());
+        } else {
+            dateString = "";
         }
         
-        throw new TemplateMasterException("unsupported field value type " + fieldValue.getClass())
-            .set("resource", resource)
-            .set("fieldDef", fieldDef)
-            .set("entity", entity)
-            ;
+        Content content = new Content()
+                .setTemplateCode("<div class=\"input-group date\" id=\""+ fieldDef.getName() +"\"><input type=\"text\" id=\"${field.id!?html}\" value=\"${dateString}\" class=\"form-control\" name=\"${field.name!?html}\"  placeholder=\"${field.placeholder!}\" [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]/><span class=\"input-group-addon\"><span class=\"glyphicon-calendar glyphicon\"></span></span></div>")
+                .add("subUrl", resource.getSubUrl())
+                .add("record", entity)
+                .add("field", fieldDef)
+                .add("dateString", dateString); 
+        return content.toString();
+        
+        
     }
 
     @Override
     public boolean isEditValueRequiresHtmlEscaping() {
-        return true;
+        return false;
     }
     
     @Override
     public boolean isControlIncluded() {
-        return false;
+        return true;
     }
 
 }
