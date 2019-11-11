@@ -328,7 +328,12 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
             return badRequest();
         }
         
-        return postEditRecordImpl(id, uriInfo, form);
+        try {
+            return postEditRecordImpl(id, uriInfo, form);
+        } catch (Throwable e) {
+            setErrorFlashMessage("Error updating " + singularTitle + ": " + e.getMessage());
+            return gotoPath(subUrl + "/edit/" + id);
+        }
     }
     
     protected Response postEditRecordImpl(ID id, UriInfo uriInfo, ENTITY form) throws Throwable {
