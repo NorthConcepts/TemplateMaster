@@ -172,7 +172,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         }
         
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:formDef.getDefaultSortField();
+        sortField = Util.isNotEmpty(sortField)?sortField:null;
 
         formDef.prepareViewer();
         
