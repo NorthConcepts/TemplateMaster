@@ -159,13 +159,18 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/")
-    public Content getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
         return getListRecords(searchQuery, sortField, 0);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Content getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+        if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
+            Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
+            return gotoUri(url.toString());
+        }
+        
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
         sortField = Util.isNotEmpty(sortField)?sortField:formDef.getDefaultSortField();
 
@@ -182,7 +187,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("script", new Content(listJavascriptTemplate));
         page.add("sortField", sortField);
 
-        return page;
+        return ok(page);
     }
 
     protected Sort getSortBy(String column) {
