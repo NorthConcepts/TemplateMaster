@@ -16,6 +16,7 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private boolean allowSearch = true;
     private boolean allowExport;
     private boolean allowImport;
+    private String defaultSortField;
     private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
     private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>(); 
 
@@ -142,6 +143,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     
     public FormDef addBulkRecordAction(CrudAction action) {
         bulkRecordActions.add(action);
+        return this;
+    }
+
+    public String getDefaultSortField() {
+        return defaultSortField;
+    }
+
+    public FormDef setDefaultSortField(String defaultSortField) {
+        this.defaultSortField = defaultSortField;
         return this;
     }
     

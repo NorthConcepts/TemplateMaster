@@ -167,7 +167,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     @Path("/{pageNumber}")
     public Content getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:null;
+        sortField = Util.isNotEmpty(sortField)?sortField:formDef.getDefaultSortField();
 
         formDef.prepareViewer();
         
