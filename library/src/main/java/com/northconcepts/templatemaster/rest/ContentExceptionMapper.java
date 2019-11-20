@@ -24,7 +24,7 @@ import javax.ws.rs.ext.Provider;
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 
 @Provider
-public class ContentExceptionMapper implements ExceptionMapper<Throwable> {
+public class ContentExceptionMapper extends BaseResource implements ExceptionMapper<Throwable> {
     
     @Override
     public Response toResponse(Throwable exception) {
