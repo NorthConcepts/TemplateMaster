@@ -16,16 +16,20 @@
  */
 package com.northconcepts.templatemaster.rest;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -212,6 +216,19 @@ public class BaseResource {
             for (Cookie cookie : cookies) {
                 if (Util.matches(cookie.getName(), name)) {
                     return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected Part getPart(HttpServletRequest request, String name) throws IOException, ServletException {
+        Collection<Part> parts = request.getParts();
+        if (parts != null) {
+            for (Part part : parts) {
+                if (Util.matches(part.getName(), name)) {
+                    return part;
                 }
             }
         }
