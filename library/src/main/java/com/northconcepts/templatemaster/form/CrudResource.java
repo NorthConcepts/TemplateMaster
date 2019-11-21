@@ -52,6 +52,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
 
     protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
     
+    protected abstract ID getId(ENTITY record);
+    
     protected ENTITY newRecord() {
         throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
     }
@@ -344,7 +346,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     protected Response postEditRecordImpl(ID id, UriInfo uriInfo, ENTITY form) throws Throwable {
         editRecord(id, form);
         setSuccessFlashMessage(singularTitle + " updated");
-        return gotoUri(RequestHolder.getReferrer());
+        return gotoPath(subUrl + "/view/" + getId(form));
     }
     
 
@@ -397,9 +399,9 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
     
     protected Response postNewRecordImpl(UriInfo uriInfo, ENTITY form) throws Throwable {
-        createRecord(form);
+        form = createRecord(form);
         setSuccessFlashMessage(singularTitle + " created");
-        return gotoPath(subUrl);
+        return gotoPath(subUrl + "/view/" + getId(form));
     }
     
 }
