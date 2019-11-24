@@ -29,7 +29,7 @@ import com.northconcepts.templatemaster.rest.Url;
 @Produces(BaseResource.TEXT_HTML)
 public abstract class CrudResource<ID extends Serializable, ENTITY extends Serializable> extends BaseResource {
 
-    protected static final int PAGE_SIZE = 20;
+    public static final int DEFAULT_PAGE_SIZE = 20;
     
     protected final String singularTitle;
     protected final String pluralTitle;
@@ -180,7 +180,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
@@ -224,7 +224,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
         page.add("resource", this);
         page.add("subUrl", subUrl + "/select");
         page.add("baseUrl", getBaseUrl());
