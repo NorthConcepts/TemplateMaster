@@ -113,7 +113,7 @@ public class FieldDef extends Bean implements PreparableViewer, PreparableEditor
             editValue = StringEscapeUtils.escapeHtml4(editValue);
         }
 
-        if (!fieldValueEditor.isControlIncluded()) {
+        if (!fieldValueEditor.isEditControlIncluded()) {
             editValue = FieldValueEditor.NULL.getEditValue(resource, this, entity, editValue);
         }
 

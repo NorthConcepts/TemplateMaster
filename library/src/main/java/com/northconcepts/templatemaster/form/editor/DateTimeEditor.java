@@ -47,7 +47,7 @@ public class DateTimeEditor implements FieldValueEditor {
     }
     
     @Override
-    public boolean isControlIncluded() {
+    public boolean isEditControlIncluded() {
         return false;
     }
 

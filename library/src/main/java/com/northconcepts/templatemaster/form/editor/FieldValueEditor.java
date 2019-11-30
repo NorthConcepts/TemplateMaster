@@ -26,7 +26,7 @@ public interface FieldValueEditor  extends PreparableEditor {
         }
         
         @Override
-        public boolean isControlIncluded() {
+        public boolean isEditControlIncluded() {
             return true;
         }
         
@@ -47,7 +47,7 @@ public interface FieldValueEditor  extends PreparableEditor {
     
     boolean isEditValueRequiresHtmlEscaping();
 
-    boolean isControlIncluded();
+    boolean isEditControlIncluded();
 
 //    Object parseEditValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Class<?> propertyType, List<String> fieldInputValue) throws Throwable;
 //    
