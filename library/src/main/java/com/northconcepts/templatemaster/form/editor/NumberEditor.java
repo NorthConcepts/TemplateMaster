@@ -15,10 +15,14 @@ public class NumberEditor implements FieldValueEditor {
     public static final NumberPresenter DECIMAL_NO_GROUPING = new NumberPresenter("0.#");
     public static final NumberPresenter DECIMAL_GROUPING = new NumberPresenter("#,##0.#");
 
-    private DecimalFormat decimalFormat;
+    private final DecimalFormat decimalFormat;
 
     public NumberEditor(String decimalFormat) {
         this.decimalFormat = new DecimalFormat(decimalFormat);
+    }
+    
+    public NumberEditor(DecimalFormat decimalFormat) {
+        this.decimalFormat = decimalFormat;
     }
 
     @Override

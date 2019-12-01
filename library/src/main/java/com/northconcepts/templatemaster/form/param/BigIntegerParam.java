@@ -16,9 +16,6 @@ public class BigIntegerParam extends Param<BigInteger> {
 
     @Override
     protected BigInteger parse(String valueAsString) throws Throwable {
-        if (valueAsString == null) {
-            return null;
-        }
         try {
             return new BigInteger(valueAsString);
         } catch (Throwable e) {

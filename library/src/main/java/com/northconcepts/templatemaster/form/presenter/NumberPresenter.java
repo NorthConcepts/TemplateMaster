@@ -14,10 +14,14 @@ public class NumberPresenter implements FieldValuePresenter {
     public static final NumberPresenter DECIMAL_NO_GROUPING = new NumberPresenter("0.#");
     public static final NumberPresenter DECIMAL_GROUPING = new NumberPresenter("#,##0.#");
 
-    private DecimalFormat decimalFormat;
+    private final DecimalFormat decimalFormat;
 
     public NumberPresenter(String decimalFormat) {
         this.decimalFormat = new DecimalFormat(decimalFormat);
+    }
+    
+    public NumberPresenter(DecimalFormat decimalFormat) {
+        this.decimalFormat = decimalFormat;
     }
 
     @Override
