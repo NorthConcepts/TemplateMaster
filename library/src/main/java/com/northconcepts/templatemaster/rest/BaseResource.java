@@ -42,6 +42,9 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.TemplateMasterException;
@@ -355,4 +358,17 @@ public class BaseResource {
         return s.toString();
     }
 
+    protected Sort getSortBy(String column) {
+        if(Util.isEmpty(column)) {
+            return null;
+        }
+        return column.startsWith("-") ? Sort.by(Sort.Direction.DESC, column.replaceFirst("-", "")) :
+                Sort.by(Sort.Direction.ASC, column);
+    }
+
+    protected Pageable getPageable(String sortField, int pageNumber, int pageSize) {
+        Sort sort = getSortBy(sortField);
+        return sort == null ? PageRequest.of(pageNumber, pageSize) : PageRequest.of(pageNumber, pageSize, sort);
+    }
+    
 }

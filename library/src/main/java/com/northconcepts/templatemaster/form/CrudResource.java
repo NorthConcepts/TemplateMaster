@@ -192,18 +192,6 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         return ok(page);
     }
 
-    protected Sort getSortBy(String column) {
-        if(Util.isEmpty(column)) {
-            return null;
-        }
-        return column.startsWith("-") ? Sort.by(Sort.Direction.DESC, column.replaceFirst("-", "")) :
-                Sort.by(Sort.Direction.ASC, column);
-    }
-
-    protected Pageable getPageable(String sortField, int pageNumber, int pageSize) {
-        Sort sort = getSortBy(sortField);
-        return sort == null ? PageRequest.of(pageNumber, pageSize) : PageRequest.of(pageNumber, pageSize, sort);
-    }
     //==========================================================================================
     // Select List
     //==========================================================================================
