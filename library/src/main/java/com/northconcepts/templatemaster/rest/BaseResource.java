@@ -366,7 +366,7 @@ public class BaseResource {
                 Sort.by(Sort.Direction.ASC, column);
     }
 
-    protected Pageable getPageable(String sortField, int pageNumber, int pageSize) {
+    protected Pageable getPageable(int pageNumber, int pageSize, String sortField) {
         Sort sort = getSortBy(sortField);
         return sort == null ? PageRequest.of(pageNumber, pageSize) : PageRequest.of(pageNumber, pageSize, sort);
     }
