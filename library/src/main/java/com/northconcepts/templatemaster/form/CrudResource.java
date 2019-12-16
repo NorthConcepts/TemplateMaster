@@ -15,9 +15,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
@@ -58,6 +55,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
     }
 
+    protected ENTITY getClonedRecord(ID id) {
+        return null;
+    }
+    
     protected abstract ENTITY getRecord(ID id);
     
     protected ENTITY createRecord(ENTITY newRecord) {
@@ -337,7 +338,46 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         return gotoPath(subUrl + "/view/" + getId(form));
     }
     
+    //==========================================================================================
+    // Clone
+    //==========================================================================================
+    
+    @GET
+    @Path("/clone/{id}")
+    public Response getCloneRecord(@PathParam("id") ID id) {
+        if (!formDef.isAllowClone()) {
+            setErrorFlashMessage("Clone not allowed");
+            return badRequest();
+        }
+        
+        ENTITY record = getClonedRecord(id);
+        if (record == null) {
+            return notFound();
+        }
+        
+        Content page = getCloneRecordImpl(id, record);
+        return ok(page);
+    }
+    
+    protected Content getCloneRecordImpl(ID id, ENTITY record) {
+        formDef.prepareEditor();
+        
+        Content page = newPage("New " + singularTitle, editBodyTemplate);
+        page.add("record", record);
+        page.add("resource", this);
+        page.add("subUrl", subUrl);
+        page.add("baseUrl", getBaseUrl());
+        page.add("formDef", getFormDef());
+        page.add("formMode", FormMode.NEW);        
+        return page;
+    } 
 
+    @POST
+    @Path("/clone/{id}")
+    public Response postCloneRecord(@Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
+        return postNewRecord(uriInfo, form);
+    }
+    
     //==========================================================================================
     // New
     //==========================================================================================

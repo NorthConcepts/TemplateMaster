@@ -14,6 +14,7 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private boolean allowEdit = true;
     private boolean allowDelete = true;
     private boolean allowSearch = true;
+    private boolean allowClone;
     private boolean allowExport;
     private boolean allowImport;
     private String defaultSortField;
@@ -108,6 +109,14 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     public FormDef setAllowSearch(boolean allowSearch) {
         this.allowSearch = allowSearch;
         return this;
+    }
+    
+    public boolean isAllowClone() {
+        return allowClone;
+    }
+
+    public void setAllowClone(boolean allowClone) {
+        this.allowClone = allowClone;
     }
 
     public boolean isAllowExport() {
