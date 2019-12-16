@@ -344,38 +344,17 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/clone/{id}")
-    public Response getCloneRecord(@PathParam("id") ID id) {
+    public Response getCloneRecord(@PathParam("id") ID id) throws Throwable {
         if (!formDef.isAllowClone()) {
             setErrorFlashMessage("Clone not allowed");
             return badRequest();
         }
-        
+
         ENTITY record = getClonedRecord(id);
         if (record == null) {
             return notFound();
         }
-        
-        Content page = getCloneRecordImpl(id, record);
-        return ok(page);
-    }
-    
-    protected Content getCloneRecordImpl(ID id, ENTITY record) {
-        formDef.prepareEditor();
-        
-        Content page = newPage("New " + singularTitle, editBodyTemplate);
-        page.add("record", record);
-        page.add("resource", this);
-        page.add("subUrl", subUrl);
-        page.add("baseUrl", getBaseUrl());
-        page.add("formDef", getFormDef());
-        page.add("formMode", FormMode.NEW);        
-        return page;
-    } 
-
-    @POST
-    @Path("/clone/{id}")
-    public Response postCloneRecord(@Context UriInfo uriInfo, @Form ENTITY form) throws Throwable {
-        return postNewRecord(uriInfo, form);
+        return gotoPath(subUrl + "/edit/" + getId(record));
     }
     
     //==========================================================================================
