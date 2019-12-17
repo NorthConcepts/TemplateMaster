@@ -115,8 +115,9 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return allowClone;
     }
 
-    public void setAllowClone(boolean allowClone) {
+    public FormDef setAllowClone(boolean allowClone) {
         this.allowClone = allowClone;
+        return this;
     }
 
     public boolean isAllowExport() {
