@@ -47,7 +47,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber);
     
     protected abstract ID getId(ENTITY record);
     
@@ -56,7 +56,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
 
     protected ENTITY getClonedRecord(ID id) {
-        return null;
+        throw new UnsupportedOperationException(getSingularTitle() + " cloning is not supported"); 
     }
     
     protected abstract ENTITY getRecord(ID id);
@@ -181,7 +181,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
@@ -213,7 +213,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber));
         page.add("resource", this);
         page.add("subUrl", subUrl + "/select");
         page.add("baseUrl", getBaseUrl());
@@ -354,6 +354,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         if (record == null) {
             return notFound();
         }
+        setSuccessFlashMessage("Entity Cloned Successfully.");
         return gotoPath(subUrl + "/edit/" + getId(record));
     }
     
