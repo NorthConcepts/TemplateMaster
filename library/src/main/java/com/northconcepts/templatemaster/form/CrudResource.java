@@ -47,7 +47,9 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber);
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
+    
+    protected abstract int getUserListPageSize(Integer pageSize);
     
     protected abstract ID getId(ENTITY record);
     
@@ -55,7 +57,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
     }
 
-    protected ENTITY getClonedRecord(ID id) {
+    protected ENTITY cloneRecord(ID id) {
         throw new UnsupportedOperationException(getSingularTitle() + " cloning is not supported"); 
     }
     
@@ -162,26 +164,30 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
-        return getListRecords(searchQuery, sortField, 0);
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("p") Integer pageSize) throws Throwable {
+        return getListRecords(searchQuery, sortField, 0, pageSize);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber, @QueryParam("p") Integer pageSize) {
         if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());
         }
         
-        searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:null;
+        if (pageSize != null && pageSize != 0 && !Util.isValidPageSize(pageSize)) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+
+        searchQuery = Util.isNotEmpty(searchQuery) ? searchQuery : null;
+        sortField = Util.isNotEmpty(sortField) ? sortField : null;
 
         formDef.prepareViewer();
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, getUserListPageSize(pageSize)));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
@@ -213,7 +219,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
         page.add("resource", this);
         page.add("subUrl", subUrl + "/select");
         page.add("baseUrl", getBaseUrl());
@@ -350,11 +356,11 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
             return badRequest();
         }
 
-        ENTITY record = getClonedRecord(id);
+        ENTITY record = cloneRecord(id);
         if (record == null) {
             return notFound();
         }
-        setSuccessFlashMessage("Entity Cloned Successfully.");
+        setSuccessFlashMessage(singularTitle + " Cloned.");
         return gotoPath(subUrl + "/edit/" + getId(record));
     }
     
