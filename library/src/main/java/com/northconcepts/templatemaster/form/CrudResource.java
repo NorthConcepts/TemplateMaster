@@ -357,9 +357,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         }
 
         ENTITY record = cloneRecord(id);
-        if (record == null) {
-            return notFound();
-        }
+
         setSuccessFlashMessage(singularTitle + " Cloned.");
         return gotoPath(subUrl + "/edit/" + getId(record));
     }
