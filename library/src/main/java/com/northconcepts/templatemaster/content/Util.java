@@ -21,6 +21,9 @@ import java.util.Iterator;
 
 public class Util {
 
+    public static final int MIN_PAGE_SIZE = 1;
+    public static final int MAX_PAGE_SIZE = 10000;
+    
     public static boolean isEmpty(String s) {
         return s == null || s.trim().length() == 0;
     }

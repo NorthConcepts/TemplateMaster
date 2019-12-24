@@ -15,9 +15,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
@@ -30,6 +27,8 @@ import com.northconcepts.templatemaster.rest.Url;
 public abstract class CrudResource<ID extends Serializable, ENTITY extends Serializable> extends BaseResource {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int MIN_PAGE_SIZE = 1;
+    public static final int MAX_PAGE_SIZE = 10000;
     
     protected final String singularTitle;
     protected final String pluralTitle;
@@ -50,7 +49,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, Integer pageSize);
     
     protected abstract ID getId(ENTITY record);
     
@@ -58,6 +57,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
     }
 
+    protected ENTITY cloneRecord(ID id) {
+        throw new UnsupportedOperationException(getSingularTitle() + " cloning is not supported"); 
+    }
+    
     protected abstract ENTITY getRecord(ID id);
     
     protected ENTITY createRecord(ENTITY newRecord) {
@@ -161,26 +164,30 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField) throws Throwable {
-        return getListRecords(searchQuery, sortField, 0);
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("p") Integer pageSize) throws Throwable {
+        return getListRecords(searchQuery, sortField, 0, pageSize);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber, @QueryParam("p") Integer pageSize) {
         if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());
         }
         
-        searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:null;
+        if (pageSize != null && (pageSize < MIN_PAGE_SIZE && pageSize > MAX_PAGE_SIZE)) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+
+        searchQuery = Util.isNotEmpty(searchQuery) ? searchQuery : null;
+        sortField = Util.isNotEmpty(sortField) ? sortField : null;
 
         formDef.prepareViewer();
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, pageSize));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
@@ -337,7 +344,24 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         return gotoPath(subUrl + "/view/" + getId(form));
     }
     
+    //==========================================================================================
+    // Clone
+    //==========================================================================================
+    
+    @GET
+    @Path("/clone/{id}")
+    public Response getCloneRecord(@PathParam("id") ID id) throws Throwable {
+        if (!formDef.isAllowClone()) {
+            setErrorFlashMessage("Clone not allowed");
+            return badRequest();
+        }
 
+        ENTITY record = cloneRecord(id);
+
+        setSuccessFlashMessage(singularTitle + " Cloned.");
+        return gotoPath(subUrl + "/edit/" + getId(record));
+    }
+    
     //==========================================================================================
     // New
     //==========================================================================================
