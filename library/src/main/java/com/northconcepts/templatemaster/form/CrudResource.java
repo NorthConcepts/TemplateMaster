@@ -27,6 +27,8 @@ import com.northconcepts.templatemaster.rest.Url;
 public abstract class CrudResource<ID extends Serializable, ENTITY extends Serializable> extends BaseResource {
 
     public static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int MIN_PAGE_SIZE = 1;
+    public static final int MAX_PAGE_SIZE = 10000;
     
     protected final String singularTitle;
     protected final String pluralTitle;
@@ -47,9 +49,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, int pageSize);
-    
-    protected abstract int getUserListPageSize(Integer pageSize);
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, Integer pageSize);
     
     protected abstract ID getId(ENTITY record);
     
@@ -176,7 +176,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
             return gotoUri(url.toString());
         }
         
-        if (pageSize != null && pageSize != 0 && !Util.isValidPageSize(pageSize)) {
+        if (pageSize != null && (pageSize < MIN_PAGE_SIZE && pageSize > MAX_PAGE_SIZE)) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
 
@@ -187,7 +187,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, getUserListPageSize(pageSize)));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, pageSize));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());

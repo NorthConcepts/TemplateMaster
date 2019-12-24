@@ -136,8 +136,4 @@ public class Util {
         return count;
     }
     
-    public static boolean isValidPageSize(int pageSize) {
-        return pageSize >= MIN_PAGE_SIZE && pageSize < MAX_PAGE_SIZE;
-    }
-    
 }
