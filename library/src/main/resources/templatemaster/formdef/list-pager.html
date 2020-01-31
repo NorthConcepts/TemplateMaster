@@ -1,17 +1,28 @@
-[#ftl]
-[#setting url_escaping_charset="UTF-8"]
-<div class="text-right">
-    <span style="margin-right: 1em">Page ${page.number + 1} of ${page.totalPages} &mdash; ${page.totalElements} Records</span>
-
+<div class="tm-list-pager text-right">
+    
+    <span style="margin-right: 1em">
+    <form id="pageSize" method="get" action="${subUrl}">
+    	Page Size
+    	<select id="pageSize" name="p" >
+	    	[#assign pageSizeArray = [20,50,100,200]]
+	
+			[#list pageSizeArray as pageSize]
+			  <option value='${pageSize}' [#if app.currentUser.listPageSize == pageSize]selected[/#if]>${pageSize}</option>
+			[/#list]
+    	</select><br/>
+    </form>
+    	Page ${page.number + 1} of ${page.totalPages} &mdash; ${page.totalElements} Records
+    </span>
+	
     [#if page.number > 0]
-    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number - 1))}[#if searchQuery??]?q=${searchQuery!?html}[/#if]" class="btn btn-default">&lt;</a>
+    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number - 1))}" class="tm-btn-previous btn btn-default">&lt;</a>
     [#else]
-    <a class="btn btn-default" disabled="disabled">&lt;</a>
+    <a class="tm-btn-previous btn btn-default" disabled="disabled">&lt;</a>
     [/#if]
     
     [#if page.number < page.totalPages - 1]
-    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number + 1))}[#if searchQuery??]?q=${searchQuery!?html}[/#if]" class="btn btn-default">&gt;</a>
+    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number + 1))}" class="tm-btn-next btn btn-default">&gt;</a>
     [#else]
-    <a class="btn btn-default" disabled="disabled">&gt;</a>
+    <a class="tm-btn-next btn btn-default" disabled="disabled">&gt;</a>
     [/#if]
 </div>

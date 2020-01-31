@@ -1,70 +1,55 @@
-[#ftl]
-[#setting url_escaping_charset="UTF-8"]
-
-<div class="crud crud-edit">
-<form method="post" action="${(action)!?html}" class="${formDef.cssStyleClass!}" id="${formDef.id!?html}-edit-form">
+<div class="tm-crud tm-edit">
+<form method="post" action="${(action)!?html}" class="form-horizontal ${formDef.cssStyleClass!}" id="${formDef.id!"editForm"?html}">
 <div class="container">
-<div class="row">
-<div class="col-sm-7 col-sm-offset-2">
-  ${pageHeader!}
-
-  <div class="box box-primary">
-    <div class="box-header">
-      <div class="box-title">${formTitle!title!?html}</div>
-      ${boxHeader!}
-    </div>
+  <h1 class="text-center">${title}</h1>
+  <div class="box box-padded box-primary">
     <div class="box-body">
-      ${boxBodyHeader!}
-
       [#list formDef.fields as field]
-        [#if (formMode == "EDIT" && field.allowEdit) || (formMode == "NEW" && field.allowCreate)]
+        [#if (field.readonly && (formMode == "EDIT" && field.showInEdit) || (formMode == "NEW" && field.showInNew)) || (formMode == "EDIT" && field.allowEdit) || (formMode == "NEW" && field.allowCreate)]
           <div class="form-group">
-            [#if ((field.controlType)!) != "CHECKBOX"]
-              <label for="${field.name!?html}" class="control-label">${field.displayName!?html}</label>
-            [/#if] 
-            [#if field.readonly]
-              <p class="form-control-static">${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}</p> 
-            [#elseif field.lookup]
-              <select class="form-control" id="${field.name!?html}" name="${field.name!?html}" [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
-                [#if field.required]
-                <option value=""></option>
-                [/#if]
-                [#list 0..field.lookupValues.valueCount-1 as index]
-                <option value="${(field.lookupValues.getValue(index))!?html}" [#if ((field.lookupValues.getValue(index))!) == ((record[field.name])!)] selected="selected"[/#if]>${(field.lookupValues.getDisplayName(index))!?html}</option>
-                [/#list]
-              </select>
-            [#elseif ((field.controlType)!) == "TEXT_AREA"]
-              <textarea class="form-control" rows="3" id="${field.id!?html}" name="${field.name!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}</textarea>
-            [#elseif ((field.controlType)!) == "CHECKBOX"]
-              <div class="checkbox">
-                <label><input type="checkbox" id="${field.id!?html}" name="${field.name!?html}" value="true" [#if ((record[field.name])!)]checked="checked"[/#if]>${field.displayName!?html}</label>
-              </div>
-            [#elseif ((field.controlType)!) == "PASSWORD"]
-            <input type="password" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
-            [#else]
-              <input type="text" class="form-control" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
-            [/#if]
-            [#if field.helpText??]
-              <span class="help-block">${field.helpText!?html}</span>
-            [/#if]
+              <label for="${field.name!?html}" class="col-sm-2 control-label">${field.displayName!?html}</label>
+              <div class="col-sm-10">
+              [#if field.readonly]
+                <div class="form-control-static">${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}</div> 
+              [#elseif field.lookup]
+                <select class="form-control [#if field.required]tm-required[/#if]" id="${field.name!?html}" name="${field.name!?html}" [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
+                  [#if !field.required]
+                  	<option value="">(Select ${field.displayName!})</option>
+                  [/#if]
+                  [#list 0..field.lookupValues.valueCount-1 as index]
+                  <option value="${(field.lookupValues.getValue(index))!?html}" [#if ((field.lookupValues.getValue(index))!) == ((record[field.name])!)] selected="selected"[/#if]>${(field.lookupValues.getDisplayName(index))!?html}</option>
+                  [/#list]
+                </select>
+              [#elseif ((field.controlType)!) == "TEXT_AREA"]
+                <textarea class="form-control [#if field.required]tm-required[/#if]" rows="3" id="${field.id!?html}" name="${field.name!?html}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}</textarea>
+              [#elseif ((field.controlType)!) == "CHECKBOX"]
+                <div class="checkbox">
+                  <label><input [#if field.required]class="tm-required"[/#if] type="checkbox" id="${field.id!?html}" name="${field.name!?html}" value="true" [#if ((record[field.name])!)]checked="checked"[/#if]>${field.displayName!?html}</label>
+                </div>
+              [#elseif ((field.controlType)!) == "PASSWORD"]
+              <input type="password" class="form-control [#if field.required]tm-required[/#if]" id="${field.id!?html}" name="${field.name!?html}" value="${(field.getDisplayValueHtmlEscaped(resource, record, record[field.name]))!}" placeholder="${field.placeholder!}"  [#if field.required]required[/#if] [#if field.autofocus]autofocus[/#if]>
+              [#else]
+                ${(field.getEditValueHtmlEscaped(resource, record, record[field.name]))!}
+              [/#if]
+              [#if field.helpText??]
+                <span class="help-block">${field.helpText!?html}</span>
+              [/#if]
+            </div>
           </div>
         [/#if]
       [/#list]
-      ${boxBodyFooter!}
     </div>
+    
     <div class="box-footer">
-      ${boxFooter!}
       <div class="form-group">
-        <div class="buttons">
+        <div class="col-sm-offset-2 col-sm-10"> 
           <button type="submit" class="btn btn-primary submit">[#if formMode == "NEW"]Create[#else]Save Changes[/#if]</button>
             <a class="btn btn-link submit" href="${RequestHolder.referer!(subUrl!)}">Cancel</a>
         </div>
       </div>
     </div>
+    
   </div>
-  ${pageFooter!}
-</div>
-</div>
 </div>
 </form>
 </div>

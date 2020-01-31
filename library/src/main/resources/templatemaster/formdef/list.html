@@ -1,86 +1,102 @@
-[#ftl]
-[#setting url_escaping_charset="UTF-8"]
+<div class="tm-crud tm-list container-fluid ${formDef.cssStyleClass!}" id="${formDef.id!?html}">
 
-<div class="crud crud-list">
-<form method="post" action="${(action)!?html}" class="${formDef.cssStyleClass!}" id="${formDef.id!?html}-edit-form">
-
-<div class="box box-primary">
-  <div class="box-header">
-    <div class="row">
-      <div class="col-xs-4">
-        <div class="box-title">${title!?html}</div>
-      </div>
+  <div class="tm-list-header box-header">
+    <div class="tm-row-search row">
+    <form method="get" action="${subUrl}">
       <div class="col-xs-8">
+      	[#if formDef.allowSearch]
+           <input id="searchInput" name="q" placeholder="Search" class="form-control" type="text" value="${searchQuery!?html}" maxlength="1000" autofocus>
+        [/#if]
+      </div>
+    </form>
+      <div class="col-xs-4">
         ${listPager!}
       </div>
     </div>
-    <div class="row" style="margin-top: 1em;">
-      <div class="col-xs-6 text-left">
+    <div class="tm-row-actions row">
+      <div class="col-xs-8 text-left">
         [#if formDef.allowDelete]
-          <button type="submit" class="btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
+          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
         [/#if]
+        [#list formDef.bulkRecordActions as action]
+        <button type="submit" class="tm-btn tm-btn-bulk ${action.cssStyleClass!} btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if] disabled="disabled">${action.displayName}</button>
+        [/#list]
       </div>
-      <div class="col-xs-6 text-right">
+      <div class="col-xs-4 text-right">
         [#if formDef.allowCreate]
-          <a class="btn btn-success" href="${RequestHolder.url.setPath(subUrl + '/new')}"><i class="fa fa-plus-circle" aria-hidden="true"></i> New ${resource.singularTitle}</a>
+          <a class="tm-btn tm-btn-create btn btn-success" href="${RequestHolder.url.setPath(subUrl + '/new')}"><i class="fa fa-plus-circle" aria-hidden="true"></i> New ${resource.singularTitle}</a>
         [/#if]
       </div>
     </div>
   </div>
   
+<div class="tm-list-body box box-padded box-primary">
   <div class="box-body" style="margin-top: 0; padding-top: 0;">
     <div class="table-responsive"> 
-      <table id="${formDef.id!}" class="display table table-bordered table-hover crud-list-table ${formDef.cssStyleClass!}" cellspacing="0">
+      <table class="tm-table display table table-hover" cellspacing="0">
           <thead>
               <tr>
-                  <th class="text-center toggleSelectAll-cell"><input type="checkbox" id="toggleSelectAll"></th>
-                  <th>#</th>
+                  [#if formDef.allowDelete || formDef.bulkRecordActions?has_content]              
+                      <th class="tm-select-all text-center toggleSelectAll-cell"><input type="checkbox" id="toggleSelectAll"></th>
+                  [/#if]
+                  <th class="tm-index">#</th>
                   [#list formDef.listFields as field]
                     [#if field.showInList]
                         [#if field.allowSort]
                             [#if sortField! == field.name]
-                                <th class="sort-asc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', '-'+field.name)}">${field.displayName}<i class="fa fa-arrow-up"></i></a></th>
+                                <th class="tm-sort tm-sort-asc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', '-'+field.name)}">${field.displayName}<i class="fa fa-arrow-up"></i></a></th>
                             [#elseif sortField! == '-'+field.name]
-                                <th class="sort-desc"><a href="${RequestHolder.url.setPath(subUrl).removeQueryParam('s')}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th>
+                            	[#if formDef.defaultSortField! == sortField!]
+                                	<th class="tm-sort tm-sort-desc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', field.name)}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th>  <!-- cycle past sort-none state -->
+                                [#else]
+                                	<th class="tm-sort tm-sort-desc"><a href="${RequestHolder.url.setPath(subUrl).removeQueryParam('s')}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th>
+                                [/#if]
                             [#else]
-                                <th class="sort-none"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', field.name)}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th> <!-- invisible arrow to prevent table shift on sort -->
+                                <th class="tm-sort tm-sort-none"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', field.name)}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th> <!-- invisible arrow to prevent table shift on sort -->
                             [/#if]
                         [#else]
-                            <th>${field.displayName}</th>
+                            <th class="tm-nosort">${field.displayName}</th>
                         [/#if]
                     [/#if]
                   [/#list]
-                  <th>Actions</th>
+                  <th class="tm-actions">Actions</th>
               </tr>
           </thead>
           <tbody>
             [#list page.content as record]
                 <tr>
-                  <td class="text-center checkbox-cell"><input type="checkbox" name="id" value="${record.id}"></td>
-                  <td>${record?index + 1}</td>
+                  [#if formDef.allowDelete || formDef.bulkRecordActions?has_content]
+                      <td class="tm-select-all text-center"><input type="checkbox" name="id" value="${record.id}"></td>
+                  [/#if]
+                  <td class="tm-index">${record?index + 1}</td>
                   [#list formDef.listFields as field]
                     [#if field.showInList]
-                        <td>${field.getDisplayValueHtmlEscaped(resource, record, record[field.name])!}</td>
+                        <td [#if sortField! == field.name || sortField! == '-'+field.name]class="tm-sorted"[/#if]>${field.getDisplayValueHtmlEscaped(resource, record, record[field.name])!}</td>
                     [/#if]
                   [/#list]
-                  <td class="actions">
-                  [#if formDef.singleRecordActions?size > 0]
-                    [#list formDef.singleRecordActions as action]
-                      <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
-                    [/#list]
-                  [/#if]
-                  <a href="${RequestHolder.url.setPath(subUrl + '/view/' + record.id)}">View</a>
-                 [#if formDef.allowEdit]
-                   | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a></td>
-                 [/#if]
+                  <td class="tm-actions">
+                      [#if formDef.singleRecordActions?has_content]
+                        [#list formDef.singleRecordActions as action]
+                          <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
+                        [/#list]
+                      [/#if]
+                      <a href="${RequestHolder.url.setPath(subUrl + '/view/' + record.id)}">View</a>
+                     [#if formDef.allowEdit]
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a>
+                     [/#if]
+                     [#if formDef.allowClone]
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + record.id)}">Clone</a>
+                     [/#if]
+                 </td>
                 </tr>
             [/#list]
           </tbody>
       </table>
     </div>
   </div>
+  </div>
   <!-- /.box-body -->
-  <div class="box-footer">
+  <div class="tm-list-footer box-footer">
     <div class="row">
       <div class="col-sm-6">
       </div>
@@ -89,10 +105,9 @@
       </div>
     </div>
   </div>
-</div>
 <!-- /.box -->
 
-</form>
+
 </div>
 
 

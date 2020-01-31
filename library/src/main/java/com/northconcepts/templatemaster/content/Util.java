@@ -16,8 +16,13 @@
  */
 package com.northconcepts.templatemaster.content;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class Util {
 
@@ -135,5 +140,49 @@ public class Util {
         
         return count;
     }
-    
+
+    public static String emptyToNull(String value) {
+        if (isEmpty(value)) {
+            return null;
+        }
+        return value;
+    }
+
+    public static String nullToEmpty(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value;
+    }
+
+    public static boolean equals(Object o1, Object o2) {
+        return Util.equals(o1, o2);
+    }
+
+    public static boolean notEquals(Object o1, Object o2) {
+        return !equals(o1, o2);
+    }
+
+    public static String capitalize(String string) {
+        if (isEmpty(string)) {
+            return null;
+        }
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    public static String getServerAddress() {
+        String serverAddress;
+        try {
+            serverAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            serverAddress = null;
+        }
+        return serverAddress;
+    }
+
+    public static <T> Future<T> run(final Callable<T> callable) {
+        FutureTask<T> futureTask = new FutureTask<T>(callable);
+        futureTask.run();
+        return futureTask;
+    }
 }

@@ -1,10 +1,10 @@
-$('.toggleSelectAll-cell').click(function(e) {
+$('th.tm-select-all').click(function(e) {
  	if(!$(e.target).is('input')){
  		$(this).find('input:checkbox').click();
 	}
 });
 
-$('#toggleSelectAll').change(function() {
+$('th.tm-select-all input:checkbox').change(function() {
     var checkboxes = $('input[name=id]');
     checkboxes.prop('checked', $(this).is(':checked'));
     if ($('input[name=id]:checked').length) {
@@ -18,7 +18,7 @@ $(document).ready(function() {
     var checkboxes = $('input[name=id]');
     var lastChecked = null;
 
-    $('.checkbox-cell').click(function (e) {
+    $('td.tm-select-all').click(function (e) {
     	
     	var checkbox = checkbox = $(this).find('input:checkbox');
      	if(!$(e.target).is('input')){
@@ -43,6 +43,20 @@ $(document).ready(function() {
         }
 
     });
+    
+    $('.tm-list #searchInput').keypress(function(e) {
+		if (e.which == 13) {
+			jQuery(this).closest("form").submit();
+		}
+	});
+    
+    $('#pageSize').change(function() {
+    	$(this).closest('form').submit();
+    });
+    
+    $("input:checkbox").change(function() {
+    	$('input:checkbox[name=id]:checked').closest('tr').addClass('tm-selected');
+    	$('input:checkbox[name=id]:not(:checked)').closest('tr').removeClass('tm-selected');
+    });
+    
 });
-
-
