@@ -33,7 +33,7 @@ public class FieldDef extends Bean implements PreparableViewer, PreparableEditor
     private boolean array;
     private String defaultValue;
     private String temporalPattern;
-    private String numbericPattern;
+    private String numericPattern;
     private String patternValidationMessage;
     private FieldLookupDef lookupValues;
     private boolean limitToLookupValues;
@@ -336,12 +336,12 @@ public class FieldDef extends Bean implements PreparableViewer, PreparableEditor
         return this;
     }
 
-    public String getNumbericPattern() {
-        return numbericPattern;
+    public String getNumericPattern() {
+        return numericPattern;
     }
 
-    public FieldDef setNumbericPattern(String numbericPattern) {
-        this.numbericPattern = numbericPattern;
+    public FieldDef setNumericPattern(String numericPattern) {
+        this.numericPattern = numericPattern;
         return this;
     }
 

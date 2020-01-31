@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -20,6 +21,7 @@ public class Bean implements Serializable {
     private static final ObjectMapper json = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
             .setSerializationInclusion(Include.NON_NULL);
     
     static {
