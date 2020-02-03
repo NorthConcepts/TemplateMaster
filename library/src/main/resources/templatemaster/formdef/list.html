@@ -3,30 +3,30 @@
   <div class="tm-list-header box-header">
     <div class="tm-row-search row">
     <form method="get" action="${subUrl}">
-      <div class="col-xs-8">
+      <div class="col-xs-4 text-left">
       	[#if formDef.allowSearch]
            <input id="searchInput" name="q" placeholder="Search" class="form-control" type="text" value="${searchQuery!?html}" maxlength="1000" autofocus>
         [/#if]
       </div>
     </form>
-      <div class="col-xs-4">
-        ${listPager!}
+
+      <div class="col-xs-6 text-center .tm-row-actions">
+	        [#if formDef.allowDelete]
+	          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
+	        [/#if]
+
+	        [#list formDef.bulkRecordActions as action]
+	        <button type="submit" class="tm-btn tm-btn-bulk ${action.cssStyleClass!} btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if] disabled="disabled">${action.displayName}</button>
+	        [/#list]
+
+	        [#if formDef.allowCreate]
+	          <a class="tm-btn tm-btn-create btn btn-success" href="${RequestHolder.url.setPath(subUrl + '/new')}"><i class="fa fa-plus-circle" aria-hidden="true"></i> New ${resource.singularTitle}</a>
+	        [/#if]
       </div>
+
+    <div class="col-xs-2 text-right">
+      ${listPager!}
     </div>
-    <div class="tm-row-actions row">
-      <div class="col-xs-8 text-left">
-        [#if formDef.allowDelete]
-          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
-        [/#if]
-        [#list formDef.bulkRecordActions as action]
-        <button type="submit" class="tm-btn tm-btn-bulk ${action.cssStyleClass!} btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if] disabled="disabled">${action.displayName}</button>
-        [/#list]
-      </div>
-      <div class="col-xs-4 text-right">
-        [#if formDef.allowCreate]
-          <a class="tm-btn tm-btn-create btn btn-success" href="${RequestHolder.url.setPath(subUrl + '/new')}"><i class="fa fa-plus-circle" aria-hidden="true"></i> New ${resource.singularTitle}</a>
-        [/#if]
-      </div>
     </div>
   </div>
   
@@ -98,9 +98,18 @@
   <!-- /.box-body -->
   <div class="tm-list-footer box-footer">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-xs-6 text-left">
+	      <form id="pageSize" method="get" action="${subUrl}">
+	    	<select name="p" >
+		    	[#assign pageSizeArray = [20,50,100,200]]
+		
+				[#list pageSizeArray as pageSize]
+				  <option value='${pageSize}' [#if currentUserPageSize == pageSize]selected[/#if]>${pageSize}</option>
+				[/#list]
+	    	</select>&nbsp;Records Per Page
+	      </form>
       </div>
-      <div class="col-sm-6">
+      <div class="col-xs-6 text-right">
         ${listPager!}
       </div>
     </div>

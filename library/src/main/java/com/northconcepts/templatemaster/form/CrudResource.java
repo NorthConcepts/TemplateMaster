@@ -120,7 +120,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
     
     public Content getListPagerContent() {
-        return new Content(listPagerTemplate).add("currentUserPageSize", getCurrentUserPageSize());
+        return new Content(listPagerTemplate);
     }
 
     public CrudResource<ID, ENTITY> setListPagerTemplate(String listPagerTemplate) {
@@ -199,6 +199,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
         page.add("listPager", getListPagerContent());
+        page.add("currentUserPageSize", getCurrentUserPageSize());
         page.add("script", new Content(listJavascriptTemplate));
         page.add("sortField", sortField);
 
@@ -231,6 +232,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
         page.add("listPager", getListPagerContent());
+        page.add("currentUserPageSize", getCurrentUserPageSize());
         page.add("sortField", sortField);
 
         if (Util.isEmpty(callbackUrl)) {
