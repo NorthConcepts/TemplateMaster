@@ -23,6 +23,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -38,18 +39,7 @@ public final class Util {
     // L, uppercase i, and
     // number 1)
 
-    public static final int MAX_KEY_LENGTH = 128;
-    public static final int MAX_VALUE = 255;
-    public static final int MAX_PROPERTIES = 256;
     public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
-
-    public static final int MIN_PASSWORD_LENGTH = 8;
-    public static final int MAX_PASSWORD_LENGTH = 255;
-    public static final int DEFAULT_PASSWORD_LENGTH = 8;
-    public static final int SALT_LENGTH = 10;
-    public static final int DEFAULT_PASSCODE_LENGTH = 20;
-
-    public static final int TRIAL_LENGTH_DAYS = 7;
 
     private Util() {
 
@@ -182,7 +172,7 @@ public final class Util {
     }
 
     public static boolean equals(Object o1, Object o2) {
-        return Util.equals(o1, o2);
+        return Objects.deepEquals(o1, o2);
     }
 
     public static boolean notEquals(Object o1, Object o2) {
