@@ -104,7 +104,7 @@
 		    	[#assign pageSizeArray = [20,50,100,200]]
 		
 				[#list pageSizeArray as pageSize]
-				  <option value='${pageSize}' [#if currentUserPageSize == pageSize]selected[/#if]>${pageSize}</option>
+				  <option value='${pageSize}' [#if currentPageSize == pageSize]selected[/#if]>${pageSize}</option>
 				[/#list]
 	    	</select>&nbsp;Records Per Page
 	      </form>

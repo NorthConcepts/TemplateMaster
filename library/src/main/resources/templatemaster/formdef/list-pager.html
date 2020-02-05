@@ -1,6 +1,6 @@
 <div class="tm-list-pager text-right">
     <span style="margin-right: 1em">
-    	1 - ${currentUserPageSize} of ${page.totalElements}&nbsp;
+    	${currentPageSize * page.number + 1} - ${currentPageSize * page.number + page.numberOfElements} of ${page.totalElements}&nbsp;
     	[#if page.number > 0]
 	    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number - 1))}" class="tm-btn-previous btn btn-default">&lt;</a>
 	    [#else]

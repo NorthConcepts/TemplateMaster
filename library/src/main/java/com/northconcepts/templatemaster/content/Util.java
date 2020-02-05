@@ -171,14 +171,6 @@ public final class Util {
         return value;
     }
 
-    public static boolean equals(Object o1, Object o2) {
-        return Objects.deepEquals(o1, o2);
-    }
-
-    public static boolean notEquals(Object o1, Object o2) {
-        return !equals(o1, o2);
-    }
-
     public static String capitalize(String string) {
         if (isEmpty(string)) {
             return null;

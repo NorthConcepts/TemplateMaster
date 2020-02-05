@@ -199,7 +199,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
         page.add("listPager", getListPagerContent());
-        page.add("currentUserPageSize", getCurrentPageSize());
+        page.add("currentPageSize", getCurrentPageSize());
         page.add("script", new Content(listJavascriptTemplate));
         page.add("sortField", sortField);
 
@@ -232,7 +232,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
         page.add("listPager", getListPagerContent());
-        page.add("currentUserPageSize", getCurrentPageSize());
+        page.add("currentPageSize", getCurrentPageSize());
         page.add("sortField", sortField);
 
         if (Util.isEmpty(callbackUrl)) {
