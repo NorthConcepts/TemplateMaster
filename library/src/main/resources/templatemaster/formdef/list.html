@@ -1,14 +1,12 @@
 <div class="tm-crud tm-list container-fluid ${formDef.cssStyleClass!}" id="${formDef.id!?html}">
-
+<form method="get" action="${subUrl}">
   <div class="tm-list-header box-header">
     <div class="tm-row-search row">
-    <form method="get" action="${subUrl}">
       <div class="col-xs-4 text-left">
       	[#if formDef.allowSearch]
            <input id="searchInput" name="q" placeholder="Search" class="form-control" type="text" value="${searchQuery!?html}" maxlength="1000" autofocus>
         [/#if]
       </div>
-    </form>
 
       <div class="col-xs-6 text-center .tm-row-actions">
 	        [#if formDef.allowDelete]
@@ -95,6 +93,9 @@
     </div>
   </div>
   </div>
+  
+  </form>
+  
   <!-- /.box-body -->
   <div class="tm-list-footer box-footer">
     <div class="row">
