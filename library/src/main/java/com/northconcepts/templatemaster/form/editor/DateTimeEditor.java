@@ -1,5 +1,6 @@
 package com.northconcepts.templatemaster.form.editor;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -14,10 +15,10 @@ public class DateTimeEditor implements FieldValueEditor {
     public static final DateTimeEditor yyyyMMddHHmmss = new DateTimeEditor("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeEditor yyyyMMdd = new DateTimeEditor("yyyy-MM-dd");
 
-    private final DateTimeFormatter formatter;
+    private DateTimeFormatter formatter;
 
     public DateTimeEditor(String pattern) {
-        formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault());
+        formatter = DateTimeFormatter.ofPattern(pattern);
     }
     
     @Override
@@ -25,8 +26,12 @@ public class DateTimeEditor implements FieldValueEditor {
         if (fieldValue == null) {
             return "";
         }
-        
-        if (fieldValue instanceof TemporalAccessor) {
+
+        if (fieldValue instanceof Instant) {
+            Instant instant = (Instant) fieldValue;
+            formatter = formatter.withZone(ZoneId.systemDefault());
+            return formatter.format(instant);
+        } else if (fieldValue instanceof TemporalAccessor) {
             TemporalAccessor temporalAccessor = (TemporalAccessor) fieldValue;
             return formatter.format(temporalAccessor);
         } else if (fieldValue instanceof Date) {

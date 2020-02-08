@@ -51,6 +51,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
 
     protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, Integer pageSize);
     
+    protected abstract Integer getCurrentPageSize();
+    
     protected abstract ID getId(ENTITY record);
     
     protected ENTITY newRecord() {
@@ -115,6 +117,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
 
     public String getListPagerTemplate() {
         return listPagerTemplate;
+    }
+    
+    public Content getListPagerContent() {
+        return new Content(listPagerTemplate);
     }
 
     public CrudResource<ID, ENTITY> setListPagerTemplate(String listPagerTemplate) {
@@ -192,7 +198,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
-        page.add("listPager", new Content(listPagerTemplate));
+        page.add("listPager", getListPagerContent());
+        page.add("currentPageSize", getCurrentPageSize());
         page.add("script", new Content(listJavascriptTemplate));
         page.add("sortField", sortField);
 
@@ -224,7 +231,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("subUrl", subUrl + "/select");
         page.add("baseUrl", getBaseUrl());
         page.add("formDef", formDef);
-        page.add("listPager", new Content(listPagerTemplate));
+        page.add("listPager", getListPagerContent());
+        page.add("currentPageSize", getCurrentPageSize());
         page.add("sortField", sortField);
 
         if (Util.isEmpty(callbackUrl)) {

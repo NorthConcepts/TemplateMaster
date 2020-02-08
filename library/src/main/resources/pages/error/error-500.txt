@@ -1,0 +1,5 @@
+Website Error
+
+We apologize, an error occurred on our side while handling your request. The details have been sent to our administrators and we eill investigate shortly.
+
+In the mean time, please retry your request as it may have been temporary.

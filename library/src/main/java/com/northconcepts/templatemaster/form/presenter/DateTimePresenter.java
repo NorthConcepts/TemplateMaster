@@ -11,6 +11,7 @@ import com.northconcepts.templatemaster.form.FieldDef;
 public class DateTimePresenter implements FieldValuePresenter {
 
     public static final DateTimePresenter EEEMMMdyyyyhmmssaz = new DateTimePresenter("EEE MMM d, yyyy h:mm:ss a (z)");
+    public static final DateTimePresenter EEEMMMdyyyyhmmaz = new DateTimePresenter("EEE MMM d, yyyy h:mm a z");
     public static final DateTimePresenter EEEMMMdyyyy = new DateTimePresenter("EEE MMM d, yyyy");
 
     private final DateTimeFormatter formatter;

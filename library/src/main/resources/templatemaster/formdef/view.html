@@ -1,18 +1,48 @@
-[#ftl]
-[#setting url_escaping_charset="UTF-8"]
-
-<div class="crud crud-view">
+<div class="tm-crud tm-view">
 <div class="container">
 <div class="row">
 <div class="col-sm-9 col-sm-offset-1">
+<form method="get" class="${formDef.cssStyleClass!}" id="${formDef.id!?html}-view-form">
 
-<div class="box box-primary">
+    <input type="hidden" id="id" name="id" value="${(record.id)!}">
+
+    <div class="row" style="margin-bottom: 1em;">
+      <div class="col-sm-4 text-left">
+         <a class="btn btn-default" href="${subUrl!}">Back</a>
+      </div>
+      <div class="col-sm-8 text-right">
+      
+       <div class="pull-right">
+            [#if formDef.allowEdit]
+              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}" formmethod="get">Edit</button>
+            [/#if]
+            
+            [#if formDef.allowClone]
+              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/clone/' + record.id)}" formmethod="get">Clone</button>
+            [/#if]
+            
+            [#list formDef.singleRecordActions as action]
+              <button type="submit" class="tm-btn tm-btn-single ${action.cssStyleClass!} btn btn-info" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if]>${action.displayName}</button>
+            [/#list]
+            
+            [#list formDef.bulkRecordActions as action]
+                <button type="submit" class="tm-btn tm-btn-bulk ${action.cssStyleClass!} btn btn-info" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if]>${action.displayName}</button>
+            [/#list]
+        </div>          
+
+      </div>
+    </div>
+
+
+<div class="box box-padded box-primary">
   <div class="box-header">
-    <div class="box-title">${title!?html}</div>
+    <div class="box-title">
+      <h1 class="text-center">${title}</h1>
+    </div>
   </div>
   <div class="box-body">
     <!-- <div class="table-responsive"> -->
-      <table class="display table table-bordered table-hover">
+      <table id="grid" class="display table table-hover">
           <tbody>
             ${headerRows!}
             [#list formDef.listFields as field]
@@ -29,24 +59,10 @@
     <!-- </div> -->
   </div>
   <!-- /.box-body -->
-  <div class="box-footer">
-    <div class="row">
-      <div class="col-sm-4 text-left">
-         <a class="btn btn-default" href="${RequestHolder.referer!(subUrl!)}">Back</a></td>
-      </div>
-      <div class="col-sm-8 text-right">
-        [#list resource.singleRecordActions as action]
-          <a class="btn btn-default crud-action" href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a>
-        [/#list]
-        [#if formDef.allowEdit]
-         <a class="btn btn-default" href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a></td>
-        [/#if]
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- /.box -->
+</form>
 </div>
 </div>
 </div>
