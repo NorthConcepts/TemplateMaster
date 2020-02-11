@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
 
@@ -170,20 +171,29 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("p") Integer pageSize) throws Throwable {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("p") String pageSize) throws Throwable {
         return getListRecords(searchQuery, sortField, 0, pageSize);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber, @QueryParam("p") Integer pageSize) {
+    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber, @QueryParam("p") String pageSize) {
         if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());
         }
         
-        if (pageSize != null && (pageSize < MIN_PAGE_SIZE && pageSize > MAX_PAGE_SIZE)) {
-            pageSize = DEFAULT_PAGE_SIZE;
+        Integer pageSizeInt = null;
+        if (!StringUtils.isBlank(pageSize)) {
+            try {
+                pageSizeInt = Integer.valueOf(pageSize);
+            } catch (NumberFormatException ex) {
+                return gotoUri("error/400");
+            }
+        }
+        
+        if (pageSizeInt != null && (pageSizeInt < MIN_PAGE_SIZE && pageSizeInt > MAX_PAGE_SIZE)) {
+            pageSizeInt = DEFAULT_PAGE_SIZE;
         }
 
         searchQuery = Util.isNotEmpty(searchQuery) ? searchQuery : null;
@@ -193,7 +203,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         Content page = newPage(pluralTitle, listBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, pageSize));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, pageSizeInt));
         page.add("resource", this);
         page.add("subUrl", subUrl);
         page.add("baseUrl", getBaseUrl());

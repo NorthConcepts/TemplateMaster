@@ -49,6 +49,7 @@ import org.springframework.data.domain.Sort;
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
+import com.northconcepts.templatemaster.form.ErrorResource;
 
 @Produces(MediaType.TEXT_HTML)
 public class BaseResource {
@@ -67,20 +68,40 @@ public class BaseResource {
         return Response.ok(entity).build();
     }
     
-    protected Response notFound() {
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
-    
     protected Response serverError(Object entity) {
         return Response.status(Status.INTERNAL_SERVER_ERROR).entity(entity).build();
     }
     
-    protected Response badRequest() {
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-    
     protected Response badRequest(Object entity) {
         return Response.status(Response.Status.BAD_REQUEST).entity(entity).build();
+    }
+    
+    protected Response notFound() {
+        try {
+            HttpServletRequest request = RequestHolder.getHttpServletRequest();
+            
+            String uri = request.getRequestURI();
+
+            request.setAttribute("javax.servlet.error.request_uri", uri);
+            Response response = new ErrorResource().getError404(request);
+            return Response.fromResponse(response).type(MediaType.TEXT_HTML_TYPE).build();
+        } catch (Throwable e) {
+            throw TemplateMasterException.wrap(e);
+        }
+    }
+    
+    protected Response badRequest() {
+        try {
+            HttpServletRequest request = RequestHolder.getHttpServletRequest();
+            
+            String uri = request.getRequestURI();
+
+            request.setAttribute("javax.servlet.error.request_uri", uri);
+            Response response = new ErrorResource().getError400(request);
+            return Response.fromResponse(response).type(MediaType.TEXT_HTML_TYPE).build();
+        } catch (Throwable e) {
+            throw TemplateMasterException.wrap(e);
+        }
     }
     
     protected Response gotoPath(String path) {
