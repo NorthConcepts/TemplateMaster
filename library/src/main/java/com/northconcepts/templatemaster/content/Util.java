@@ -29,7 +29,7 @@ import java.util.concurrent.FutureTask;
 
 import org.apache.commons.codec.binary.Hex;
 
-public final class Util {
+public class Util {
 
     public static final int MIN_PAGE_SIZE = 1;
     public static final int MAX_PAGE_SIZE = 10000;

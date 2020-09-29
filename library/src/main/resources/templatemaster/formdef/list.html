@@ -8,7 +8,7 @@
         [/#if]
       </div>
 
-      <div class="col-xs-6 text-center .tm-row-actions">
+      <div class="col-xs-6 text-center tm-row-actions">
 	        [#if formDef.allowDelete]
 	          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
 	        [/#if]
