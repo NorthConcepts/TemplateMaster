@@ -45,13 +45,17 @@ import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
+import com.northconcepts.templatemaster.template.StaticBeanTemplateModel;
 import com.northconcepts.templatemaster.template.Templates;
 
-import freemarker.cache.WebappTemplateLoader;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 
 @WebFilter(urlPatterns = "/*")
 public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
+
+    public static final String UUID = "com.northconcepts.templatemaster.uuid";
 
     public static final int MAX_ENV_VALUE_LENGTH = 256;
 
@@ -60,6 +64,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     public final Logger LOG = LogManager.getLogger(getClass());
 
     private FilterConfig filterConfig;
+
     private ServletContext servletContext;
 
     public TemplateMasterBootstrap() {
@@ -75,15 +80,27 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-      LOG.debug("contextInitialized: " + event.getServletContext());
-      super.contextInitialized(event);
-        servletContext = event.getServletContext();
-        Configuration configuration = Templates.get().getConfiguration();
-        configuration.setTemplateLoader(new WebappTemplateLoader(servletContext, "WEB-INF/content"));
-        configuration.setNumberFormat("0.####");
-        ResteasyProviderFactory providerFactory = getResteasyProviderFactory();
-        providerFactory.registerProvider(ContentMessageBodyWriter.class);
-        providerFactory.registerProvider(ContentExceptionMapper.class);
+        try {
+            LOG.debug("contextInitialized: " + event.getServletContext());
+            ServletContextHolder.setServletContext(event.getServletContext());
+            super.contextInitialized(event);
+            servletContext = event.getServletContext();
+            Configuration configuration = Templates.get().getConfiguration();
+            // configuration.setTemplateLoader(new WebappTemplateLoader(servletContext, "WEB-INF/content"));
+            configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templatemaster"));
+            configuration.setNumberFormat("0.####");
+            configuration.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
+            configuration.setURLEscapingCharset("UTF-8");
+
+            BeansWrapper wrapper = (BeansWrapper) configuration.getObjectWrapper();
+            configuration.setSharedVariable("RequestHolder", new StaticBeanTemplateModel(wrapper, RequestHolder.class));
+
+            ResteasyProviderFactory providerFactory = getResteasyProviderFactory();
+            providerFactory.registerProvider(ContentMessageBodyWriter.class);
+            providerFactory.registerProvider(ContentExceptionMapper.class);
+        } catch (Throwable e) {
+            throw TemplateMasterException.wrap(e);
+        }
         debugEnvironment(getServletContext());
     }
 
@@ -92,6 +109,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         LOG.debug("contextDestroyed: " + event.getServletContext());
         super.contextDestroyed(event);
         servletContext = null;
+        ServletContextHolder.setServletContext(null);
     }
 
     @Override
@@ -107,6 +125,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         RequestHolder.setHttpServletRequest((HttpServletRequest) request);
+        setRequestUuid(request);
         try {
             chain.doFilter(request, response);
         } catch (Throwable e) {
@@ -117,6 +136,10 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         } finally {
             RequestHolder.clearHttpServletRequest();
         }
+    }
+
+    protected void setRequestUuid(ServletRequest request) {
+        request.setAttribute(UUID, java.util.UUID.randomUUID());
     }
 
     public Registry getRegistry() {
@@ -253,7 +276,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
 
         s.append("------------------------------------------");
 
-//        log.info(s);
+        // log.info(s);
         System.out.println(s);
     }
 
@@ -267,5 +290,5 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         }
         return s;
     }
-    
+
 }

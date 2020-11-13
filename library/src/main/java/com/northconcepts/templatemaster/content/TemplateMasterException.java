@@ -29,10 +29,21 @@ public class TemplateMasterException extends RuntimeException {
         if (exception instanceof TemplateMasterException) {
             return (TemplateMasterException) exception;
         } else {
-            return new TemplateMasterException(exception.getMessage(), exception);
+            return new TemplateMasterException(exception.getMessage(), exception).addNestedProperties();
         }
     }
 
+    private TemplateMasterException addNestedProperties() {
+        Throwable cause = this;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+            if (cause instanceof TemplateMasterException) {
+                this.properties.putAll(((TemplateMasterException)cause).properties);
+            }
+        }
+        return this;
+    }
+    
     private final Map<String, Object> properties = new LinkedHashMap<String, Object>(64);
     // private final Map<String,Object> properties = new TreeMap<String,Object>();
 

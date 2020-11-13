@@ -1,0 +1,123 @@
+<div class="tm-crud tm-list container-fluid ${formDef.cssStyleClass!}" id="${formDef.id!?html}">
+<form method="get" action="${subUrl}">
+  <div class="tm-list-header box-header">
+    <div class="tm-row-search row">
+      <div class="col-xs-4 text-left">
+      	[#if formDef.allowSearch]
+           <input id="searchInput" name="q" placeholder="Search" class="form-control" type="text" value="${searchQuery!?html}" maxlength="1000" autofocus>
+        [/#if]
+      </div>
+
+      <div class="col-xs-6 text-center tm-row-actions">
+	        [#if formDef.allowDelete]
+	          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
+	        [/#if]
+
+	        [#list formDef.bulkRecordActions as action]
+	        <button type="submit" class="tm-btn tm-btn-bulk ${action.cssStyleClass!} btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if] disabled="disabled">${action.displayName}</button>
+	        [/#list]
+
+	        [#if formDef.allowCreate]
+	          <a class="tm-btn tm-btn-create btn btn-success" href="${RequestHolder.url.setPath(subUrl + '/new')}"><i class="fa fa-plus-circle" aria-hidden="true"></i> New ${resource.singularTitle}</a>
+	        [/#if]
+      </div>
+
+    <div class="col-xs-2 text-right">
+      ${listPager!}
+    </div>
+    </div>
+  </div>
+  
+<div class="tm-list-body box box-padded box-primary">
+  <div class="box-body" style="margin-top: 0; padding-top: 0;">
+    <div class="table-responsive"> 
+      <table class="tm-table display table table-hover" cellspacing="0">
+          <thead>
+              <tr>
+                  [#if formDef.allowDelete || formDef.bulkRecordActions?has_content]              
+                      <th class="tm-select-all text-center toggleSelectAll-cell"><input type="checkbox" id="toggleSelectAll"></th>
+                  [/#if]
+                  <th class="tm-index">#</th>
+                  [#list formDef.listFields as field]
+                    [#if field.showInList]
+                        [#if field.allowSort]
+                            [#if sortField! == field.name]
+                                <th class="tm-sort tm-sort-asc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', '-'+field.name)}">${field.displayName}<i class="fa fa-arrow-up"></i></a></th>
+                            [#elseif sortField! == '-'+field.name]
+                            	[#if formDef.defaultSortField! == sortField!]
+                                	<th class="tm-sort tm-sort-desc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', field.name)}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th>  <!-- cycle past sort-none state -->
+                                [#else]
+                                	<th class="tm-sort tm-sort-desc"><a href="${RequestHolder.url.setPath(subUrl).removeQueryParam('s')}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th>
+                                [/#if]
+                            [#else]
+                                <th class="tm-sort tm-sort-none"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', field.name)}">${field.displayName}<i class="fa fa-arrow-down"></i></a></th> <!-- invisible arrow to prevent table shift on sort -->
+                            [/#if]
+                        [#else]
+                            <th class="tm-nosort">${field.displayName}</th>
+                        [/#if]
+                    [/#if]
+                  [/#list]
+                  <th class="tm-actions">Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+            [#list page.content as record]
+                <tr>
+                  [#if formDef.allowDelete || formDef.bulkRecordActions?has_content]
+                      <td class="tm-select-all text-center"><input type="checkbox" name="id" value="${record.id}"></td>
+                  [/#if]
+                  <td class="tm-index">${record?index + 1}</td>
+                  [#list formDef.listFields as field]
+                    [#if field.showInList]
+                        <td [#if sortField! == field.name || sortField! == '-'+field.name]class="tm-sorted"[/#if]>${field.getDisplayValueHtmlEscaped(resource, record, record[field.name])!}</td>
+                    [/#if]
+                  [/#list]
+                  <td class="tm-actions">
+                      [#if formDef.singleRecordActions?has_content]
+                        [#list formDef.singleRecordActions as action]
+                          <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
+                        [/#list]
+                      [/#if]
+                      <a href="${RequestHolder.url.setPath(subUrl + '/view/' + record.id)}">View</a>
+                     [#if formDef.allowEdit]
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a>
+                     [/#if]
+                     [#if formDef.allowClone]
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + record.id)}">Clone</a>
+                     [/#if]
+                 </td>
+                </tr>
+            [/#list]
+          </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+  
+  </form>
+  
+  <!-- /.box-body -->
+  <div class="tm-list-footer box-footer">
+    <div class="row">
+      <div class="col-xs-6 text-left">
+	      <form id="pageSize" method="get" action="${subUrl}">
+	    	<select name="p" >
+		    	[#assign pageSizeArray = [20,50,100,200]]
+		
+				[#list pageSizeArray as pageSize]
+				  <option value='${pageSize}' [#if currentPageSize == pageSize]selected[/#if]>${pageSize}</option>
+				[/#list]
+	    	</select>&nbsp;Records Per Page
+	      </form>
+      </div>
+      <div class="col-xs-6 text-right">
+        ${listPager!}
+      </div>
+    </div>
+  </div>
+<!-- /.box -->
+
+
+</div>
+
+

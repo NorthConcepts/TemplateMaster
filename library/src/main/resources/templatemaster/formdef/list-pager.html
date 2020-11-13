@@ -1,0 +1,16 @@
+<div class="tm-list-pager text-right">
+    <span style="margin-right: 1em">
+    	${currentPageSize * page.number + 1} - ${currentPageSize * page.number + page.numberOfElements} of ${page.totalElements}&nbsp;
+    	[#if page.number > 0]
+	    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number - 1))}" class="tm-btn-previous btn btn-default">&lt;</a>
+	    [#else]
+	    <a class="tm-btn-previous btn btn-default" disabled="disabled">&lt;</a>
+	    [/#if]
+	    
+	    [#if page.number < page.totalPages - 1] 
+	    <a href="${RequestHolder.url.setPath(subUrl + '/' + (page.number + 1))}" class="tm-btn-next btn btn-default">&gt;</a>
+	    [#else]
+	    <a class="tm-btn-next btn btn-default" disabled="disabled">&gt;</a>
+	    [/#if]
+    </span>
+</div>
