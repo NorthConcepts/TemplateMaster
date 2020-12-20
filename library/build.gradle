@@ -1,13 +1,50 @@
 
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
-archivesBaseName='NorthConcepts-TemplateMaster'
+archivesBaseName='NorthConcepts-TemplateMaster'.toLowerCase()
 
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+compileJava {
+    options.compilerArgs += ["-parameters", "-g:lines,vars,source"]
+}
+
+publishing {
+    publications {
+
+        templatemaster(MavenPublication) {
+
+            groupId = "${mavenTemplateMasterGroupId}"
+            version = "${version}"
+            artifactId = "${archivesBaseName}"
+
+            from components.java
+            artifact sourceJar
+            artifact packageJavadoc
+        }
+
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username "${mavenUser}"
+                password "${mavenPassword}"
+            }
+            name = "${mavenTemplateMasterRepo}"
+            url = "${mavenTemplateMasterUrl}"
+        }
+    }
+
+}
 
 dependencies {
-    // This dependency is exported to consumers, that is to say, found on their compile classpath.
     api 'org.freemarker:freemarker:2.3.28'
     api 'org.jboss.resteasy:resteasy-jaxrs:3.6.1.Final'
     api 'javax.servlet:javax.servlet-api:4.0.1'
@@ -17,39 +54,28 @@ dependencies {
     api 'org.springframework.data:spring-data-commons:2.1.2.RELEASE'
     api 'com.fasterxml.jackson.core:jackson-core:2.9.9'
     api 'org.apache.commons:commons-text:1.6'
-    
 
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    // implementation 'com.google.guava:guava:23.0'
-
-    // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
 
-// In this section you declare where to find the dependencies of your project
-repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+javadoc {
+  source = sourceSets.main.allJava
+  classpath = configurations.compileClasspath
+
+  options {
+    setMemberLevel JavadocMemberLevel.PUBLIC
+    setAuthor true
+
+    links "https://docs.oracle.com/javase/8/docs/api/"
+  }
 }
 
-task srcZip(type: Zip) {
-    classifier = 'src'
-    from sourceSets*.allSource
+task sourceJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allJava
 }
 
-task sourcesZip(type: Zip, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocZip(type: Zip, dependsOn: javadoc) {
+task packageJavadoc(type: Jar) {
+    from javadoc
     classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesZip
-    archives javadocZip
 }
