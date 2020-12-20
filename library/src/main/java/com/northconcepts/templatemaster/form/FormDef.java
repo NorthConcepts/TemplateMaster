@@ -10,6 +10,10 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private String id;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
     private final List<FieldDef> fields = new ArrayList<FieldDef>();
+    private boolean paginate = true;
+    private int defaultPageSize = CrudResource.DEFAULT_PAGE_SIZE;
+    private int minPageSize = CrudResource.MIN_PAGE_SIZE;
+    private int maxPageSize = CrudResource.MAX_PAGE_SIZE;
     private boolean allowCreate = true;
     private boolean allowEdit = true;
     private boolean allowDelete = true;
@@ -73,6 +77,42 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
 
     public FieldDef add(String name, String displayName) {
         return add(new FieldDef(name, displayName));
+    }
+    
+    public boolean isPaginate() {
+        return paginate;
+    }
+    
+    public FormDef setPaginate(boolean paginate) {
+        this.paginate = paginate;
+        return this;
+    }
+    
+    public int getDefaultPageSize() {
+        return defaultPageSize;
+    }
+    
+    public FormDef setDefaultPageSize(int defaultPageSize) {
+        this.defaultPageSize = defaultPageSize;
+        return this;
+    }
+    
+    public int getMaxPageSize() {
+        return maxPageSize;
+    }
+    
+    public FormDef setMaxPageSize(int maxPageSize) {
+        this.maxPageSize = maxPageSize;
+        return this;
+    }
+    
+    public int getMinPageSize() {
+        return minPageSize;
+    }
+    
+    public FormDef setMinPageSize(int minPageSize) {
+        this.minPageSize = minPageSize;
+        return this;
     }
 
     public boolean isAllowCreate() {

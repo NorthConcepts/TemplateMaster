@@ -1,3 +1,4 @@
+[#if formDef.paginate]
 <div class="tm-list-pager text-right">
     <span style="margin-right: 1em">
     	${currentPageSize * page.number + 1} - ${currentPageSize * page.number + page.numberOfElements} of ${page.totalElements}&nbsp;
@@ -14,3 +15,4 @@
 	    [/#if]
     </span>
 </div>
+[/#if]
