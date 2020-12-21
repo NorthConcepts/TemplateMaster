@@ -64,7 +64,7 @@
             [#list page.content as record]
                 <tr>
                   [#if formDef.allowDelete || formDef.bulkRecordActions?has_content]
-                      <td class="tm-select-all text-center"><input type="checkbox" name="id" value="${record.id}"></td>
+                      <td class="tm-select-all text-center"><input type="checkbox" name="id" value="${resource.getId(record)}"></td>
                   [/#if]
                   <td class="tm-index">${record?index + 1}</td>
                   [#list formDef.listFields as field]
@@ -73,18 +73,20 @@
                     [/#if]
                   [/#list]
                   <td class="tm-actions">
+                    [#if resource.getId(record)??]
                       [#if formDef.singleRecordActions?has_content]
                         [#list formDef.singleRecordActions as action]
-                          <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + record.id)}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
+                          <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + resource.getId(record))}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
                         [/#list]
                       [/#if]
-                      <a href="${RequestHolder.url.setPath(subUrl + '/view/' + record.id)}">View</a>
+                      <a href="${RequestHolder.url.setPath(subUrl + '/view/' + resource.getId(record))}">View</a>
                      [#if formDef.allowEdit]
-                       | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}">Edit</a>
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + resource.getId(record))}">Edit</a>
                      [/#if]
                      [#if formDef.allowClone]
-                       | <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + record.id)}">Clone</a>
+                       | <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + resource.getId(record))}">Clone</a>
                      [/#if]
+                   [/#if]
                  </td>
                 </tr>
             [/#list]

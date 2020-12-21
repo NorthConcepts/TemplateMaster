@@ -11,12 +11,15 @@ public interface FieldValueEditor  extends PreparableEditor {
         
         @Override
         public String getEditValue(CrudResource<?, ?> resource, FieldDef fieldDef, Object entity, Object fieldValue) {
+            
+            String stringFieldValue = fieldValue==null?fieldDef.getNullDisplayValue():fieldValue.toString();
+            
             return new Content("/formdef/edit-field-default.html")
                     .add("resource", resource)
                     .add("record", entity)
                     .add("formDef", fieldDef.getFormDef())
                     .add("field", fieldDef)
-                    .add("fieldValue", fieldValue)
+                    .add("fieldValue", stringFieldValue)
                     .toString();
         }
         

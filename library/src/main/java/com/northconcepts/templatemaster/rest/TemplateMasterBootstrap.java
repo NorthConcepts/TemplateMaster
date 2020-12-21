@@ -49,6 +49,9 @@ import com.northconcepts.templatemaster.template.StaticBeanTemplateModel;
 import com.northconcepts.templatemaster.template.Templates;
 
 import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 
@@ -86,8 +89,10 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
             super.contextInitialized(event);
             servletContext = event.getServletContext();
             Configuration configuration = Templates.get().getConfiguration();
-            // configuration.setTemplateLoader(new WebappTemplateLoader(servletContext, "WEB-INF/content"));
-            configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templatemaster"));
+             configuration.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{ 
+                     new WebappTemplateLoader(servletContext, "WEB-INF/content"),
+                     new ClassTemplateLoader(getClass().getClassLoader(), "templatemaster")
+             }));
             configuration.setNumberFormat("0.####");
             configuration.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
             configuration.setURLEscapingCharset("UTF-8");
