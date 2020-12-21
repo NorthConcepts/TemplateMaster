@@ -57,7 +57,9 @@
                         [/#if]
                     [/#if]
                   [/#list]
+                  [#if formDef.hasSingleOrBuiltInRecordActions()]
                   <th class="tm-actions">Actions</th>
+                  [/#if]
               </tr>
           </thead>
           <tbody>
@@ -72,6 +74,7 @@
                         <td [#if sortField! == field.name || sortField! == '-'+field.name]class="tm-sorted"[/#if]>${field.getDisplayValueHtmlEscaped(resource, record, record[field.name])!}</td>
                     [/#if]
                   [/#list]
+                  [#if formDef.hasSingleOrBuiltInRecordActions()]
                   <td class="tm-actions">
                     [#if resource.getId(record)??]
                       [#if formDef.singleRecordActions?has_content]
@@ -79,15 +82,18 @@
                           <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + resource.getId(record))}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
                         [/#list]
                       [/#if]
+                     [#if formDef.allowView]
                       <a href="${RequestHolder.url.setPath(subUrl + '/view/' + resource.getId(record))}">View</a>
+                     [/#if]
                      [#if formDef.allowEdit]
-                       | <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + resource.getId(record))}">Edit</a>
+                        <a href="${RequestHolder.url.setPath(subUrl + '/edit/' + resource.getId(record))}">Edit</a>
                      [/#if]
                      [#if formDef.allowClone]
-                       | <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + resource.getId(record))}">Clone</a>
+                        <a href="${RequestHolder.url.setPath(subUrl + '/clone/' + resource.getId(record))}">Clone</a>
                      [/#if]
                    [/#if]
                  </td>
+                  [/#if]
                 </tr>
             [/#list]
           </tbody>

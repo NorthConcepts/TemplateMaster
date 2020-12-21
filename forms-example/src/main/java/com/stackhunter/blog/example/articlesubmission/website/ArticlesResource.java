@@ -59,6 +59,8 @@ public class ArticlesResource extends CrudResource<Long, Article> {
 //        formDef.setPaginate(false);
 //        formDef.setDefaultPageSize(10);
         formDef.setAllowSort(false);
+//        formDef.setAllowView(false);
+        formDef.setAllowEdit(false);
         
         formDef.add("id", "ID");
         formDef.add("url", "URL");

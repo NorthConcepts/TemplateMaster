@@ -3,6 +3,8 @@ package com.northconcepts.templatemaster.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.params.AllClientPNames;
+
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
@@ -15,6 +17,7 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private int minPageSize = CrudResource.MIN_PAGE_SIZE;
     private int maxPageSize = CrudResource.MAX_PAGE_SIZE;
     private boolean allowCreate = true;
+    private boolean allowView = true;
     private boolean allowEdit = true;
     private boolean allowDelete = true;
     private boolean allowSearch = true;
@@ -125,6 +128,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
 
+    public boolean isAllowView() {
+        return allowView;
+    }
+    
+    public FormDef setAllowView(boolean allowView) {
+        this.allowView = allowView;
+        return this;
+    }
+    
     public boolean isAllowEdit() {
         return allowEdit;
     }
@@ -188,6 +200,21 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
 
+//    public List<CrudAction> getSingleRecordActions(boolean includeBuiltInActions) {
+//        if (includeBuiltInActions) {
+//            List<CrudAction> actions = new ArrayList<CrudAction>();
+//            
+//            // TODO add view, edit, and clone actions
+//            
+//            actions.addAll(getSingleRecordActions());
+//        }
+//        return singleRecordActions;
+//    }
+    
+    public boolean hasSingleOrBuiltInRecordActions() {
+        return singleRecordActions.size() > 0 || allowView || allowEdit || allowClone;
+    }
+    
     public List<CrudAction> getSingleRecordActions() {
         return singleRecordActions;
     }
