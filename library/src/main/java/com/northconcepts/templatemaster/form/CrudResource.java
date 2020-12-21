@@ -53,7 +53,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     protected abstract Integer getCurrentPageSize();
     
-    protected abstract ID getId(ENTITY record);
+    public abstract ID getId(ENTITY record);
     
     protected ENTITY newRecord() {
         throw new UnsupportedOperationException(getSingularTitle() + " creation is not supported"); 
@@ -182,12 +182,20 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
             return gotoUri(url.toString());
         }
         
-        if (pageSize != null && (pageSize < MIN_PAGE_SIZE && pageSize > MAX_PAGE_SIZE)) {
-            pageSize = DEFAULT_PAGE_SIZE;
+        return ok(getListRecordsImpl(searchQuery, sortField, pageNumber, pageSize));
+    }
+
+    protected Content getListRecordsImpl(String searchQuery, String sortField, int pageNumber, Integer pageSize) {
+        if (formDef.isPaginate() == false) {
+            pageNumber = 0;
+            pageSize = Integer.MAX_VALUE;
+        } else if (pageSize == null || (pageSize < formDef.getMinPageSize() || pageSize > formDef.getMaxPageSize())) {
+            pageSize = formDef.getDefaultPageSize();
         }
 
         searchQuery = Util.isNotEmpty(searchQuery) ? searchQuery : null;
-        sortField = Util.isNotEmpty(sortField) ? sortField : null;
+        
+        sortField = normalizeSortField(sortField);
 
         formDef.prepareViewer();
         
@@ -202,8 +210,7 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         page.add("currentPageSize", getCurrentPageSize());
         page.add("script", new Content(listJavascriptTemplate));
         page.add("sortField", sortField);
-
-        return ok(page);
+        return page;
     }
 
     //==========================================================================================
@@ -220,13 +227,14 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     @Path("/select/{pageNumber}")
     public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:null;
+
+        sortField = normalizeSortField(sortField);
 
         formDef.prepareViewer();
         
         Content page = newPage("Select " + singularTitle, selectListBodyTemplate);
         page.add("searchQuery", searchQuery);
-        page.add("page", getPage(searchQuery, sortField, pageNumber, DEFAULT_PAGE_SIZE));
+        page.add("page", getPage(searchQuery, sortField, pageNumber, formDef.getDefaultPageSize()));
         page.add("resource", this);
         page.add("subUrl", subUrl + "/select");
         page.add("baseUrl", getBaseUrl());
@@ -244,6 +252,15 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         
         return page;
+    }
+
+    protected String normalizeSortField(String sortField) {
+        if (formDef.isAllowSort() == false) {
+            sortField = null;
+        } else {
+            sortField = Util.isNotEmpty(sortField) ? sortField : null;
+        }
+        return sortField;
     }
     
     //==========================================================================================

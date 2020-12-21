@@ -3,6 +3,8 @@ package com.northconcepts.templatemaster.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.params.AllClientPNames;
+
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
@@ -10,10 +12,16 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private String id;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
     private final List<FieldDef> fields = new ArrayList<FieldDef>();
+    private boolean paginate = true;
+    private int defaultPageSize = CrudResource.DEFAULT_PAGE_SIZE;
+    private int minPageSize = CrudResource.MIN_PAGE_SIZE;
+    private int maxPageSize = CrudResource.MAX_PAGE_SIZE;
     private boolean allowCreate = true;
+    private boolean allowView = true;
     private boolean allowEdit = true;
     private boolean allowDelete = true;
     private boolean allowSearch = true;
+    private boolean allowSort = true;
     private boolean allowClone;
     private boolean allowExport;
     private boolean allowImport;
@@ -74,6 +82,42 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     public FieldDef add(String name, String displayName) {
         return add(new FieldDef(name, displayName));
     }
+    
+    public boolean isPaginate() {
+        return paginate;
+    }
+    
+    public FormDef setPaginate(boolean paginate) {
+        this.paginate = paginate;
+        return this;
+    }
+    
+    public int getDefaultPageSize() {
+        return defaultPageSize;
+    }
+    
+    public FormDef setDefaultPageSize(int defaultPageSize) {
+        this.defaultPageSize = defaultPageSize;
+        return this;
+    }
+    
+    public int getMaxPageSize() {
+        return maxPageSize;
+    }
+    
+    public FormDef setMaxPageSize(int maxPageSize) {
+        this.maxPageSize = maxPageSize;
+        return this;
+    }
+    
+    public int getMinPageSize() {
+        return minPageSize;
+    }
+    
+    public FormDef setMinPageSize(int minPageSize) {
+        this.minPageSize = minPageSize;
+        return this;
+    }
 
     public boolean isAllowCreate() {
         return allowCreate;
@@ -84,6 +128,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
 
+    public boolean isAllowView() {
+        return allowView;
+    }
+    
+    public FormDef setAllowView(boolean allowView) {
+        this.allowView = allowView;
+        return this;
+    }
+    
     public boolean isAllowEdit() {
         return allowEdit;
     }
@@ -108,6 +161,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
 
     public FormDef setAllowSearch(boolean allowSearch) {
         this.allowSearch = allowSearch;
+        return this;
+    }
+    
+    public boolean isAllowSort() {
+        return allowSort;
+    }
+    
+    public FormDef setAllowSort(boolean allowSort) {
+        this.allowSort = allowSort;
         return this;
     }
     
@@ -138,6 +200,21 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
 
+//    public List<CrudAction> getSingleRecordActions(boolean includeBuiltInActions) {
+//        if (includeBuiltInActions) {
+//            List<CrudAction> actions = new ArrayList<CrudAction>();
+//            
+//            // TODO add view, edit, and clone actions
+//            
+//            actions.addAll(getSingleRecordActions());
+//        }
+//        return singleRecordActions;
+//    }
+    
+    public boolean hasSingleOrBuiltInRecordActions() {
+        return singleRecordActions.size() > 0 || allowView || allowEdit || allowClone;
+    }
+    
     public List<CrudAction> getSingleRecordActions() {
         return singleRecordActions;
     }

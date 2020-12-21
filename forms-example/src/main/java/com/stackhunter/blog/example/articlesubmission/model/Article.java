@@ -16,11 +16,14 @@
  */
 package com.stackhunter.blog.example.articlesubmission.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.ws.rs.FormParam;
 
-public class Article {
+public class Article implements Serializable {
+    
+    private long id;
 
     @FormParam("url")
     private String url;
@@ -54,6 +57,15 @@ public class Article {
         this.title = title;
         this.email = email;
         this.name = name;
+    }
+    
+    public long getId() {
+        return id;
+    }
+    
+    public Article setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public String getUrl() {

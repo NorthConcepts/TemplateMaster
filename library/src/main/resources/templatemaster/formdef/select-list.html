@@ -31,7 +31,7 @@
           </thead>
           <tbody>
             [#list page.content as record]
-                [#assign selectUrl=(callbackUrl.setQueryParam('selected', record.id))!]
+                [#assign selectUrl=(callbackUrl.setQueryParam('selected', resource.getId(record)))!]
                 <tr>
                   <td>${record?index + 1}</td>
                   [#list formDef.listFields as field]

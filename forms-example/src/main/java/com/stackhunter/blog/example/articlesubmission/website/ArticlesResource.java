@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,15 +35,43 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.annotations.Form;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.northconcepts.templatemaster.content.Content;
+import com.northconcepts.templatemaster.content.Util;
+import com.northconcepts.templatemaster.form.CrudResource;
+import com.northconcepts.templatemaster.form.FormDef;
+import com.northconcepts.templatemaster.rest.RequestHolder;
 import com.stackhunter.blog.example.articlesubmission.model.Article;
 
 
 @SuppressWarnings("deprecation")
 @Path("/")
 @Produces(MediaType.TEXT_HTML)
-public class ArticlesResource {
+public class ArticlesResource extends CrudResource<Long, Article> {
+    
+    private static final FormDef formDef = new FormDef();
+    
+    static {
+//        formDef.setPaginate(false);
+//        formDef.setDefaultPageSize(10);
+        formDef.setAllowSort(false);
+//        formDef.setAllowView(false);
+        formDef.setAllowEdit(false);
+        
+        formDef.add("id", "ID");
+        formDef.add("url", "URL");
+        formDef.add("title", "Title");
+        formDef.add("email", "Email");
+        formDef.add("name", "Name");
+        formDef.add("lastUpdatedOn", "Last Updated");
+        formDef.add("views", "Views");
+        formDef.add("published", "Published");
+        formDef.add("priority", "Priority");
+    }
     
     private static final List<Article> articles = new ArrayList<Article>();
     private static final Map<String, Article> pendingArticles = new ConcurrentHashMap<String, Article>();
@@ -87,13 +117,54 @@ public class ArticlesResource {
         }
     }
     
+    public ArticlesResource() {
+        super("Article", "Articles", "/articles", formDef); 
+    }
+    
+    public String getBaseUrl() {
+        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        String url = request.getRequestURL().toString();
+        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        return baseUrl;
+    }
+
+    @Override
+    protected Page<Article> getPage(String keyword, String sortField, int pageNumber, Integer pageSize) {
+        int fromIndex = pageNumber * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, articles.size() - fromIndex);
+        
+        Sort sort = Util.isEmpty(sortField)?Sort.unsorted():Sort.by(sortField);
+        
+        // TODO sort articles
+        
+        return new PageImpl<>(articles.subList(fromIndex, toIndex), PageRequest.of(pageNumber, pageSize, sort), articles.size());
+    }
+
+    @Override
+    protected Integer getCurrentPageSize() {
+        return formDef.getDefaultPageSize();
+    }
+
+    @Override
+    public Long getId(Article record) {
+        return record.getId();
+    }
+
+    @Override
+    protected Article getRecord(Long id) {
+        return articles.stream().filter(article -> article.getId() == id).findAny().orElse(null);
+    }
+
+
+    
 
 //    @GET
 //    @Path("/")
 //    public Response getHome() throws Throwable {
 //        return Response.seeOther(new URI("/articles/")).build();
 //    }
-
+    
+/*
     @GET
     @Path("/")
     public Content getArticles() throws Throwable {
@@ -143,5 +214,6 @@ public class ArticlesResource {
         articles.add(article);
         return Response.seeOther(new URI("/")).build();
     }
+*/
 
 }

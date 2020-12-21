@@ -4,21 +4,21 @@
 <div class="col-sm-9 col-sm-offset-1">
 <form method="get" class="${formDef.cssStyleClass!}" id="${formDef.id!?html}-view-form">
 
-    <input type="hidden" id="id" name="id" value="${(record.id)!}">
+    <input type="hidden" id="id" name="id" value="${(resource.getId(record))!}">
 
     <div class="row" style="margin-bottom: 1em;">
       <div class="col-sm-4 text-left">
-         <a class="btn btn-default" href="${subUrl!}">Back</a>
+         <a class="btn btn-default" href="${RequestHolder.url.setPath(subUrl)}">Back</a>
       </div>
       <div class="col-sm-8 text-right">
       
        <div class="pull-right">
             [#if formDef.allowEdit]
-              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/edit/' + record.id)}" formmethod="get">Edit</button>
+              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/edit/' + resource.getId(record))}" formmethod="get">Edit</button>
             [/#if]
             
             [#if formDef.allowClone]
-              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/clone/' + record.id)}" formmethod="get">Clone</button>
+              <button type="submit" class="btn btn-primary" formaction="${RequestHolder.url.setPath(subUrl + '/clone/' + resource.getId(record))}" formmethod="get">Clone</button>
             [/#if]
             
             [#list formDef.singleRecordActions as action]
