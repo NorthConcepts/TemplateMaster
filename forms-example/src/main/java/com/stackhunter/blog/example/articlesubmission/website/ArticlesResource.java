@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -43,6 +44,7 @@ import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.form.CrudResource;
 import com.northconcepts.templatemaster.form.FormDef;
+import com.northconcepts.templatemaster.rest.RequestHolder;
 import com.stackhunter.blog.example.articlesubmission.model.Article;
 
 
@@ -55,7 +57,8 @@ public class ArticlesResource extends CrudResource<Long, Article> {
     
     static {
 //        formDef.setPaginate(false);
-        formDef.setDefaultPageSize(10);
+//        formDef.setDefaultPageSize(10);
+        formDef.setAllowSort(false);
         
         formDef.add("id", "ID");
         formDef.add("url", "URL");
@@ -113,7 +116,14 @@ public class ArticlesResource extends CrudResource<Long, Article> {
     }
     
     public ArticlesResource() {
-        super("Article", "Articles", "/blog-article/articles", formDef); 
+        super("Article", "Articles", "/articles", formDef); 
+    }
+    
+    public String getBaseUrl() {
+        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        String url = request.getRequestURL().toString();
+        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        return baseUrl;
     }
 
     @Override

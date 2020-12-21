@@ -40,7 +40,7 @@
                   <th class="tm-index">#</th>
                   [#list formDef.listFields as field]
                     [#if field.showInList]
-                        [#if field.allowSort]
+                        [#if formDef.allowSort && field.allowSort]
                             [#if sortField! == field.name]
                                 <th class="tm-sort tm-sort-asc"><a href="${RequestHolder.url.setPath(subUrl).setQueryParam('s', '-'+field.name)}">${field.displayName}<i class="fa fa-arrow-up"></i></a></th>
                             [#elseif sortField! == '-'+field.name]

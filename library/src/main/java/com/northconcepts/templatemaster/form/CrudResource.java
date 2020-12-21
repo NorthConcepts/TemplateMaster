@@ -194,7 +194,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         }
 
         searchQuery = Util.isNotEmpty(searchQuery) ? searchQuery : null;
-        sortField = Util.isNotEmpty(sortField) ? sortField : null;
+        
+        sortField = normalizeSortField(sortField);
 
         formDef.prepareViewer();
         
@@ -226,7 +227,8 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     @Path("/select/{pageNumber}")
     public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @PathParam("pageNumber") int pageNumber) {
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
-        sortField = Util.isNotEmpty(sortField)?sortField:null;
+
+        sortField = normalizeSortField(sortField);
 
         formDef.prepareViewer();
         
@@ -250,6 +252,15 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         
         
         return page;
+    }
+
+    protected String normalizeSortField(String sortField) {
+        if (formDef.isAllowSort() == false) {
+            sortField = null;
+        } else {
+            sortField = Util.isNotEmpty(sortField) ? sortField : null;
+        }
+        return sortField;
     }
     
     //==========================================================================================
