@@ -107,17 +107,19 @@
   <!-- /.box-body -->
   <div class="tm-list-footer box-footer">
     <div class="row">
+      [#if formDef.paginate]
       <div class="col-xs-6 text-left">
-	      <form id="pageSize" method="get" action="${subUrl}">
-	    	<select name="p" >
-		    	[#assign pageSizeArray = [20,50,100,200]]
-		
-				[#list pageSizeArray as pageSize]
-				  <option value='${pageSize}' [#if currentPageSize == pageSize]selected[/#if]>${pageSize}</option>
-				[/#list]
-	    	</select>&nbsp;Records Per Page
-	      </form>
+        <form id="pageSize" method="get" action="${subUrl}">
+            <select name="p" >
+                [#assign pageSizeArray = [20,50,100,200]]
+
+                [#list pageSizeArray as pageSize]
+                <option value='${pageSize}' [#if currentPageSize == pageSize]selected[/#if]>${pageSize}</option>
+                [/#list]
+            </select>&nbsp;Records Per Page
+        </form>
       </div>
+      [/#if]
       <div class="col-xs-6 text-right">
         ${listPager!}
       </div>
