@@ -40,8 +40,7 @@ public class Util {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
-    private Util() {
-
+    protected Util() {
     }
 
     public static boolean isEmpty(String s) {
