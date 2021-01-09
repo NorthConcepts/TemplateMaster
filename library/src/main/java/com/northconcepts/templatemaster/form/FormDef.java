@@ -3,8 +3,6 @@ package com.northconcepts.templatemaster.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.client.params.AllClientPNames;
-
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
