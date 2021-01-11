@@ -27,15 +27,26 @@ import com.northconcepts.templatemaster.template.ITemplateSource;
 import freemarker.template.Template;
 import freemarker.template.TemplateModelException;
 
-public class Content implements IContent {
+public class Content implements IContent, Cloneable {
     
     public static final int BUFFER_SIZE = 1024 * 16;
     private Content parent;
-    private final Map<String, ContentList> blocks = new HashMap<String, ContentList>();
+    private Map<String, ContentList> blocks = new HashMap<String, ContentList>();
     private ITemplateSource templateSource;
 //    private final BlockTemplateModel templateModel = new BlockTemplateModel(this);
     
     public Content() {
+    }
+    
+    @Override
+    public Content clone() {
+        try {
+            Content clone = (Content)super.clone();
+            clone.blocks = new HashMap<String, ContentList>();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw TemplateMasterException.wrap(e);
+        }
     }
     
     public Content(String file) {
@@ -54,6 +65,11 @@ public class Content implements IContent {
 
     public Map<String, ContentList> getBlocks() {
         return blocks;
+    }
+    
+    public Content clear() {
+        blocks.clear();
+        return this;
     }
     
     public Content add(String name, IContent block) {
