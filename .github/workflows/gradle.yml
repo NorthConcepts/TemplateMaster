@@ -15,8 +15,4 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew build -PmavenDataPipelineRepo=datapipeline -PmavenDataPipelineUrl=https://maven.northconcepts.com/repositories/datapipeline -PmavenDataPipelineGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --no-daemon
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: build-reports
-        path: build/reports
+      working-directory: library
