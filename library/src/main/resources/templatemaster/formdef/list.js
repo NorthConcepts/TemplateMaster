@@ -49,11 +49,15 @@ $(document).ready(function() {
 			jQuery(this).closest("form").submit();
 		}
 	});
-    
+
     $('#pageSize').change(function() {
     	$(this).closest('form').submit();
     });
-    
+
+    $('#recordsFilter').change(function() {
+        $(this).closest('form').submit();
+    });
+
     $("input:checkbox").change(function() {
     	$('input:checkbox[name=id]:checked').closest('tr').addClass('tm-selected');
     	$('input:checkbox[name=id]:not(:checked)').closest('tr').removeClass('tm-selected');

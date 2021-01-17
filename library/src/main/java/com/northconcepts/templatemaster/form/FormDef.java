@@ -3,8 +3,6 @@ package com.northconcepts.templatemaster.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.client.params.AllClientPNames;
-
 import com.northconcepts.templatemaster.service.Bean;
 
 public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
@@ -27,7 +25,8 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private boolean allowImport;
     private String defaultSortField;
     private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
-    private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>(); 
+    private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>();
+    private final List<String> recordsFilter = new ArrayList<>();
 
     public FormDef() {
     }
@@ -241,8 +240,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         this.defaultSortField = defaultSortField;
         return this;
     }
-    
-    
+
+    public List<String> getRecordsFilter() {
+        return recordsFilter;
+    }
+
+    public FormDef addRecordsFilter(String action) {
+        recordsFilter.add(action);
+        return this;
+    }
     
     
 /*    
