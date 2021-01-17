@@ -15,4 +15,3 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: library/./gradlew build -PmavenDataPipelineRepo=datapipeline -PmavenDataPipelineUrl=https://maven.northconcepts.com/repositories/datapipeline -PmavenDataPipelineGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --no-daemon
-      working-directory: library
