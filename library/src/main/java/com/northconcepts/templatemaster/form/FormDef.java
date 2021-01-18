@@ -26,7 +26,7 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
     private String defaultSortField;
     private final List<CrudAction> singleRecordActions = new ArrayList<CrudAction>(); 
     private final List<CrudAction> bulkRecordActions = new ArrayList<CrudAction>();
-    private final List<String> recordsFilter = new ArrayList<>();
+    private final List<NamedFilter> namedFilters = new ArrayList<>();
 
     public FormDef() {
     }
@@ -241,13 +241,17 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
 
-    public List<String> getRecordsFilter() {
-        return recordsFilter;
+    public List<NamedFilter> getNamedFilters() {
+        return namedFilters;
     }
 
-    public FormDef addRecordsFilter(String action) {
-        recordsFilter.add(action);
+    public FormDef addNamedFilter(NamedFilter filter) {
+        namedFilters.add(filter);
         return this;
+    }
+    
+    public FormDef addNamedFilter(String code, String label) {
+        return addNamedFilter(new NamedFilter(code, label));
     }
     
     

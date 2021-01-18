@@ -54,7 +54,7 @@ $(document).ready(function() {
     	$(this).closest('form').submit();
     });
 
-    $('#recordsFilter').change(function() {
+    $('#namedFilters').change(function() {
         $(this).closest('form').submit();
     });
 
