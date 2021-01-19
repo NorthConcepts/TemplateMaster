@@ -9,6 +9,17 @@
       </div>
 
       <div class="col-xs-6 text-center tm-row-actions">
+          [#if formDef.namedFilters?has_content]
+          <div class="col-xs-4 text-left">
+              <select id="namedFilters" class="form-control" name="f">
+                  <option value=""> All ${resource.pluralTitle}</option>
+                  [#list formDef.namedFilters as filter]
+                  <option value="${filter.code}" [#if namedFilterCode?? && namedFilterCode == filter.code]selected[/#if]>${filter.label}</option>
+                  [/#list]
+              </select>
+          </div>
+          [/#if]
+
 	        [#if formDef.allowDelete]
 	          <button type="submit" class="tm-btn tm-btn-delete btn btn-default" formaction="${RequestHolder.url.setPath(subUrl + '/delete')}" formmethod="post" disabled="disabled"><i class="fa fa-trash" aria-hidden="true"></i> Delete ${resource.pluralTitle}</button>
 	        [/#if]
