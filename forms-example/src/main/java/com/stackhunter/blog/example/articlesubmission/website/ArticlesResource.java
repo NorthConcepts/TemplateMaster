@@ -129,7 +129,7 @@ public class ArticlesResource extends CrudResource<Long, Article> {
     }
 
     @Override
-    protected Page<Article> getPage(String keyword, String sortField, int pageNumber, Integer pageSize) {
+    protected Page<Article> getPage(String keyword, String sortField, String namedFilterCode, int pageNumber, Integer pageSize) {
         int fromIndex = pageNumber * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, articles.size() - fromIndex);
         
