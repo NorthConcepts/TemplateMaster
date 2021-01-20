@@ -170,19 +170,20 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode, @QueryParam("p") Integer pageSize) throws Throwable {
-        return getListRecords(searchQuery, sortField, namedFilterCode, 0, pageSize);
+    public Response getListRecords(ListRequest listRequest) throws Throwable {
+        return getListRecords(listRequest, 0);
     }
     
     @GET
     @Path("/{pageNumber}")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode, @PathParam("pageNumber") int pageNumber, @QueryParam("p") Integer pageSize) {
-        if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
+    public Response getListRecords(ListRequest listRequest, @PathParam("pageNumber")int pageNumber) {
+        listRequest.setPageNumber(pageNumber);
+        if (listRequest.getPageNumber() == 0 && Util.isEmpty(listRequest.getSortField()) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());
         }
         
-        return ok(getListRecordsImpl(searchQuery, sortField, namedFilterCode, pageNumber, pageSize));
+        return ok(getListRecordsImpl(listRequest.getSearchQuery(), listRequest.getSortField(), listRequest.getNamedFilterCode(), listRequest.getPageNumber(), listRequest.getPageSize()));
     }
 
     protected Content getListRecordsImpl(String searchQuery, String sortField, String namedFilterCode, int pageNumber, Integer pageSize) {
