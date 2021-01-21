@@ -2,6 +2,8 @@ package com.northconcepts.templatemaster.form;
 
 import java.io.Serializable;
 
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -168,16 +170,10 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     // List
     //==========================================================================================
     
+
     @GET
     @Path("/")
-    public Response getListRecords(ListRequest listRequest) throws Throwable {
-        return getListRecords(listRequest, 0);
-    }
-    
-    @GET
-    @Path("/{pageNumber}")
-    public Response getListRecords(ListRequest listRequest, @PathParam("pageNumber")int pageNumber) {
-        listRequest.setPageNumber(pageNumber);
+    public Response getListRecords(@Form ListRequest listRequest) {
         if (listRequest.getPageNumber() == 0 && Util.isEmpty(listRequest.getSortField()) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());

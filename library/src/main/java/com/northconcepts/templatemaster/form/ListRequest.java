@@ -1,41 +1,30 @@
 package com.northconcepts.templatemaster.form;
 
-import org.jboss.resteasy.annotations.jaxrs.QueryParam;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.spi.HttpRequest;
 
-import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 public class ListRequest {
 
     @QueryParam("q")
-    String searchQuery;
+    private String searchQuery;
 
     @QueryParam("s")
-    String sortField;
+    private String sortField;
 
     @QueryParam("f")
-    String namedFilterCode;
+    private String namedFilterCode;
 
-    @PathParam("pageNumber")
     int pageNumber;
 
     @QueryParam("p")
     Integer pageSize;
 
-    public ListRequest(String searchQuery, String sortField, String namedFilterCode, Integer pageSize) {
-        this.searchQuery = searchQuery;
-        this.sortField = sortField;
-        this.namedFilterCode = namedFilterCode;
-        this.pageNumber = 0;
-        this.pageSize = pageSize;
-    }
+    private HttpRequest request;
 
-    public ListRequest(String searchQuery, String sortField, String namedFilterCode, int pageNumber, Integer pageSize) {
-        this.searchQuery = searchQuery;
-        this.sortField = sortField;
-        this.namedFilterCode = namedFilterCode;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
-    }
+    public ListRequest(){}
 
     public String getSearchQuery() {
         return searchQuery;
@@ -65,8 +54,18 @@ public class ListRequest {
         return pageNumber;
     }
 
+    @PathParam("pageNumber")
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public HttpRequest getRequest() {
+        return request;
+    }
+
+    @Context
+    public void setRequest(HttpRequest request) {
+        this.request = request;
     }
 
     public Integer getPageSize() {
