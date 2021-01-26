@@ -46,15 +46,30 @@ public final class RequestHolder {
         threadLocalHttpServletRequest.remove();
     }
 
-    public static HttpServletRequest getHttpServletRequest() {
+    public static HttpServletRequest getHttpServletRequest(boolean exceptionOnFailure) {
         if (threadLocalHttpServletRequest == null) {
+            if (!exceptionOnFailure) {
+                return null;
+            }
             throw new TemplateMasterException("threadLocalHttpServletRequest has not been initialized");
         }
+
         HttpServletRequest request = threadLocalHttpServletRequest.get();
         if (request == null) {
+            if (!exceptionOnFailure) {
+                return null;
+            }
             throw new RuntimeException("not inside a servlet request; threadLocalHttpServletRequest.get() is null");
         }
         return request;
+    }
+
+    public static HttpServletRequest getHttpServletRequest() {
+        return getHttpServletRequest(true);
+    }
+
+    public static boolean hasHttpServletRequest() {
+        return getHttpServletRequest(false) != null;
     }
 
     // ============================================================================================================
