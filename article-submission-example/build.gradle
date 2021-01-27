@@ -21,7 +21,7 @@ dependencies {
     
     compile 'org.jboss.resteasy:resteasy-jackson2-provider:3.6.1.Final'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
-    compile 'com.northconcepts:northconcepts-templatemaster:2.6.2-SNAPSHOT'
+    compile 'com.northconcepts:northconcepts-templatemaster:2.6.4-SNAPSHOT'
     //compile fileTree(dir: 'lib', include: ['*.jar'])
 
     // Use JUnit test framework
