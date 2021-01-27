@@ -2,6 +2,8 @@ package com.northconcepts.templatemaster.form;
 
 import java.io.Serializable;
 
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -167,22 +169,22 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     //==========================================================================================
     // List
     //==========================================================================================
-    
+
     @GET
     @Path("/")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode, @QueryParam("p") Integer pageSize) throws Throwable {
-        return getListRecords(searchQuery, sortField, namedFilterCode, 0, pageSize);
+    public Response getListRecords(@BeanParam ListRequest listRequest){
+        return getListRecords(listRequest, 0);
     }
-    
+
     @GET
     @Path("/{pageNumber}")
-    public Response getListRecords(@QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode, @PathParam("pageNumber") int pageNumber, @QueryParam("p") Integer pageSize) {
-        if (pageNumber == 0 && Util.isEmpty(sortField) && Util.isNotEmpty(formDef.getDefaultSortField())) {
+    public Response getListRecords(@BeanParam ListRequest listRequest, @PathParam("pageNumber") int pageNumber) {
+        if (pageNumber == 0 && Util.isEmpty(listRequest.getSortField()) && Util.isNotEmpty(formDef.getDefaultSortField())) {
             Url url = RequestHolder.getUrl().setQueryParam("s", formDef.getDefaultSortField());
             return gotoUri(url.toString());
         }
         
-        return ok(getListRecordsImpl(searchQuery, sortField, namedFilterCode, pageNumber, pageSize));
+        return ok(getListRecordsImpl(listRequest.getSearchQuery(), listRequest.getSortField(), listRequest.getNamedFilterCode(), pageNumber, listRequest.getPageSize()));
     }
 
     protected Content getListRecordsImpl(String searchQuery, String sortField, String namedFilterCode, int pageNumber, Integer pageSize) {
@@ -220,13 +222,18 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     
     @GET
     @Path("/select/")
-    public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode) throws Throwable {
-        return getSelectListRecords(callbackUrl, searchQuery, sortField, namedFilterCode, 0);
+    public Content getSelectListRecords(@BeanParam ListRequest listRequest) throws Throwable {
+        return getSelectListRecords(listRequest, 0);
     }
     
     @GET
     @Path("/select/{pageNumber}")
-    public Content getSelectListRecords(@QueryParam("cb") String callbackUrl, @QueryParam("q") String searchQuery, @QueryParam("s")String sortField, @QueryParam("f")String namedFilterCode, @PathParam("pageNumber") int pageNumber) {
+    public Content getSelectListRecords(@BeanParam ListRequest listRequest, @PathParam("pageNumber") int pageNumber) {
+        String searchQuery = listRequest.getSearchQuery();
+        String sortField = listRequest.getSortField();
+        String namedFilterCode = listRequest.getNamedFilterCode();
+        String callbackUrl = listRequest.getCallbackUrl();
+
         searchQuery =  Util.isNotEmpty(searchQuery)?searchQuery:null;
 
         sortField = normalizeSortField(sortField);
