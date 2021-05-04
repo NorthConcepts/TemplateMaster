@@ -47,4 +47,8 @@ public class CrudAction extends Bean implements PreparableViewer {
         return cssStyleClass;
     }
     
+    public boolean isVisible(CrudResource<?, ?> resource, Object entity) {
+        return true;
+    }
+    
 }
