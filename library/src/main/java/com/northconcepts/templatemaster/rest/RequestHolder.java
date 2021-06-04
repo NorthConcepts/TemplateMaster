@@ -109,6 +109,14 @@ public final class RequestHolder {
         return getReferrer();
     } 
 
+    public static String getRemoteAddr(HttpServletRequest request) {
+        return Util.coalesceCharSequences(request.getHeader("x-forwarded-for"), request.getRemoteAddr());
+    }
+    
+    public static String getRemoteAddr() {
+        return getRemoteAddr(RequestHolder.getHttpServletRequest());
+    }
+    
     
     // ============================================================================================================
     //  Session Attribute
