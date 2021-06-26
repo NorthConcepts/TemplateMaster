@@ -51,6 +51,31 @@ public class Util {
         return !isEmpty(s);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T coalesce(T ... values) {
+        if (values != null) {
+            for (T v : values) {
+                if (v != null) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+    
+    
+    @SafeVarargs
+    public static <T extends CharSequence> T coalesceCharSequences(T ... values) {
+        if (values != null) {
+            for (T v : values) {
+                if (v != null && v.toString().trim().length() != 0) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+    
     public static String trimLeft(String string, char padChar) {
         if (string == null) {
             return string;
