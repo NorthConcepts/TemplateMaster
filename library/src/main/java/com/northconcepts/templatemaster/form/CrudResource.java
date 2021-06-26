@@ -3,14 +3,12 @@ package com.northconcepts.templatemaster.form;
 import java.io.Serializable;
 
 import javax.ws.rs.BeanParam;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -51,8 +49,12 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
         this.formDef = formDef;
     }
 
-    protected abstract Page<ENTITY> getPage(String keyword, String sortField, String namedFilterCode, int pageNumber, Integer pageSize);
+    protected Page<ENTITY> getPage(String keyword, String sortField, String namedFilterCode, int pageNumber, Integer pageSize) {
+        return getPage(keyword, sortField, pageNumber, pageSize) ;
+    }
     
+    protected abstract Page<ENTITY> getPage(String keyword, String sortField, int pageNumber, Integer pageSize);
+
     protected abstract Integer getCurrentPageSize();
     
     public abstract ID getId(ENTITY record);
