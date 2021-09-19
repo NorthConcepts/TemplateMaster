@@ -117,6 +117,22 @@ public final class RequestHolder {
         return getRemoteAddr(RequestHolder.getHttpServletRequest());
     }
     
+    public static String getRemoteHost(HttpServletRequest request) {
+        return Util.coalesceCharSequences(request.getHeader("x-forwarded-host"), request.getRemoteHost());
+    }
+    
+    public static String getRemoteHost() {
+        return getRemoteHost(RequestHolder.getHttpServletRequest());
+    }
+    
+    public static String getScheme(HttpServletRequest request) {
+        return Util.coalesceCharSequences(request.getHeader("x-forwarded-proto"), request.getScheme());
+    }
+    
+    public static String getScheme() {
+        return getScheme(RequestHolder.getHttpServletRequest());
+    }
+    
     
     // ============================================================================================================
     //  Session Attribute

@@ -90,7 +90,9 @@
                     [#if resource.getId(record)??]
                       [#if formDef.singleRecordActions?has_content]
                         [#list formDef.singleRecordActions as action]
-                          <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + resource.getId(record))}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
+                          [#if action.isVisible(resource, record)]
+                            <a href="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + resource.getId(record))}" [#if action.target??]target="${action.target}"[/#if]>${action.displayName}</a> |
+                          [/#if]
                         [/#list]
                       [/#if]
                      [#if formDef.allowView]
