@@ -8,8 +8,11 @@ import com.northconcepts.templatemaster.service.Bean;
 public class FormDef extends Bean implements PreparableViewer, PreparableEditor {
     
     private String id;
+    private String singularTitle;
+    private String pluralTitle;
     private final CssStyleClass cssStyleClass = new CssStyleClass();
     private final List<FieldDef> fields = new ArrayList<FieldDef>();
+    private String idFieldName = "id";
     private boolean paginate = true;
     private int defaultPageSize = CrudResource.DEFAULT_PAGE_SIZE;
     private int minPageSize = CrudResource.MIN_PAGE_SIZE;
@@ -52,6 +55,24 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
         return this;
     }
     
+    public String getSingularTitle() {
+        return singularTitle;
+    }
+    
+    public FormDef setSingularTitle(String singularTitle) {
+        this.singularTitle = singularTitle;
+        return this;
+    }
+    
+    public String getPluralTitle() {
+        return pluralTitle;
+    }
+    
+    public FormDef setPluralTitle(String pluralTitle) {
+        this.pluralTitle = pluralTitle;
+        return this;
+    }
+    
     public CssStyleClass getCssStyleClass() {
         return cssStyleClass;
     }
@@ -80,6 +101,15 @@ public class FormDef extends Bean implements PreparableViewer, PreparableEditor 
 
     public FieldDef add(String name, String displayName) {
         return add(new FieldDef(name, displayName));
+    }
+    
+    public String getIdFieldName() {
+        return idFieldName;
+    }
+    
+    public FormDef setIdFieldName(String idFieldName) {
+        this.idFieldName = idFieldName;
+        return this;
     }
     
     public boolean isPaginate() {
