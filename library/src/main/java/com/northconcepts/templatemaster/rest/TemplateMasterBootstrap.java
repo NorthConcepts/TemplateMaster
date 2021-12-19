@@ -66,6 +66,16 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
 
     public final Logger LOG = LogManager.getLogger(getClass());
 
+    private static boolean useXforwardedHeaders;
+    
+    public static void setUseXforwardedHeaders(boolean useXforwardedHeaders) {
+        TemplateMasterBootstrap.useXforwardedHeaders = useXforwardedHeaders;
+    }
+    
+    public static boolean isUseXforwardedHeaders() {
+        return useXforwardedHeaders;
+    }
+
     private FilterConfig filterConfig;
 
     private ServletContext servletContext;
@@ -129,6 +139,10 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (useXforwardedHeaders) {
+            request = new XForwardedRequestWrapper((HttpServletRequest) request);
+        }
+        
         RequestHolder.setHttpServletRequest((HttpServletRequest) request);
         setRequestUuid(request);
         try {
