@@ -17,8 +17,11 @@ package com.northconcepts.templatemaster.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -78,7 +81,12 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     private FilterConfig filterConfig;
 
     private ServletContext servletContext;
-
+    
+    protected final List<String> sensitiveKeyParts = new ArrayList<>(Arrays.asList("password", "secret", "key", "user"));
+    protected final Set<String> whitelistedKeys = new HashSet<>(Arrays.asList("user.country", "user.dir", "user.home", 
+            "user.language", "user.name", "user.script", "user.timezone", "user.variant", "gradle_user_home", "allusersprofile", 
+            "userdomain", "userdomain_roamingprofile", "username", "userprofile"));
+    
     public TemplateMasterBootstrap() {
     }
 
@@ -249,7 +257,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static void debugEnvironment(ServletContext context) {
+    public void debugEnvironment(ServletContext context) {
         StringBuilder s = new StringBuilder(1024 * 20);
         s.append("------------------------------------------" + LINE_SEPARATOR);
         s.append("ServletContext:" + LINE_SEPARATOR);
@@ -262,7 +270,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         if (properties != null) {
             Set<String> keys = new TreeSet(properties.keySet());
             for (String key : keys) {
-                s.append("    ").append(key).append("=[").append(value(System.getProperty(key))).append("]" + LINE_SEPARATOR);
+                s.append("    ").append(key).append("=[").append(getDisplayValue(key, valueToString(System.getProperty(key)))).append("]" + LINE_SEPARATOR);
             }
         }
 
@@ -272,7 +280,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         if (env != null) {
             Set<String> keys = new TreeSet(env.keySet());
             for (String key : keys) {
-                s.append("    ").append(key).append("=[").append(value(env.get(key))).append("]" + LINE_SEPARATOR);
+                s.append("    ").append(key).append("=[").append(getDisplayValue(key, valueToString(env.get(key)))).append("]" + LINE_SEPARATOR);
             }
         }
 
@@ -281,7 +289,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         Enumeration initParameterNames = context.getInitParameterNames();
         while (initParameterNames.hasMoreElements()) {
             String key = (String) initParameterNames.nextElement();
-            s.append("    ").append(key).append("=[").append(value(context.getInitParameter(key))).append("]" + LINE_SEPARATOR);
+            s.append("    ").append(key).append("=[").append(getDisplayValue(key, valueToString(context.getInitParameter(key)))).append("]" + LINE_SEPARATOR);
         }
 
         s.append("------------------------------------------" + LINE_SEPARATOR);
@@ -289,7 +297,7 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         Enumeration attributeNames = context.getAttributeNames();
         while (attributeNames.hasMoreElements()) {
             String key = (String) attributeNames.nextElement();
-            s.append("    ").append(key).append("=[").append(value(context.getAttribute(key))).append("]" + LINE_SEPARATOR);
+            s.append("    ").append(key).append("=[").append(getDisplayValue(key, valueToString(context.getAttribute(key)))).append("]" + LINE_SEPARATOR);
         }
 
         s.append("------------------------------------------");
@@ -298,7 +306,26 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         System.out.println(s);
     }
 
-    private static String value(Object value) {
+    protected boolean allowShowValue(String key) {
+        if (key == null) {
+            return true;
+        }
+        
+        key = key.toLowerCase();
+        
+        if (whitelistedKeys.contains(key)) {
+            return true;
+        }
+        
+        final String key0 = key;
+        return !sensitiveKeyParts.stream().anyMatch(keyPart -> key0.contains(keyPart));
+    }
+
+    protected Object getDisplayValue(String key, Object value) {
+        return allowShowValue(key)?value:"**********";
+    }
+
+    protected String valueToString(Object value) {
         if (value == null) {
             return null;
         }

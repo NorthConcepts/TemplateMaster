@@ -391,9 +391,9 @@ public abstract class CrudResource<ID extends Serializable, ENTITY extends Seria
     }
     
     protected Response postEditRecordImpl(ID id, UriInfo uriInfo, ENTITY form) throws Throwable {
-        editRecord(id, form);
+        ENTITY editRecord = editRecord(id, form);
         setSuccessFlashMessage(singularTitle + " updated");
-        return gotoPath(subUrl + "/view/" + getId(form));
+        return gotoPath(subUrl + "/view/" + getId(editRecord));
     }
     
     //==========================================================================================
