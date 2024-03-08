@@ -13,7 +13,7 @@ plugins {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     compile 'org.freemarker:freemarker:2.3.28'
     compile 'org.jboss.resteasy:resteasy-jaxrs:3.6.1.Final'
