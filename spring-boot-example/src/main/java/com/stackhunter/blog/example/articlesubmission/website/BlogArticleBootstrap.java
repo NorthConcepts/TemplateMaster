@@ -1,6 +1,6 @@
 package com.stackhunter.blog.example.articlesubmission.website;
 
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.annotation.WebListener;
 
 import com.northconcepts.templatemaster.rest.TemplateMasterBootstrap;
 

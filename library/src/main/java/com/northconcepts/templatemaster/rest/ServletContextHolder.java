@@ -15,7 +15,7 @@
  */
 package com.northconcepts.templatemaster.rest;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import com.northconcepts.templatemaster.content.Util;
 
