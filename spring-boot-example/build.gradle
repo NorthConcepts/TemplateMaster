@@ -13,14 +13,14 @@ plugins {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     compile 'org.jboss.resteasy:resteasy-spring-boot-starter:2.0.1.Final'   
    
-    compile 'org.freemarker:freemarker:2.3.28'
-    compile 'org.jboss.resteasy:resteasy-jaxrs:3.6.1.Final'
+    compile 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
+    compile 'com.github.resteasy.resteasy:resteasy-core:6.2.3.Final'
     compile 'org.apache.logging.log4j:log4j-core:2.11.1'
-    compile 'org.jboss.resteasy:resteasy-jackson2-provider:3.6.1.Final'
+    compile 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.7.Final'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
     compile 'com.northconcepts:northconcepts-templatemaster:2.6.4-SNAPSHOT'
     //compile fileTree(dir: 'lib', include: ['*.jar'])
@@ -36,6 +36,13 @@ repositories {
     jcenter()
     maven {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
+    }
+    maven { url 'https://jitpack.io' }
+    maven {
+        url "https://repository.apache.org/content/repositories/snapshots/"
+        //content {
+            //includeGroup "org.freemarker"
+        //}
     }
 }
 
