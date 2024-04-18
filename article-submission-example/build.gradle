@@ -9,30 +9,29 @@
 plugins {
     id 'java'
     id 'war'
-    id 'org.gretty' version '2.2.0'    
+    id 'org.gretty' version '4.1.2'    
 }
 
 dependencies {
-    compile 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
-    compile 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
+    implementation 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
     
-    compile 'com.github.resteasy.resteasy:resteasy-core:6.2.3.Final'
+    implementation 'org.jboss.resteasy:resteasy-core:6.2.8.Final'
    
-    compile 'org.apache.logging.log4j:log4j-core:2.11.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.1'
     
-    compile 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.8.Final'
+    implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.8.Final'
    
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
     
-    compile('com.northconcepts:northconcepts-templatemaster:2.6.4-SNAPSHOT') {
-         transitive = false
-     }
+    implementation 'com.northconcepts:northconcepts-templatemaster:3.0.0'
+    implementation 'org.springframework.data:spring-data-commons:2.1.2.RELEASE'
    
     //compile fileTree(dir: 'lib', include: ['*.jar'])
 
     // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -46,10 +45,10 @@ repositories {
         maven { url 'https://jitpack.io' }
     
     maven {
-        url "https://repository.apache.org/content/repositories/snapshots/"
-        //content {
-            //includeGroup "org.freemarker"
-        //}
+        url "https://repository.apache.org/content/groups/snapshots/"
+        content {
+            includeGroup "org.freemarker"
+        }
     }
 }
 
@@ -57,7 +56,7 @@ repositories {
 archivesBaseName='blog-article'
 
 gretty {
-    servletContainer = 'jetty9.4'
+    servletContainer = 'jetty11'
 
 //    httpEnabled = true
 //    httpPort = 8081

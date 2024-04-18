@@ -36,6 +36,8 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +60,7 @@ import freemarker.ext.jakarta.servlet.WebappTemplateLoader;
 import freemarker.template.Configuration;
 
 @WebFilter(urlPatterns = "/*")
-public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
+public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter, ServletRequestListener {
 
     public static final String UUID = "com.northconcepts.templatemaster.uuid";
 
@@ -162,6 +164,12 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         } finally {
             RequestHolder.clearHttpServletRequest();
         }
+    }
+
+    @Override
+    public void requestInitialized(ServletRequestEvent event) {
+        HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+        RequestHolder.setHttpServletRequest(request);
     }
 
     protected void setRequestUuid(ServletRequest request) {

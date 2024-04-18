@@ -68,14 +68,14 @@ public class ArticlesResource {
     }
     
 
-//    @GET
-//    @Path("/")
-//    public Response getHome() throws Throwable {
-//        return Response.seeOther(new URI("/articles/")).build();
-//    }
-
     @GET
     @Path("/")
+    public Response getHome() throws Throwable {
+        return Response.seeOther(new URI("/articles/")).build();
+    }
+
+    @GET
+    @Path("/articles")
     public Content getArticles() throws Throwable {
         Content content = new Content("site.html");
         content.add("body", new Content("articles/grid-articles.html"));
@@ -84,7 +84,7 @@ public class ArticlesResource {
     }
 
     @GET
-    @Path("/new")
+    @Path("/articles/new")
     public Content getNewArticle() throws Throwable {
         Content content = new Content("site.html");
         content.add("body", new Content("articles/form-article.html"));
@@ -92,16 +92,16 @@ public class ArticlesResource {
     }
 
     @POST
-    @Path("/new")
+    @Path("/articles/new")
     public Response postNewArticle(@Form Article article) throws Throwable {
         String articleId = UUID.randomUUID().toString();
         pendingArticles.put(articleId, article);
         
-        return Response.seeOther(new URI("/confirm/" + articleId + "/")).build();
+        return Response.seeOther(new URI("/articles/confirm/" + articleId + "/")).build();
     }
 
     @GET
-    @Path("/confirm/{articleId}")
+    @Path("/articles/confirm/{articleId}")
     public Content getConfirmNewArticle(@PathParam("articleId") String articleId) throws Throwable {
         Article article = pendingArticles.get(articleId);
         
@@ -117,11 +117,11 @@ public class ArticlesResource {
     }
 
     @POST
-    @Path("/confirm/{articleId}")
+    @Path("/articles/confirm/{articleId}")
     public Response postConfirmNewArticle(@PathParam("articleId") String articleId) throws Throwable {
         Article article = pendingArticles.remove(articleId);
         articles.add(article);
-        return Response.seeOther(new URI("/")).build();
+        return Response.seeOther(new URI("/articles/")).build();
     }
 
 }

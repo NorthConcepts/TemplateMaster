@@ -58,8 +58,6 @@ public class BaseResource {
 
     protected final Logger log = LogManager.getLogger(getClass());
     
-    ResteasyProviderFactory resteasyProviderFactory = ResteasyProviderFactory.getInstance();
-    
     protected Response ok() {
         return Response.ok().build();
     }
@@ -147,11 +145,11 @@ public class BaseResource {
     }
     
     protected HttpResponse getHttpResponse() {
-        return resteasyProviderFactory.getContextData(HttpResponse.class);
+        return ResteasyProviderFactory.getInstance().getContextData(HttpResponse.class);
     }
 
     protected HttpRequest getHttpRequest() {
-        return resteasyProviderFactory.getContextData(HttpRequest.class);
+        return ResteasyProviderFactory.getInstance().getContextData(HttpRequest.class);
     }
 
 
