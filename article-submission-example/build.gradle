@@ -42,8 +42,6 @@ repositories {
     maven {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
     }
-        maven { url 'https://jitpack.io' }
-    
     maven {
         url "https://repository.apache.org/content/groups/snapshots/"
         content {
