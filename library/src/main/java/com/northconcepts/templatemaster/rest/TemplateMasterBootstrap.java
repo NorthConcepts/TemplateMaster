@@ -169,7 +169,11 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
     @Override
     public void requestInitialized(ServletRequestEvent event) {
         HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+        if (useXforwardedHeaders) {
+            request = new XForwardedRequestWrapper(request);
+        }
         RequestHolder.setHttpServletRequest(request);
+        setRequestUuid(request);
     }
 
     @Override
