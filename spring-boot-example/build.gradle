@@ -37,6 +37,9 @@ repositories {
     jcenter()
     maven {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
+        content {
+            includeGroup "com.northconcepts.northconcepts-templatemaster"
+        }
     }
     maven {
         url "https://repository.apache.org/content/groups/snapshots/"

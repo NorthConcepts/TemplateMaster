@@ -172,6 +172,11 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         RequestHolder.setHttpServletRequest(request);
     }
 
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {
+        RequestHolder.clearHttpServletRequest();
+    }
+
     protected void setRequestUuid(ServletRequest request) {
         request.setAttribute(UUID, java.util.UUID.randomUUID());
     }
