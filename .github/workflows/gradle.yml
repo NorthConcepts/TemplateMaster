@@ -19,3 +19,4 @@ jobs:
     - name: Compile with Gradle
       run: |
         cd ./library
+        ./gradlew compileJava
