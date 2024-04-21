@@ -14,4 +14,13 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew build --no-daemon
+      run: |
+        ./gradlew build --no-daemon
+        cd library
+        ./gradlew build --no-daemon
+        cd ../forms-example
+        ./gradlew build --no-daemon
+        cd ../spring-boot-example
+        ./gradlew build --no-daemon
+        cd ../article-submission-example
+        ./gradlew build --no-daemon
