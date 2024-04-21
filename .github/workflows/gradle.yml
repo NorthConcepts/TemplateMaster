@@ -18,7 +18,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        cd ../library
+        cd ./library
         pwd
         ./gradlew build --no-daemon
         cd ../forms-example
