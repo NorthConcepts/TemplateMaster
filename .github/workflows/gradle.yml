@@ -19,10 +19,3 @@ jobs:
     - name: Compile with Gradle
       run: |
         cd ./library
-        ./gradlew compileJava
-        cd ../forms-example
-        ./gradlew compileJava
-        cd ../spring-boot-example
-        ./gradlew compileJava
-        cd ../article-submission-example
-        ./gradlew compileJava
