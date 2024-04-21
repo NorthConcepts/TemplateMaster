@@ -19,10 +19,14 @@ jobs:
     - name: Build with Gradle
       run: |
         cd library
+        pwd
         ./gradlew build --no-daemon
         cd ../forms-example
+        pwd
         ./gradlew build --no-daemon
         cd ../spring-boot-example
+        pwd
         ./gradlew build --no-daemon
         cd ../article-submission-example
+        pwd
         ./gradlew build --no-daemon
