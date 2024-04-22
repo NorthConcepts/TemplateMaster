@@ -11,7 +11,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
@@ -29,9 +29,9 @@ hs_err_pid*
 .gradle
 .idea
 bin/
-#build/
+build/
 gen/
-gradle/
+#gradle/
 local.properties
 Thumbs.db
 dist/
