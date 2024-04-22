@@ -29,7 +29,7 @@ hs_err_pid*
 .gradle
 .idea
 bin/
-build/
+#build/
 gen/
 gradle/
 local.properties
