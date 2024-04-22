@@ -18,7 +18,6 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: |
-        ./gradlew build
         cd ./library
         ./gradlew build -PmavenTemplateMasterRepo=templatemaster -PmavenTemplateMasterUrl=https://maven.northconcepts.com/repositories/templatemaster -PmavenTemplateMasterGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --stacktrace
         cd ../spring-boot-example
