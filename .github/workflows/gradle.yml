@@ -21,9 +21,11 @@ jobs:
         cd ./library
         ./gradlew build -PmavenTemplateMasterRepo=templatemaster -PmavenTemplateMasterUrl=https://maven.northconcepts.com/repositories/templatemaster -PmavenTemplateMasterGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --stacktrace
         cd ../spring-boot-example
+        chmod +x gradlew
         ./gradlew build
         cd ../forms-example
+        chmod +x gradlew
         ./gradlew build
         cd ../article-submission-example
+        chmod +x gradlew
         ./gradlew build
-        
