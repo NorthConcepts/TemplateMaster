@@ -30,7 +30,7 @@ hs_err_pid*
 bin/
 build/
 gen/
-#gradle/
+gradle/
 local.properties
 Thumbs.db
 dist/
