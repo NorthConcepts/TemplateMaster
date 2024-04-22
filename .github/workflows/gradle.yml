@@ -19,5 +19,5 @@ jobs:
     - name: Build with Gradle
       run: |
         cd ./library
-        ./gradlew build  -PmavenTemplateMasterGroupId=com.northconcepts --stacktrace
+        ./gradlew build -PmavenTemplateMasterRepo=templatemaster -PmavenTemplateMasterUrl=https://maven.northconcepts.com/repositories/templatemaster -PmavenTemplateMasterGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --stacktrace
         
