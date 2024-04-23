@@ -1,2 +1,2 @@
-cls && call gradle publish
+cls && call gradlew publish
 @REM pause
