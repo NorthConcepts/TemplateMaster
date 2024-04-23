@@ -16,14 +16,14 @@
     </tr>
   </thead>
   <tbody>
-    <#list articles as article>
+    [#list articles as article]
     <tr>
-      <td>${article_index + 1}</td>
-      <td>${article.title}</td>
-      <td>${article.name}</td>
-      <td>${article.email}</td>
-      <td>${article.url}</td>
+      <td>${(article_index)! + 1}</td>
+      <td>${(article.title)!}</td>
+      <td>${(article.name)!}</td>
+      <td>${(article.email)!}</td>
+      <td>${(article.url)!}</td>
     </tr>
-    </#list>
+    [/#list]
   </tbody>
 </table>

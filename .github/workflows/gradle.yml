@@ -9,9 +9,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
       with:
-        java-version: 1.8
+        java-version: 11
+        distribution: 'adopt'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build --no-daemon
+      run: |
+        cd ./library
+        ./gradlew build -PmavenTemplateMasterRepo=templatemaster -PmavenTemplateMasterUrl=https://maven.northconcepts.com/repositories/templatemaster -PmavenTemplateMasterGroupId=com.northconcepts -PmavenUser=${{ secrets.mavenUser }} -PmavenPassword=${{ secrets.mavenPassword }} --stacktrace
+        cd ../spring-boot-example
+        chmod +x gradlew
+        ./gradlew build
+        cd ../forms-example
+        chmod +x gradlew
+        ./gradlew build
+        cd ../article-submission-example
+        chmod +x gradlew
+        ./gradlew build

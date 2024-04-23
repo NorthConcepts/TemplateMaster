@@ -23,13 +23,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.annotations.Form;
 
@@ -68,14 +68,14 @@ public class ArticlesResource {
     }
     
 
-//    @GET
-//    @Path("/")
-//    public Response getHome() throws Throwable {
-//        return Response.seeOther(new URI("/articles/")).build();
-//    }
-
     @GET
     @Path("/")
+    public Response getHome() throws Throwable {
+        return Response.seeOther(new URI("/articles/")).build();
+    }
+
+    @GET
+    @Path("/articles")
     public Content getArticles() throws Throwable {
         Content content = new Content("site.html");
         content.add("body", new Content("articles/grid-articles.html"));
@@ -84,7 +84,7 @@ public class ArticlesResource {
     }
 
     @GET
-    @Path("/new")
+    @Path("/articles/new")
     public Content getNewArticle() throws Throwable {
         Content content = new Content("site.html");
         content.add("body", new Content("articles/form-article.html"));
@@ -92,16 +92,16 @@ public class ArticlesResource {
     }
 
     @POST
-    @Path("/new")
+    @Path("/articles/new")
     public Response postNewArticle(@Form Article article) throws Throwable {
         String articleId = UUID.randomUUID().toString();
         pendingArticles.put(articleId, article);
         
-        return Response.seeOther(new URI("/confirm/" + articleId + "/")).build();
+        return Response.seeOther(new URI("/articles/confirm/" + articleId + "/")).build();
     }
 
     @GET
-    @Path("/confirm/{articleId}")
+    @Path("/articles/confirm/{articleId}")
     public Content getConfirmNewArticle(@PathParam("articleId") String articleId) throws Throwable {
         Article article = pendingArticles.get(articleId);
         
@@ -117,11 +117,11 @@ public class ArticlesResource {
     }
 
     @POST
-    @Path("/confirm/{articleId}")
+    @Path("/articles/confirm/{articleId}")
     public Response postConfirmNewArticle(@PathParam("articleId") String articleId) throws Throwable {
         Article article = pendingArticles.remove(articleId);
         articles.add(article);
-        return Response.seeOther(new URI("/")).build();
+        return Response.seeOther(new URI("/articles/")).build();
     }
 
 }

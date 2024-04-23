@@ -19,7 +19,7 @@ package com.stackhunter.blog.example.articlesubmission.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.FormParam;
 
 public class Article implements Serializable {
     
