@@ -42,7 +42,7 @@ repositories {
     maven {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
         content {
-            includeGroup "com.northconcepts.northconcepts-templatemaster"
+            includeGroup "com.northconcepts"
         }
     }
     maven {
