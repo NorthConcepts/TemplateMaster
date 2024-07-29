@@ -12,12 +12,6 @@ archivesBaseName='NorthConcepts-TemplateMaster'.toLowerCase()
 repositories {
     mavenLocal()
     jcenter()
-    maven {
-        url "https://repository.apache.org/content/repositories/snapshots/"
-        content {
-            includeGroup "org.freemarker"
-        }
-    }
 }
 
 compileJava {
