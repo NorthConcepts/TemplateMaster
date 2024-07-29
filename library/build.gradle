@@ -64,7 +64,7 @@ publishing {
 }
 
 dependencies {
-    api 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
+    api 'org.freemarker:freemarker:2.3.33'
     api 'commons-codec:commons-codec:1.16.1'
     api 'org.jboss.resteasy:resteasy-core:6.2.8.Final'
     api 'jakarta.servlet:jakarta.servlet-api:6.0.0'
