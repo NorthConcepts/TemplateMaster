@@ -58,10 +58,6 @@ publishing {
 }
 
 dependencies {
-    api('com.northconcepts:northconcepts-templatemaster:+') {
-        exclude group: 'org.freemarker', module: 'freemarker'
-    }
-
     api 'org.freemarker:freemarker:2.3.33'
     api 'commons-codec:commons-codec:1.16.1'
     api 'org.jboss.resteasy:resteasy-core:6.2.8.Final'
