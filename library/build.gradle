@@ -12,7 +12,6 @@ archivesBaseName='NorthConcepts-TemplateMaster'.toLowerCase()
 repositories {
     mavenLocal()
     jcenter()
-    mavenCentral()
 }
 
 compileJava {

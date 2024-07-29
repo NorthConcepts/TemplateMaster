@@ -15,7 +15,7 @@ plugins {
 dependencies {
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
-    implementation 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
+    implementation 'org.freemarker:freemarker:2.3.33'
     
     implementation 'org.jboss.resteasy:resteasy-core:6.2.8.Final'
    
@@ -43,12 +43,6 @@ repositories {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
         content {
             includeGroup "com.northconcepts"
-        }
-    }
-    maven {
-        url "https://repository.apache.org/content/groups/snapshots/"
-        content {
-            includeGroup "org.freemarker"
         }
     }
 }
