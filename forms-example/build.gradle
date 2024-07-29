@@ -9,7 +9,7 @@ dependencies {
 
     implementation 'org.jboss.resteasy:resteasy-spring-boot-starter:5.0.0.Final'
 
-    implementation 'org.freemarker:freemarker:2.3.33-SNAPSHOT'
+    implementation 'org.freemarker:freemarker:2.3.33'
     implementation 'org.jboss.resteasy:resteasy-core:6.2.8.Final'
     implementation 'org.apache.logging.log4j:log4j-core:2.11.1'
     implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.8.Final'
@@ -34,12 +34,6 @@ repositories {
         url = 'https://maven.northconcepts.com/public/repositories/templatemaster'
         content {
             includeGroup "com.northconcepts"
-        }
-    }
-    maven {
-        url "https://repository.apache.org/content/groups/snapshots/"
-        content {
-            includeGroup "org.freemarker"
         }
     }
 }
