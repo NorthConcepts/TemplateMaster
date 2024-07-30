@@ -15,6 +15,11 @@ compileJava {
     options.compilerArgs += ["-parameters", "-g:lines,vars,source"]
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
 
@@ -25,8 +30,6 @@ publishing {
             artifactId = "${archivesBaseName}"
 
             from components.java
-            artifact sourceJar
-            artifact packageJavadoc
         }
 
     }
@@ -68,14 +71,4 @@ javadoc {
 
     links "https://docs.oracle.com/javase/8/docs/api/"
   }
-}
-
-task sourceJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allJava
-}
-
-task packageJavadoc(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
 }
