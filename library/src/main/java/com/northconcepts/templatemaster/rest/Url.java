@@ -153,7 +153,7 @@ public final class Url {
         }
 
         try {
-            URI uri = new URI(this.uri.getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
+            URI uri = new URI(getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
             setQuery(uri, queryParamsToString(queryParams));
             return new Url(uri);
         } catch (Throwable e) {
@@ -169,7 +169,7 @@ public final class Url {
             }
         }
         try {
-            URI uri = new URI(this.uri.getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
+            URI uri = new URI(getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
             setQuery(uri, queryParamsToString(queryParams));
             return new Url(uri);
         } catch (Throwable e) {
@@ -188,7 +188,7 @@ public final class Url {
             }
         }
         try {
-            URI uri = new URI(this.uri.getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
+            URI uri = new URI(getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), this.uri.getPath(), null, this.uri.getFragment());
             setQuery(uri, queryParamsToString(queryParams));
             return new Url(uri);
         } catch (Throwable e) {
@@ -209,12 +209,20 @@ public final class Url {
 
             newPath = Util.trimRight(baseFolder, '/') + "/" + Util.trimLeft(newPath, '/');
 
-            URI uri = new URI(this.uri.getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), newPath, this.uri.getQuery(),
+            URI uri = new URI(getScheme(), this.uri.getUserInfo(), this.uri.getHost(), this.uri.getPort(), newPath, this.uri.getQuery(),
                     this.uri.getFragment());
             return new Url(uri);
         } catch (Throwable e) {
             throw TemplateMasterException.wrap(e).set("uri", this.uri).set("newPath", newPath);
         }
+    }
+
+    public static String getScheme(HttpServletRequest request) {
+        return Util.coalesceCharSequences(request.getHeader("x-forwarded-proto"), request.getScheme());
+    }
+
+    public static String getScheme() {
+        return getScheme(RequestHolder.getHttpServletRequest());
     }
 
     @Override
