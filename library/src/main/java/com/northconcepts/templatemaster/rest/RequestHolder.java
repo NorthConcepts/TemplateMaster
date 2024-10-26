@@ -21,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.rest.FlashMessage.FlashMessageType;
@@ -240,16 +241,48 @@ public final class RequestHolder {
     public static void setSuccessFlashMessage(String message) {
         setFlashMessage(new FlashMessage(FlashMessageType.SUCCESS, message));
     }
+
+    public static void setSuccessFlashMessage(String message, boolean escapeHtml) {
+        setFlashMessage(new FlashMessage(FlashMessageType.SUCCESS, message, escapeHtml));
+    }
+
+    public static void setSuccessFlashMessage(Content message) {
+        setFlashMessage(new FlashMessage(FlashMessageType.SUCCESS, message));
+    }
     
     public static void setInfoFlashMessage(String message) {
+        setFlashMessage(new FlashMessage(FlashMessageType.INFO, message));
+    }
+
+    public static void setInfoFlashMessage(String message, boolean escapeHtml) {
+        setFlashMessage(new FlashMessage(FlashMessageType.INFO, message, escapeHtml));
+    }
+
+    public static void setInfoFlashMessage(Content message) {
         setFlashMessage(new FlashMessage(FlashMessageType.INFO, message));
     }
     
     public static void setWarningFlashMessage(String message) {
         setFlashMessage(new FlashMessage(FlashMessageType.WARNING, message));
     }
+
+    public static void setWarningFlashMessage(String message, boolean escapeHtml) {
+        setFlashMessage(new FlashMessage(FlashMessageType.WARNING, message, escapeHtml));
+    }
+
+    public static void setWarningFlashMessage(Content message) {
+        setFlashMessage(new FlashMessage(FlashMessageType.WARNING, message.toString()));
+    }
     
     public static void setErrorFlashMessage(String message) {
+        setFlashMessage(new FlashMessage(FlashMessageType.ERROR, message));
+    }
+
+    public static void setErrorFlashMessage(String message, boolean escapeHtml) {
+        setFlashMessage(new FlashMessage(FlashMessageType.ERROR, message, escapeHtml));
+    }
+
+    public static void setErrorFlashMessage(Content message) {
         setFlashMessage(new FlashMessage(FlashMessageType.ERROR, message));
     }
 
