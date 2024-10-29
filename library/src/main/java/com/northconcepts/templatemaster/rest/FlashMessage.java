@@ -15,6 +15,9 @@
  */
 package com.northconcepts.templatemaster.rest;
 
+import com.northconcepts.templatemaster.content.Content;
+import org.apache.commons.text.StringEscapeUtils;
+
 public class FlashMessage {
     
     public static enum FlashMessageType {
@@ -23,10 +26,20 @@ public class FlashMessage {
     
     private final FlashMessageType type;
     private final String displayText;
-    
-    public FlashMessage(FlashMessageType type, String displayText) {
+    private final boolean displayTextRequiresHtmlEscaping;
+
+    public FlashMessage(FlashMessageType type, String displayText, boolean displayTextRequiresHtmlEscaping) {
         this.type = type;
         this.displayText = displayText;
+        this.displayTextRequiresHtmlEscaping = displayTextRequiresHtmlEscaping;
+    }
+
+    public FlashMessage(FlashMessageType type, String displayText) {
+        this(type, displayText, false);
+    }
+
+    public FlashMessage(FlashMessageType type, Content displayContent) {
+        this(type, displayContent.toString(), false);
     }
     
     public FlashMessageType getType() {
@@ -34,7 +47,15 @@ public class FlashMessage {
     }
 
     public String getDisplayText() {
+        if(isDisplayTextRequiresHtmlEscaping()) {
+            return StringEscapeUtils.escapeHtml4(displayText);
+        }
         return displayText;
+    }
+
+
+    public boolean isDisplayTextRequiresHtmlEscaping() {
+        return displayTextRequiresHtmlEscaping;
     }
     
     @Override
