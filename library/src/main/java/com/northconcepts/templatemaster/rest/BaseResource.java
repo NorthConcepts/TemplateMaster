@@ -199,19 +199,51 @@ public class BaseResource {
     protected void setSuccessFlashMessage(String message) {
         RequestHolder.setSuccessFlashMessage(message);
     }
-    
+
+    protected void setSuccessFlashMessage(String message, boolean escapeHtml) {
+        RequestHolder.setSuccessFlashMessage(message, escapeHtml);
+    }
+
+    protected void setSuccessFlashMessage(Content message) {
+        RequestHolder.setSuccessFlashMessage(message);
+    }
+
     protected void setInfoFlashMessage(String message) {
         RequestHolder.setInfoFlashMessage(message);
     }
-    
+
+    protected void setInfoFlashMessage(String message, boolean escapeHtml) {
+        RequestHolder.setInfoFlashMessage(message, escapeHtml);
+    }
+
+    protected void setInfoFlashMessage(Content message) {
+        RequestHolder.setInfoFlashMessage(message);
+    }
+
     protected void setWarningFlashMessage(String message) {
         RequestHolder.setWarningFlashMessage(message);
     }
-    
+
+    protected void setWarningFlashMessage(String message, boolean escapeHtml) {
+        RequestHolder.setWarningFlashMessage(message, escapeHtml);
+    }
+
+    protected void setWarningFlashMessage(Content message) {
+        RequestHolder.setWarningFlashMessage(message);
+    }
+
     protected void setErrorFlashMessage(String message) {
         RequestHolder.setErrorFlashMessage(message);
     }
-    
+
+    protected void setErrorFlashMessage(String message, boolean escapeHtml) {
+        RequestHolder.setErrorFlashMessage(message, escapeHtml);
+    }
+
+    protected void setErrorFlashMessage(Content message) {
+        RequestHolder.setErrorFlashMessage(message);
+    }
+
     protected String getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
