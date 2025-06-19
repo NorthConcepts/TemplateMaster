@@ -23,7 +23,7 @@
             
             [#list formDef.singleRecordActions as action]
               [#if action.isVisible(resource, record)]
-                <button type="submit" class="tm-btn tm-btn-single ${action.cssStyleClass!} btn btn-info" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath)}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if]>${action.displayName}</button>
+                <button type="submit" class="tm-btn tm-btn-single ${action.cssStyleClass!} btn btn-info" formaction="${RequestHolder.url.setPath(subUrl + '/' + action.subPath + '/' + resource.getId(record))}" formmethod="${action.method}" [#if action.target??]formtarget="${action.target}"[/#if]>${action.displayName}</button>
               [/#if]
             [/#list]
             
