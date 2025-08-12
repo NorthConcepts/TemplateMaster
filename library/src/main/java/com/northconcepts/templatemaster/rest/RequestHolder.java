@@ -78,6 +78,21 @@ public final class RequestHolder {
 
     private static String cachedBaseUrl;
 
+    public static String removeUrlQueryParams(String url) {
+        int index = url.indexOf('?');
+        if (index >= 0) {
+            url = url.substring(0, index);
+        }
+        return url;
+    }
+    
+    public static String getBaseUrl(HttpServletRequest request) {
+        String url = request.getRequestURL().toString();
+        url = removeUrlQueryParams(url);
+        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        return baseUrl;
+    }
+    
     public static String getBaseUrl() {
         HttpServletRequest request = getThreadLocalHttpServletRequest().get();
         if (request == null) {
@@ -86,8 +101,7 @@ public final class RequestHolder {
             }
             return cachedBaseUrl;
         }
-        String url = request.getRequestURL().toString();
-        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        String baseUrl = getBaseUrl(request);
         cachedBaseUrl = baseUrl;
         return baseUrl;
     }
