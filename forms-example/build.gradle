@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.8.Final'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
 
-    implementation 'com.northconcepts:northconcepts-templatemaster:3.0.0'
+    implementation 'com.northconcepts:northconcepts-templatemaster:3.0.2'
     implementation 'org.springframework.data:spring-data-commons:2.1.2.RELEASE'
     implementation 'org.apache.commons:commons-text:1.12.0'
 

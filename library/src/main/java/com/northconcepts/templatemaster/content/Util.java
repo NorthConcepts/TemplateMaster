@@ -98,6 +98,32 @@ public class Util {
         return (length < string.length()) ? string.substring(0, length) : string;
     }
 
+    public static String trimTo(String string, String substring) {
+        if (isEmpty(string) || isEmpty(substring)) {
+            return string;
+        }
+
+        int index = string.indexOf(substring);
+        if (index >= 0) {
+            string = string.substring(index+substring.length());
+        }
+
+        return string;
+    }
+
+    public static String trimFrom(String string, String substring) {
+        if (isEmpty(string) || isEmpty(substring)) {
+            return string;
+        }
+
+        int index = string.indexOf(substring);
+        if (index >= 0) {
+            string = string.substring(0, index);
+        }
+
+        return string;
+    }
+
     public static boolean matches(String s1, String s2, boolean caseSensitive, boolean allowEmpty) {
         if (!allowEmpty && (isEmpty(s1) || isEmpty(s2))) {
             return false;

@@ -53,6 +53,7 @@ public final class Url {
     public Url(HttpServletRequest request) {
         String s = request.getRequestURL().toString();
         if (Util.isNotEmpty(request.getQueryString())) {
+            s = Util.trimFrom(s, "?");
             s += "?" + request.getQueryString();
         }
 
