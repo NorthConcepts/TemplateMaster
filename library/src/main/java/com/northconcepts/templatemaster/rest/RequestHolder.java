@@ -76,6 +76,7 @@ public final class RequestHolder {
     //  Base URL, URL, Referrer
     // ============================================================================================================
 
+    private static String baseUrlOverride;
     private static String cachedBaseUrl;
 
     public static String removeUrlQueryParams(String url) {
@@ -94,6 +95,10 @@ public final class RequestHolder {
     }
     
     public static String getBaseUrl() {
+        if (baseUrlOverride != null) {
+            return baseUrlOverride;
+        }
+        
         HttpServletRequest request = getThreadLocalHttpServletRequest().get();
         if (request == null) {
             if (Util.isEmpty(cachedBaseUrl)) {
@@ -104,6 +109,22 @@ public final class RequestHolder {
         String baseUrl = getBaseUrl(request);
         cachedBaseUrl = baseUrl;
         return baseUrl;
+    }
+    
+    /**
+     * Sets the URL to always return when {@link #getBaseUrl()} is called.  
+     * Setting to null will unset this and allow normal processing to resume.
+     */
+    public static void setBaseUrl(String baseUrlOverride) {
+        RequestHolder.baseUrlOverride = baseUrlOverride;
+    }
+    
+    /**
+     * Sets the URL to return when no URL has been cached by a call inside a servlet request.  
+     * Setting to null will force a re-cache when {@link #getBaseUrl()} is next called inside a servlet request.
+     */
+    public static void setCachedBaseUrl(String cachedBaseUrl) {
+        RequestHolder.cachedBaseUrl = cachedBaseUrl;
     }
     
     public static Url getUrl() {
