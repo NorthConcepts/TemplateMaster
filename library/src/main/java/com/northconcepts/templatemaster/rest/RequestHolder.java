@@ -15,6 +15,9 @@
  */
 package com.northconcepts.templatemaster.rest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -301,6 +304,22 @@ public final class RequestHolder {
         }
 
         return null;
+    }
+
+    public static List<Cookie> getCookies(String name) {
+        Cookie[] cookies = getHttpServletRequest().getCookies();
+        if (cookies == null || name == null) {
+            return Collections.emptyList();
+        }
+
+        List<Cookie> matchingCookies = new ArrayList<>();
+        for (Cookie cookie : cookies) {
+            if (Util.matches(cookie.getName(), name)) {
+                matchingCookies.add(cookie);
+            }
+        }
+
+        return matchingCookies;
     }
 
     // ============================================================================================================
