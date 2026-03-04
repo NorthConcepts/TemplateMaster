@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.ServletException;
@@ -255,6 +256,22 @@ public class BaseResource {
         }
 
         return null;
+    }
+
+    protected List<Cookie> getCookies(HttpServletRequest request, String name) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null || name == null) {
+            return Collections.emptyList();
+        }
+
+        List<Cookie> matchingCookies = new ArrayList<>();
+        for (Cookie cookie : cookies) {
+            if (Util.matches(cookie.getName(), name)) {
+                matchingCookies.add(cookie);
+            }
+        }
+
+        return matchingCookies;
     }
 
     protected Part getPart(HttpServletRequest request, String name) throws IOException, ServletException {
