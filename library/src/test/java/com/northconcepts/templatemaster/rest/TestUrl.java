@@ -32,7 +32,7 @@ public class TestUrl {
         Url url = new Url("https://example.com/path?a=1");
         Url result = url.setQueryParam("b", "2");
 
-        assertTrue(result.toString().contains("a=1"));
+        assertTrue(result.toString().contains("a=12"));
         assertTrue(result.toString().contains("b=2"));
     }
 
