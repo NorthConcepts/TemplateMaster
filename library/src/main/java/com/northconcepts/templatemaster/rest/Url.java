@@ -78,7 +78,7 @@ public final class Url {
             }
 
             for (String param : query.split("&")) {
-                String pair[] = param.split("=");
+                String pair[] = param.split("=", 2);
                 String key = URLDecoder.decode(pair[0], ENCODING);
                 String value = null;
                 if (pair.length > 1) {
@@ -101,22 +101,25 @@ public final class Url {
     }
 
     private String queryParamsToString(Map<String, List<String>> queryParams) throws UnsupportedEncodingException {
-        String s = "";
+        StringBuilder sb = new StringBuilder();
         for (String key : queryParams.keySet()) {
-            if (!Util.isEmpty(s)) {
-                s += "&";
-            }
             List<String> values = queryParams.get(key);
             if (values == null || values.size() == 0) {
-                s += URLEncoder.encode(key, ENCODING);
+                if (sb.length() > 0) {
+                    sb.append("&");
+                }
+                sb.append(URLEncoder.encode(key, ENCODING));
             } else {
                 for (String value : values) {
-                    s += URLEncoder.encode(key, ENCODING) + "=" + URLEncoder.encode(value, ENCODING);
+                    if (sb.length() > 0) {
+                        sb.append("&");
+                    }
+                    sb.append(URLEncoder.encode(key, ENCODING)).append("=").append(URLEncoder.encode(value, ENCODING));
                 }
             }
         }
 
-        return s;
+        return sb.toString();
     }
 
     private static void setQuery(URI uri, String query) {
