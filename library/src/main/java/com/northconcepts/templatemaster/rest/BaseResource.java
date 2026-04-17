@@ -25,16 +25,16 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -146,11 +146,11 @@ public class BaseResource {
     }
     
     protected HttpResponse getHttpResponse() {
-        return ResteasyProviderFactory.getContextData(HttpResponse.class);
+        return ResteasyProviderFactory.getInstance().getContextData(HttpResponse.class);
     }
 
     protected HttpRequest getHttpRequest() {
-        return ResteasyProviderFactory.getContextData(HttpRequest.class);
+        return ResteasyProviderFactory.getInstance().getContextData(HttpRequest.class);
     }
 
 
@@ -318,7 +318,7 @@ public class BaseResource {
         s.append("    RemoteUser=[").append(request.getRemoteUser()).append("]" + LINE_SEPARATOR);
         s.append("    RequestedSessionId=[").append(request.getRequestedSessionId()).append("]" + LINE_SEPARATOR);
         s.append("    RequestedSessionIdFromCookie =[").append(request.isRequestedSessionIdFromCookie()).append("]" + LINE_SEPARATOR);
-        s.append("    RequestedSessionIdFromUrl =[").append(request.isRequestedSessionIdFromUrl()).append("]" + LINE_SEPARATOR);
+        s.append("    RequestedSessionIdFromUrl =[").append(request.isRequestedSessionIdFromURL()).append("]" + LINE_SEPARATOR);
         s.append("    RequestedSessionIdValid =[").append(request.isRequestedSessionIdValid()).append("]" + LINE_SEPARATOR);
         s.append("    RequestURI=[").append(request.getRequestURI()).append("]" + LINE_SEPARATOR);
         s.append("    RequestURL=[").append(request.getRequestURL()).append("]" + LINE_SEPARATOR);

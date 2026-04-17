@@ -15,7 +15,7 @@
  */
 package com.northconcepts.templatemaster.form;
 
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.QueryParam;
 
 public class ListRequest {
 

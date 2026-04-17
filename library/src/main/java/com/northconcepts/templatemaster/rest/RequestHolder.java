@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.TemplateMasterException;
@@ -79,9 +79,29 @@ public final class RequestHolder {
     //  Base URL, URL, Referrer
     // ============================================================================================================
 
+    private static String baseUrlOverride;
     private static String cachedBaseUrl;
 
+    public static String removeUrlQueryParams(String url) {
+        int index = url.indexOf('?');
+        if (index >= 0) {
+            url = url.substring(0, index);
+        }
+        return url;
+    }
+    
+    public static String getBaseUrl(HttpServletRequest request) {
+        String url = request.getRequestURL().toString();
+        url = removeUrlQueryParams(url);
+        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        return baseUrl;
+    }
+    
     public static String getBaseUrl() {
+        if (baseUrlOverride != null) {
+            return baseUrlOverride;
+        }
+        
         HttpServletRequest request = getThreadLocalHttpServletRequest().get();
         if (request == null) {
             if (Util.isEmpty(cachedBaseUrl)) {
@@ -89,10 +109,25 @@ public final class RequestHolder {
             }
             return cachedBaseUrl;
         }
-        String url = request.getRequestURL().toString();
-        String baseUrl = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+        String baseUrl = getBaseUrl(request);
         cachedBaseUrl = baseUrl;
         return baseUrl;
+    }
+    
+    /**
+     * Sets the URL to always return when {@link #getBaseUrl()} is called.  
+     * Setting to null will unset this and allow normal processing to resume.
+     */
+    public static void setBaseUrl(String baseUrlOverride) {
+        RequestHolder.baseUrlOverride = baseUrlOverride;
+    }
+    
+    /**
+     * Sets the URL to return when no URL has been cached by a call inside a servlet request.  
+     * Setting to null will force a re-cache when {@link #getBaseUrl()} is next called inside a servlet request.
+     */
+    public static void setCachedBaseUrl(String cachedBaseUrl) {
+        RequestHolder.cachedBaseUrl = cachedBaseUrl;
     }
     
     public static Url getUrl() {

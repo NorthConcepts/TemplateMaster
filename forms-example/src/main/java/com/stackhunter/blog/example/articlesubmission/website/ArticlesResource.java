@@ -16,31 +16,22 @@
  */
 package com.stackhunter.blog.example.articlesubmission.website;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
-import org.jboss.resteasy.annotations.Form;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import com.northconcepts.templatemaster.content.Content;
 import com.northconcepts.templatemaster.content.Util;
 import com.northconcepts.templatemaster.form.CrudResource;
 import com.northconcepts.templatemaster.form.FormDef;
@@ -137,6 +128,18 @@ public class ArticlesResource extends CrudResource<Long, Article> {
         
         // TODO sort articles
         
+        return new PageImpl<>(articles.subList(fromIndex, toIndex), PageRequest.of(pageNumber, pageSize, sort), articles.size());
+    }
+
+    @Override
+    protected Page<Article> getPage(String keyword, String sortField, int pageNumber, Integer pageSize) {
+        int fromIndex = pageNumber * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, articles.size() - fromIndex);
+
+        Sort sort = Util.isEmpty(sortField)?Sort.unsorted():Sort.by(sortField);
+
+        // TODO sort articles
+
         return new PageImpl<>(articles.subList(fromIndex, toIndex), PageRequest.of(pageNumber, pageSize, sort), articles.size());
     }
 

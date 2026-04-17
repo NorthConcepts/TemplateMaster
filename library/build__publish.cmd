@@ -1,3 +1,2 @@
-cls && call gradlew --console=plain publish
-echo %DATE% %TIME%
-pause
+cls && call gradlew publish
+@REM pause

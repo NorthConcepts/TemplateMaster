@@ -1,1 +1,1 @@
-gradle --console=plain build
+gradlew --console=plain build

@@ -27,18 +27,20 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,12 +55,12 @@ import com.northconcepts.templatemaster.template.Templates;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.jakarta.servlet.WebappTemplateLoader;
 import freemarker.template.Configuration;
 
 @WebFilter(urlPatterns = "/*")
-public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter {
+public class TemplateMasterBootstrap extends ResteasyBootstrap implements ServletContextListener, Filter, ServletRequestListener {
 
     public static final String UUID = "com.northconcepts.templatemaster.uuid";
 
@@ -162,6 +164,21 @@ public class TemplateMasterBootstrap extends ResteasyBootstrap implements Servle
         } finally {
             RequestHolder.clearHttpServletRequest();
         }
+    }
+
+    @Override
+    public void requestInitialized(ServletRequestEvent event) {
+        HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+        if (useXforwardedHeaders) {
+            request = new XForwardedRequestWrapper(request);
+        }
+        RequestHolder.setHttpServletRequest(request);
+        setRequestUuid(request);
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {
+        RequestHolder.clearHttpServletRequest();
     }
 
     protected void setRequestUuid(ServletRequest request) {

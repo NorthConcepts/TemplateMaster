@@ -16,7 +16,7 @@
  */
 package com.stackhunter.blog.example.articlesubmission.model;
 
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.FormParam;
 
 public class Article {
 

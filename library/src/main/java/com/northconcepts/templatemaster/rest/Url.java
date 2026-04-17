@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.northconcepts.templatemaster.content.TemplateMasterException;
 import com.northconcepts.templatemaster.content.Util;
@@ -53,6 +53,7 @@ public final class Url {
     public Url(HttpServletRequest request) {
         String s = request.getRequestURL().toString();
         if (Util.isNotEmpty(request.getQueryString())) {
+            s = Util.trimFrom(s, "?");
             s += "?" + request.getQueryString();
         }
 
