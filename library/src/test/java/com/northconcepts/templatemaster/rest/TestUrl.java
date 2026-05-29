@@ -95,4 +95,29 @@ public class TestUrl {
         assertTrue(s.contains("c=blue"));
         assertFalse(s.contains("other"));
     }
+
+    @Test
+    public void testParseQueryParams_noDoubleDecoding() {
+        Url url = new Url("https://example.com/path?path=%252Fhome");
+        Url result = url.setQueryParam("extra", "yes");
+
+        String s = result.toString();
+        assertTrue("Double-encoded value should only be decoded once",
+                s.contains("path=%252F") || s.contains("path=%252f"));
+        assertTrue(s.contains("extra=yes"));
+        assertFalse("Should not double-decode %252F into /",
+                s.contains("path=%2F") || s.contains("path=%2f") || s.contains("path=/"));
+    }
+
+    @Test
+    public void testParseQueryParams_ignoresEmptySegments() {
+        Url url = new Url("https://example.com/path?a=1&&b=2&");
+        Url result = url.setQueryParam("c", "3");
+
+        String s = result.toString();
+        assertTrue(s.contains("a=1"));
+        assertTrue(s.contains("b=2"));
+        assertTrue(s.contains("c=3"));
+        assertFalse("Should not contain empty key", s.contains("&&"));
+    }
 }
