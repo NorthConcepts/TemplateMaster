@@ -71,12 +71,15 @@ public final class Url {
         try {
             Map<String, List<String>> queryParams = new LinkedHashMap<String, List<String>>();
 
-            String query = uri.getQuery();
+            String query = uri.getRawQuery();
             if (Util.isEmpty(query)) {
                 return queryParams;
             }
 
             for (String param : query.split("&")) {
+                if (param.isEmpty()) {
+                    continue;
+                }
                 String pair[] = param.split("=", 2);
                 String key = URLDecoder.decode(pair[0], ENCODING);
                 String value = null;
