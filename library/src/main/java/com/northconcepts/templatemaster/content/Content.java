@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.northconcepts.templatemaster.template.CodeTemplateSource;
 import com.northconcepts.templatemaster.template.FileTemplateSource;
 import com.northconcepts.templatemaster.template.ITemplateSource;
@@ -53,6 +54,7 @@ public class Content implements IContent, Cloneable {
     }
     
     
+    @JsonIgnore
     public Content getParent() {
         return parent;
     }
